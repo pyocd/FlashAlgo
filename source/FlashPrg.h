@@ -1,4 +1,4 @@
-/* CMSIS-DAP Interface Firmware
+/* Flash OS Routines
  * Copyright (c) 2009-2015 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

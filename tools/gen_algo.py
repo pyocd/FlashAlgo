@@ -1,6 +1,6 @@
 """
-CMSIS-DAP Interface Firmware
-Copyright (c) 2009-2013 ARM Limited
+DAPLink FlashAlgo
+Copyright (c) 2011-2015 ARM Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@ limitations under the License.
 
 
 This script takes as input an .axf file containing the flash algorithm to be
-loaded in the target RAM and it converts it to a binary array ready to be
-included in the CMSIS-DAP Interface Firmware source code.
+loaded in the target RAM and it converts it to a binary blob ready to be
+included in the DAPLink Interface Firmware source code and also pyDAPFlash.
 """
 from struct import unpack
 from os.path import join
