@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @file FlashPrg.h */
+
 #ifndef FLASHPRG_H
 #define FLASHPRG_H
 

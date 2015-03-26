@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @file FlashPrg.c */
+
 #include "FlashOS.h"
 #include "FlashPrg.h"
 
@@ -23,7 +25,7 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
     //  watchdogs, peripherals and anything else needed to
     //  access or program memory. Fnc parameter has meaning
     //  but currently isnt used in MSC programming routines
-    return 0;
+    return 1;
 }
 
 uint32_t UnInit(uint32_t fnc)
@@ -32,36 +34,36 @@ uint32_t UnInit(uint32_t fnc)
     //  communication channels and clocks that were enabled
     //  Fnc parameter has meaning but isnt used in MSC program
     //  routines
-    return 0;
+    return 1;
 }
 
 uint32_t BlankCheck(uint32_t adr, uint32_t sz, uint8_t pat)
 {
     // Check that the memory at address adr for length sz is 
     //  empty or the same as pat
-    return 0;
+    return 1;
 }
 
 uint32_t EraseChip(void)
 {
     // Execute a sequence that erases the entire of flash memory region 
-    return 0;
+    return 1;
 }
 
 uint32_t EraseSector(uint32_t adr)
 {
     // Execute a sequence that erases the sector that adr resides in
-    return 0;
+    return 1;
 }
 
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
     // Program the contents of buf starting at adr for length of sz
-    return 0;
+    return 1;
 }
 
 uint32_t Verify(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
     // Given an adr and sz compare this against the content of buf
-    return 0;
+    return 1;
 }

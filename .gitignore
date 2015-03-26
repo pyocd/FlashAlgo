@@ -63,6 +63,7 @@ tags
 *.tag
 *.html
 debug.txt
+docs
 
 # PyCharm project files
 .idea

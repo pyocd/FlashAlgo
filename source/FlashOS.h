@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/** @file FlashOS.h */
+
 #ifndef FLASHOS_H
 #define FLASHOS_H
 
@@ -23,29 +25,19 @@
   extern "C" {
 #endif
 
-/**
-    @ingroup FlashOS
-    @{
-*/
+#define VERS        1       // Interface Version 1.01
+#define NAME_MAX    128     // Max size of the routine name
+#define PAGE_MAX    65536   // Max Page Size for Programming
+#define SECTOR_NUM  512     // Max Number of Sector Items
+#define SECTOR_END  0xFFFFFFFF, 0xFFFFFFFF
 
-#define VERS       1      // Interface Version 1.01
-#define NAME_MAX   128    // Max size of the routine name
-#define PAGE_MAX   65536  // Max Page Size for Programming
-#define SECTOR_NUM 512    // Max Number of Sector Items
-#define SECTOR_END 0xFFFFFFFF, 0xFFFFFFFF
-
-/**
-    @enum FlashLoc
-    @brief  An enumerated type of possible program memory locations and interfaces
- */
-typedef enum {
-    UNKNOWN = 0,   /*!< Unknown location */
-    ONCHIP,        /*!< On-chip Flash Memory */
-    EXT8BIT,       /*!< External Flash Device on 8-bit  Bus */
-    EXT16BIT,      /*!< External Flash Device on 16-bit Bus */
-    EXT32BIT,      /*!< External Flash Device on 32-bit Bus */
-    EXTSPI         /*!< External Flash Device on SPI */
-} FlashLoc;
+// FlashDevice.devType interface mechanism
+#define UNKNOWN     0
+#define ONCHIP      1
+#define EXT8BIT     2
+#define EXT16BIT    3
+#define EXT32BIT    4
+#define EXTSPI      5
 
 /**
     @struct FlashSector
@@ -64,7 +56,7 @@ struct FlashSector {
 struct FlashDevice {
     uint16_t vers;          /*!< Version Number and Architecture */
     char devName[NAME_MAX]; /*!< Device Name and Description */
-    enum FlashLoc devType;  /*!< Device Type: ONCHIP, EXT8BIT, EXT16BIT, ... */
+    uint16_t devType;       /*!< Device Type: ONCHIP, EXT8BIT, EXT16BIT, ... */
     uint32_t devAdr;        /*!< Default Device Start Address */
     uint32_t szDev;         /*!< Total Size of Device */
     uint32_t szPage;        /*!< Programming Page Size */
