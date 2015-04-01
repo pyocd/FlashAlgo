@@ -1,0 +1,27 @@
+tool_specific:
+    uvision:
+    	mcu:
+    		- cortex-m0
+        macros:
+            -
+        misc:
+            Cads:
+                MiscControls:
+            		- --gnu
+            		- --c99
+                Optim:
+                    - 0
+                uC99:
+                    - enable
+                OneElfS:
+                    - enable
+        		Ropi:
+        			- enable
+        		Rwpi:
+        			- enable
+    		TargetOption:
+    			AfterMake:
+    				RunUserProg1:
+    					- enalbe
+    				RunUserProg1:
+    					- python ../tools/gen_algo.py #L#S

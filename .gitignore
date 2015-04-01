@@ -1,6 +1,9 @@
 # Private settings
 private_settings.py
 
+# Mac files
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo
