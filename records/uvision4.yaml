@@ -1,14 +1,17 @@
 tool_specific:
     uvision:
     	mcu:
-    		- cortex-m0
+    		- Cortex-M0
         macros:
             -
+        linker_file:
+            - source/Target.lin
         misc:
             Cads:
                 MiscControls:
             		- --gnu
             		- --c99
+            		- --debug
                 Optim:
                     - 0
                 uC99:
@@ -24,4 +27,4 @@ tool_specific:
     				RunUserProg1:
     					- enalbe
     				RunUserProg1:
-    					- python ../tools/gen_algo.py #L#S
+    					- python ../../tools/gen_algo.py $L@L.axf
