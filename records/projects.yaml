@@ -1,4 +1,5 @@
-template:
-    - records/projects/template.yaml
-    - records/uvision4.yaml
+projects:
+        template:
+        - records/projects/template.yaml
+        - records/uvision4.yaml
 
