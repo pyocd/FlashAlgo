@@ -1,0 +1,34 @@
+common:
+    target:
+        - frdm-kl46z
+    include_paths:
+        - source\freescale\devices\MKL46Z4
+    source_files:
+        - source\freescale\driver\flash_densities_kl_series.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKL46Z256VLH4
+tool_specific:
+    uvision:
+        mcu:
+            - cortex-m0
+        linker_file:
+            - source/FlashAlgo.lin
+        misc:
+            Cads:
+                MiscControls:
+                    - --debug
+                    - -g
+                    - --c99
+                Optim:
+                    - 0
+                Ropi:
+                    - enable
+                Rwpi:
+                    - enable
+            TargetOption:
+                AfterMake:
+                    RunUserProg1:
+                        - enable
+                    UserProg1Name:
+                        - python ../../tools/gen_algo.py $L@L.axf

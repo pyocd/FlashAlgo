@@ -1,3 +1,6 @@
-template:
-    - records/projects/template.yaml
-    
+projects:
+    mkl46z4_flash_algo:
+        - records\freescale\common\flash_algo_fsl.yaml
+        - records\freescale\targets\frdm_mkl46z4.yaml
+
+        

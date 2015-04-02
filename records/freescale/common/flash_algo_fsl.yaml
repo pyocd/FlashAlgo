@@ -1,0 +1,18 @@
+common:
+    group_name:
+        - flash_algo
+    include_paths:
+        - source/freescale/device
+        - source/freescale/driver
+    source_files:
+        - source/freescale/driver/flash_get_property.c
+        - source/freescale/driver/flash_erase.c
+        - source/freescale/driver/flash_erase_all.c
+        - source/freescale/driver/flash_init.c
+        - source/freescale/driver/flash_program.c
+        - source/freescale/driver/flash_verify_erase.c
+        - source/freescale/driver/flash_verify_erase_all.c
+        - source/freescale/driver/flash_verify_program.c
+        - source/freescale/driver/flash_command_sequence.c
+    macros:
+        -
