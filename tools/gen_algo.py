@@ -1,5 +1,5 @@
 """
-DAPLink FlashAlgo
+FlashAlgo
 Copyright (c) 2011-2015 ARM Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,20 +30,6 @@ from settings import *
 # FIXED LENGTH
 ALGO_OFFSET = 0x20
 
-# Algorithm start addresses for each TARGET (compared with DevName in the
-# FlashDevice structure in FlashDev.c
-ALGO_START_ADDRESSES = {
-    'LPC1700':  0x10000000,
-    'LPC11xx':  0x10000000,
-    'LPC8xx':   0x10000000,
-    'LPC11U68': 0x10000000,
-    'LPC1549':  0x02000000,
-    'LPC18xx':  0x10000000,
-    'LPC43xx':  0x10000000,
-    'LPC4337':  0x10000000,
-    'MKXX':     0x20000000,
-}
-
 class FlashInfo(object):
     def __init__(self, path):
         with open(path, "rb") as f:
@@ -72,17 +58,6 @@ class FlashInfo(object):
                     self.sectSize.append(size)
                     self.sectAddr.append(addr)
 
-
-    def get_algo_start(self):
-        # Search the DevName part of the FlashDevice description (FlashDev.c)
-        # for anything matching the ALGO_START_ADDRESSES dictionary
-        for target in ALGO_START_ADDRESSES:
-            if target in self.devName:
-                print 'Identified target as %s' % (target)
-                return ALGO_START_ADDRESSES[target]
-        print 'Found no match in ALGO_START_ADDRESSES for "%s"' % (self.devName)
-        raise Error()
-
     def printInfo(self):
         print "Extracted device information:"
         print "----------------------------"
@@ -101,7 +76,7 @@ class FlashInfo(object):
 
 def gen_algo():
     if len(sys.argv) < 2:
-        print "usage: >python gen_algo.py <abs_path_w_elf_name>"
+        print "usage: >python gen_algo.py <abs_path_bin_algo_info>"
         sys.exit()
         
     ALGO_ELF_PATH_NAME = sys.argv[1]
@@ -111,10 +86,8 @@ def gen_algo():
     # need some work here to name and locate to a collective folder
     ALGO_TXT_PATH = join(ALGO_ELF_PATH, "flash_algo.txt")
 
-    run_cmd([FROMELF, '--bin', ALGO_ELF_PATH_NAME, '-o', ALGO_ELF_PATH])
-    try:
-        flash_info = FlashInfo(DEV_INFO_PATH)
-        ALGO_START = flash_info.get_algo_start()
+    flash_info = FlashInfo(DEV_INFO_PATH)
+    ALGO_START = flash_info.get_algo_start()
     except IOError, e:
         print repr(e), e
         ALGO_START = 0x20000000

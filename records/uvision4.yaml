@@ -29,7 +29,11 @@ tool_specific:
             TargetOption:
                 AfterMake:
                     RunUserProg1:
-                        - enalbe
-                    RunUserProg1:
-                        - python ../../tools/gen_algo.py $L@L.axf
+                        - enable
+                    UserProg1Name:
+                        - fromelf --bin $L@L.axf -o $L@L --text -s -o $L@Lsymbols.tmp
+                    RunUserProg2:
+                        - enable
+                    UserProg2Name:
+                        - python ../../tools/gen_algo.py $L@L
 
