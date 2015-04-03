@@ -15,16 +15,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
-This script takes as input an .axf file containing the flash algorithm to be
-loaded in the target RAM and it converts it to a binary blob ready to be
-included in the DAPLink Interface Firmware source code and also pyDAPFlash.
+This script takes the path to file(s) created by an image conversion tool
+(fromelf or arm-elf-objcopy) as input. These files (bin and text) are used
+to create flash programming blobs (instruction arrays) which are then
+loaded into the target MCU RAM. Generates files compatible with C programs 
+and python programs (DAPLink Interface Firmware and pyDAPFlash)
 """
 from struct import unpack
 from os.path import join
 import os
 import sys
 
-from utils import run_cmd
 from settings import *
 
 # FIXED LENGTH
@@ -74,28 +75,20 @@ class FlashInfo(object):
             print "Sectors[%d]: { 0x%08x, 0x%08x }" % (i, self.sectSize[i], self.sectAddr[i])
 
 
-def gen_algo():
-    if len(sys.argv) < 2:
-        print "usage: >python gen_algo.py <abs_path_bin_algo_info>"
-        sys.exit()
-        
-    ALGO_ELF_PATH_NAME = sys.argv[1]
-    ALGO_ELF_PATH, ALGO_ELF_NAME = os.path.split(ALGO_ELF_PATH_NAME)
-    DEV_INFO_PATH = join(ALGO_ELF_PATH, "DevDscr")
-    ALGO_BIN_PATH = join(ALGO_ELF_PATH, "PrgCode")
+def generate_c_blob(str):
+    ALGO_ELF_PATH_NAME = str
+    
+    ALGO_PATH = str
+    DEV_DSCR_PATH = join(ALGO_PATH, "DevDscr")
+    PRG_CODE_PATH = join(ALGO_PATH, "PrgCode")
+    ALGO_SYM_PATH = join(ALGO_PATH, "symbols")
     # need some work here to name and locate to a collective folder
-    ALGO_TXT_PATH = join(ALGO_ELF_PATH, "flash_algo.txt")
+    CBLOB_PATH = join(ALGO_PATH, "flash_algo.txt")
 
-    flash_info = FlashInfo(DEV_INFO_PATH)
-    ALGO_START = flash_info.get_algo_start()
-    except IOError, e:
-        print repr(e), e
-        ALGO_START = 0x20000000
-    print "ALGO_START = 0x%08x\n" % ALGO_START
-
+    flash_info = FlashInfo(DEV_DSCR_PATH)
     flash_info.printInfo()
 
-    with open(ALGO_BIN_PATH, "rb") as f, open(ALGO_TXT_PATH, mode="w+") as res:
+    with open(PRG_CODE_PATH, "rb") as f, open(CBLOB_PATH, mode="w+") as res:
         # Flash Algorithm - these instructions are the ALGO_OFFSET
         res.write("""
 const uint32_t flash_algorithm_blob[] = {
@@ -154,7 +147,19 @@ static const TARGET_FLASH flash_algorithm_struct = {
         res.write("    512              // ram_to_flash_bytes_to_be_written\n")
         res.write("};\n\n")
 
+    return
+
+
+def generate_py_blob(str):
+    return
 
 if __name__ == '__main__':
-    gen_algo()
+    
+    if len(sys.argv) < 2:
+        print "usage: >python gen_algo.py <abs_path_bin_algo_info>"
+        sys.exit()
+    
+    generate_c_blob(sys.argv[1])
+
+    generate_py_blob(sys.argv[1])
 
