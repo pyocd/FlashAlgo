@@ -28,8 +28,12 @@ import sys
 
 from settings import *
 
-# FIXED LENGTH
+# TODO
+# - create template for c and py files
+# - use template rather than hardcoded
+# FIXED LENGTH - remove and these (shrink offset to 4 for bkpt only)
 ALGO_OFFSET = 0x20
+ALGO_START = 0x20000000
 
 class FlashInfo(object):
     def __init__(self, path):
@@ -75,10 +79,10 @@ class FlashInfo(object):
             print "Sectors[%d]: { 0x%08x, 0x%08x }" % (i, self.sectSize[i], self.sectAddr[i])
 
 
-def generate_c_blob(str):
-    ALGO_ELF_PATH_NAME = str
+def generate_c_blob(string):
+    ALGO_ELF_PATH_NAME = string
     
-    ALGO_PATH = str
+    ALGO_PATH = string
     DEV_DSCR_PATH = join(ALGO_PATH, "DevDscr")
     PRG_CODE_PATH = join(ALGO_PATH, "PrgCode")
     ALGO_SYM_PATH = join(ALGO_PATH, "symbols")
@@ -88,7 +92,7 @@ def generate_c_blob(str):
     flash_info = FlashInfo(DEV_DSCR_PATH)
     flash_info.printInfo()
 
-    with open(PRG_CODE_PATH, "rb") as f, open(CBLOB_PATH, mode="w+") as res:
+    with open(PRG_CODE_PATH, "rb") as f1, open(CBLOB_PATH, mode="w+") as res:
         # Flash Algorithm - these instructions are the ALGO_OFFSET
         res.write("""
 const uint32_t flash_algorithm_blob[] = {
@@ -98,7 +102,7 @@ const uint32_t flash_algorithm_blob[] = {
         nb_bytes = ALGO_OFFSET
         prg_data = ''
 
-        bytes_read = f.read(1024)
+        bytes_read = f1.read(1024)
         while bytes_read:
             bytes_read = unpack(str(len(bytes_read)/4) + 'I', bytes_read)
             for i in range(len(bytes_read)):
@@ -106,51 +110,48 @@ const uint32_t flash_algorithm_blob[] = {
                 nb_bytes += 4
                 if (nb_bytes % 0x20) == 0:
                     res.write("\n    ") # % nb_bytes)
-            bytes_read = f.read(1024)
+            bytes_read = f1.read(1024)
         
         res.write("\n};\n")
                 
         # Address of the functions within the flash algorithm
-        stdout, _, _ = run_cmd([FROMELF, '-s', ALGO_ELF_PATH_NAME])
-        # run a diagnostic if prompted to
-        if sys.argv[1] == '-v':
-            print stdout
-        res.write("""
-static const TARGET_FLASH flash_algorithm_struct = {
-""")
-        for line in stdout.splitlines():
-            t = line.strip().split()
-            if len(t) < 5: continue
-            name, loc, sec = t[1], t[2], t[4]
-            
-            if name in ['Init', 'UnInit', 'EraseChip', 'EraseSector', 'ProgramPage']:
-                addr = ALGO_START + ALGO_OFFSET + int(loc, 16)
-                res.write("    0x%08X, // %s\n" % (addr,  name))
+        with open(ALGO_SYM_PATH, "rb") as f2:
+            res.write("""
+    static const TARGET_FLASH flash_algorithm_struct = {
+    """)
+            for line in list(f2):
+                t = line.strip().split()
+                if len(t) < 5: continue
+                name, loc, sec = t[1], t[2], t[4]
+                
+                if name in ['Init', 'UnInit', 'EraseChip', 'EraseSector', 'ProgramPage']:
+                    addr = ALGO_START + ALGO_OFFSET + int(loc, 16)
+                    res.write("    0x%08X, // %s\n" % (addr,  name))
 
-            if name == '$d.realdata':
-                if sec == '2':
-                    prg_data = int(loc, 16)
+                if name == '$d.realdata':
+                    if sec == '2':
+                        prg_data = int(loc, 16)
 
-        res.write("    // breakpoint = RAM start + 1\n")
-        res.write("    // RSB : base address is address of Execution Region PrgData in map file\n")
-        res.write("    //       to access global/static data\n")
-        res.write("    // RSP : Initial stack pointer\n")
-        res.write("    {\n")
-        res.write("        0x%08X, // breakpoint instruction address\n" % (ALGO_START+1))
-        res.write("        0x%08X + 0x%X + 0x%X,  // static base register value (image start + header + static base offset)\n" % (ALGO_START, ALGO_OFFSET, prg_data))
-        res.write("        0x%08X // initial stack pointer\n" % (ALGO_START+2048))
-        res.write("    },\n\n")
-        res.write("    0x%08X, // flash_buffer, any valid RAM location with > 512 bytes of working room and proper alignment\n" % (ALGO_START+2048+256))
-        res.write("    0x%08X, // algo_start, start of RAM\n" % ALGO_START)
-        res.write("    sizeof(flash_algorithm_blob), // algo_size, size of array above\n")
-        res.write("    flash_algorithm, // image, flash algo instruction array\n")
-        res.write("    512              // ram_to_flash_bytes_to_be_written\n")
-        res.write("};\n\n")
+            res.write("    // breakpoint = RAM start + 1\n")
+            res.write("    // RSB : base address is address of Execution Region PrgData in map file\n")
+            res.write("    //       to access global/static data\n")
+            res.write("    // RSP : Initial stack pointer\n")
+            res.write("    {\n")
+            res.write("        0x%08X, // breakpoint instruction address\n" % (ALGO_START+1))
+            res.write("        0x%08X + 0x%X + 0x%X,  // static base register value (image start + header + static base offset)\n" % (ALGO_START, ALGO_OFFSET, prg_data))
+            res.write("        0x%08X // initial stack pointer\n" % (ALGO_START+2048))
+            res.write("    },\n\n")
+            res.write("    0x%08X, // flash_buffer, any valid RAM location with > 512 bytes of working room and proper alignment\n" % (ALGO_START+2048+256))
+            res.write("    0x%08X, // algo_start, start of RAM\n" % ALGO_START)
+            res.write("    sizeof(flash_algorithm_blob), // algo_size, size of array above\n")
+            res.write("    flash_algorithm, // image, flash algo instruction array\n")
+            res.write("    512              // ram_to_flash_bytes_to_be_written\n")
+            res.write("};\n\n")
 
     return
 
 
-def generate_py_blob(str):
+def generate_py_blob(string):
     return
 
 if __name__ == '__main__':
@@ -160,6 +161,5 @@ if __name__ == '__main__':
         sys.exit()
     
     generate_c_blob(sys.argv[1])
-
     generate_py_blob(sys.argv[1])
 
