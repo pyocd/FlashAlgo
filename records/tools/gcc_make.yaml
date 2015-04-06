@@ -1,0 +1,34 @@
+common:
+    target:
+        - cortex-m0
+
+tool_specific:
+    make_gcc_arm:
+        mcu:
+            - cortex-m0
+        macros:
+            -
+        linker_file:
+            - source/FlashAlgo.ld
+        misc:
+            libraries:
+                - m
+                - gcc
+                - c
+                - nosys
+            optimization:
+                - O0
+            compiler_options:
+                - g
+                - ggdb
+                - Wall
+                - fno-strict-aliasing
+                - ffunction-sections
+                - fdata-sections
+                - fno-exceptions
+                - fno-delete-null-pointer-checks
+                - fmessage-length=0
+                - fno-builtin
+                - fpic
+
+

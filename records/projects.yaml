@@ -1,5 +1,6 @@
 projects:
         template:
         - records/projects/template.yaml
-        - records/uvision4.yaml
+        - records/tools/uvision4.yaml
+        - records/tools/gcc_make.yaml
 

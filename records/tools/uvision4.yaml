@@ -31,9 +31,9 @@ tool_specific:
                     RunUserProg1:
                         - enable
                     UserProg1Name:
-                        - ..\..\tools\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
+                        - ..\..\scripts\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
                     RunUserProg2:
                         - enable
                     UserProg2Name:
-                        - python ..\..\tools\generate_blobs.py $L@L
+                        - python ..\..\scripts\generate_blobs.py $L@L
 
