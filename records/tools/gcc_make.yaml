@@ -19,16 +19,14 @@ tool_specific:
             optimization:
                 - O0
             compiler_options:
-                - g
-                - ggdb
                 - Wall
-                - fno-strict-aliasing
                 - ffunction-sections
                 - fdata-sections
-                - fno-exceptions
-                - fno-delete-null-pointer-checks
-                - fmessage-length=0
-                - fno-builtin
                 - fpic
+                - msingle-pic-base
+                - mpic-register=9
+                - fno-jump-tables
+            linker_options:
+                - nostartfiles
 
 

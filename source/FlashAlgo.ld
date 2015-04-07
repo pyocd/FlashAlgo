@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
+
 SECTIONS
 {
-    .PrgCode :
+    PrgCode 0 :
     {
-        . = 0;
         *(.text*)
         *(.rodata*)
     }
 
-    .PrgData :
+    PrgData :
     {
         *(.data*)
         *(.bss*)
