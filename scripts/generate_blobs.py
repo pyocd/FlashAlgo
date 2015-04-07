@@ -23,10 +23,7 @@ and python programs (DAPLink Interface Firmware and pyDAPFlash)
 """
 from struct import unpack
 from os.path import join
-import os
 import sys
-
-from settings import *
 
 # TODO
 # - create template for c and py files
