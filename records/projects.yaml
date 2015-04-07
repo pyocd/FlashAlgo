@@ -1,6 +1,9 @@
 projects:
-        template:
+    template:
         - records/projects/template.yaml
         - records/tools/uvision4.yaml
         - records/tools/gcc_make.yaml
-
+    nrf51xxx:
+        - records/projects/nordic/nrf51xxx.yaml
+        - records/tools/uvision4.yaml
+        - records/tools/gcc_make.yaml
