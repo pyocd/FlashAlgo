@@ -2,8 +2,8 @@ common:
     group_name:
         - flash_algo
     include_paths:
-        - source\freescale\devices
-        - source\freescale\driver
+        - source/freescale/devices
+        - source/freescale/driver
     source_files:
         - source/freescale/driver/flash_get_property.c
         - source/freescale/driver/flash_erase.c
@@ -16,3 +16,38 @@ common:
         - source/freescale/driver/flash_command_sequence.c
     macros:
         -
+tool_specific:
+    uvision:
+        linker_file:
+            - source/FlashAlgo.lin
+        misc:
+            Aads:
+                Ropi:
+                    - enable
+                Rwpi:
+                    - enable
+                thumb:
+                    - enable
+            Cads:
+                MiscControls:
+                    - --diag_suppress=1 
+                    - --gnu
+                Optim:
+                    - 3
+                uC99:
+                    - enable
+                Ropi:
+                    - enable
+                Rwpi:
+                    - enable
+            LDads:
+                Misc:
+                    - --diag_suppress L6305
+                RepFail:
+                    - enable
+            TargetOption:
+                AfterMake:
+                    RunUserProg1:
+                        - enable
+                    UserProg1Name:
+                        - python ../../tools/gen_algo.py $L@L.axf

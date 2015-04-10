@@ -1,6 +1,9 @@
 projects:
-    mkl46z4_flash_algo:
+    frdm_mkl46z4_fla:
         - records\freescale\common\flash_algo_fsl.yaml
         - records\freescale\targets\frdm_mkl46z4.yaml
+    frdm_mk20d5_fla:
+        - records\freescale\common\flash_algo_fsl.yaml
+        - records\freescale\targets\frdm_mk20d5.yaml
 
         

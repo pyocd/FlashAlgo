@@ -1,10 +1,10 @@
-name:
-    - mk20d5_specific
 common:
+    target:
+        - cortex-m4
     include_paths:
         - source/freescale/devices/MK20D5
     source_files:
-        - source/common/flash_algorithms/hal/freescale/flash/flash_densities_k_series.c
+        - source/freescale/driver/flash_densities_k_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MK20DX128VLF5
@@ -12,24 +12,4 @@ tool_specific:
     uvision:
         mcu:
             - cortex-m4
-        linker_file:
-            - source/FlashAlgo.lin
-        misc:
-            Cads:
-                MiscControls:
-                    - --debug
-                    - -g
-                    - --c99
-                Optim:
-                    - 0
-                Ropi:
-                    - enable
-                Rwpi:
-                    - enable
-        misc:
-            TargetOption:
-                AfterMake:
-                    RunUserProg1:
-                        - enable
-                    UserProg1Name:
-                        - python ../../tools/flash_algo_gen.py $L@L.axf
+

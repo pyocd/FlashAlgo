@@ -47,7 +47,7 @@
 #ifndef __FSL_DEVICE_REGISTERS_H__
 #define __FSL_DEVICE_REGISTERS_H__
 
-#include "regs.h"
+//#include "regs.h"
 
 /*
  * Include the cpu specific register header files.
