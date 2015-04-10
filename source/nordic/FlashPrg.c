@@ -1,5 +1,5 @@
-/* CMSIS-DAP Interface Firmware
- * Copyright (c) 2009-2013 ARM Limited
+/* Flash OS Routines
+ * Copyright (c) 2009-2015 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.H"
 
 #define U8  unsigned char
 #define U16 unsigned short
@@ -59,57 +59,59 @@
 /*
  *  Feed watchdog, if running
  */
-static void _FeedWDT(void) {
-  U32 Status;
-  volatile U32* pReloadReg;
+static void _FeedWDT(void)
+{
+    U32 Status;
+    volatile U32* pReloadReg;
   
-  Status = WDT_REG_REQSTATUS & 0xFF;
-  if (Status && WDT_REG_CRV) {    // Watchdog reload value configured and any reload registers are enabled and not fed yet?
-    pReloadReg = (volatile U32*)(WDT_REGS_BASE_ADDR + 0x600);
-    //
-    // We need to write a reload request to each reload request register which is enabled and which has not been written yet
-    //
-    do {
-      if (Status & 1) {
-        *pReloadReg = 0x6E524635;
-      }
-      pReloadReg++;
-      Status >>= 1;
-    } while(Status);
-  }
+    Status = WDT_REG_REQSTATUS & 0xFF;
+    if (Status && WDT_REG_CRV) {    // Watchdog reload value configured and any reload registers are enabled and not fed yet?
+        pReloadReg = (volatile U32*)(WDT_REGS_BASE_ADDR + 0x600);
+        //
+        // We need to write a reload request to each reload request register which is enabled and which has not been written yet
+        //
+        do {
+            if (Status & 1) {
+                *pReloadReg = 0x6E524635;
+            }
+            pReloadReg++;
+            Status >>= 1;
+        } while(Status);
+    }
 }
 
 /*
  *  Erase a single flash sector
  */
-static void _EraseSector(U32 Addr) {
-  U32 Status;
-  //
-  // Make sure that flash controller is in erase mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_ERASE;
-  //
-  // Check if sector is the UICR or CODE region
-  //
-  if (Addr >= 0x10001000) {
-    FLASH_REG_ERASEUICR = 1;
-  } else {
-    FLASH_REG_ERASEPAGE = Addr;
-  }
-  //
-  // Wait for operation to complete
-  //
-  do {
-    _FeedWDT();
-    Status = FLASH_REG_READY;
-    if (Status & 1) {        // Flash controller ready?
-      break;
+static void _EraseSector(U32 Addr)
+{
+    U32 Status;
+    //
+    // Make sure that flash controller is in erase mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_ERASE;
+    //
+    // Check if sector is the UICR or CODE region
+    //
+    if (Addr >= 0x10001000) {
+        FLASH_REG_ERASEUICR = 1;
+    } else {
+        FLASH_REG_ERASEPAGE = Addr;
     }
-  } while(1);
-  //
-  // Bring back flash controller into read mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_READ;
+    //
+    // Wait for operation to complete
+    //
+    do {
+        _FeedWDT();
+        Status = FLASH_REG_READY;
+        if (Status & 1) {        // Flash controller ready?
+          break;
+        }
+    } while(1);
+    //
+    // Bring back flash controller into read mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_READ;
 }
 
 /*
@@ -119,11 +121,12 @@ static void _EraseSector(U32 Addr) {
  *                    fnc:  Function Code (1 - Erase, 2 - Program, 3 - Verify)
  *    Return Value:   0 - OK,  1 - Failed
  */
-int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
-	//
-	// No special init necessary
-	//
-  return (0);
+int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
+{
+    //
+    // No special init necessary
+    //
+    return (0);
 }
 
 /*
@@ -132,45 +135,47 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
  *    Return Value:   0 - OK,  1 - Failed
  */
 
-int UnInit (unsigned long fnc) {
-	//
-	// No special uninit necessary
-	//
-  return (0);
+int UnInit (unsigned long fnc)
+{
+    //
+    // No special uninit necessary
+    //
+    return (0);
 }
 
 /*
  *  Erase complete Flash Memory
  *    Return Value:   0 - OK,  1 - Failed
  */
-int EraseChip (void) {
-  U32 Status;
-  //
-  // Make sure that flash controller is in erase mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_ERASE;
-  //
-	// Use erase chip command, since it is faster
-	//
-	//
-	// Chip erase, erases CODE and UICR Regions
-	//
-	FLASH_REG_ERASEALL = 1;
-	//
-	// Wait for operation to complete
-	//
-	do {
-		Status = FLASH_REG_READY;
-		if (Status & 1) {        // Flash controller ready?
-			break;
-		}
-		_FeedWDT();
-	} while(1);
-  //
-  // Bring back flash controller into read mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_READ;   
-  return (0);                                    // Finished without Errors
+int EraseChip (void)
+{
+    U32 Status;
+    //
+    // Make sure that flash controller is in erase mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_ERASE;
+    //
+    // Use erase chip command, since it is faster
+    //
+    //
+    // Chip erase, erases CODE and UICR Regions
+    //
+    FLASH_REG_ERASEALL = 1;
+    //
+    // Wait for operation to complete
+    //
+    do {
+		    Status = FLASH_REG_READY;
+		    if (Status & 1) {        // Flash controller ready?
+            break;
+		    }
+		    _FeedWDT();
+    } while(1);
+    //
+    // Bring back flash controller into read mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_READ;   
+    return (0);                                    // Finished without Errors
 }
 
 /*
@@ -178,9 +183,10 @@ int EraseChip (void) {
  *    Parameter:      adr:  Sector Address
  *    Return Value:   0 - OK,  1 - Failed
  */
-int EraseSector (unsigned long adr) {
-  _EraseSector(adr);
-  return (0);
+int EraseSector (unsigned long adr)
+{
+    _EraseSector(adr);
+    return (0);
 }
 
 /*
@@ -190,42 +196,43 @@ int EraseSector (unsigned long adr) {
  *                    buf:  Page Data
  *    Return Value:   0 - OK,  1 - Failed
  */
-int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf) {
-  volatile U32* pDest;
-  volatile U32* pSrc;
-  U32 NumWords;
-  U32 Status;
+int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
+{
+    volatile U32* pDest;
+    volatile U32* pSrc;
+    U32 NumWords;
+    U32 Status;
 	
-  pDest = (volatile U32*)adr;
-  pSrc = (volatile U32*)buf;    // Always 32-bit aligned. Made sure by CMSIS-DAP firmware
-	//
-	// adr is always aligned to "Programming Page Size" specified in table in FlashDev.c
-  // sz is always a multiple of "Programming Page Size"
-	//
-  NumWords = sz >> 2;	
-  //
-  // Make sure that flash controller is in write mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_WRITE;
-  //
-  // Program word by word
-  //
-  do {
-		*pDest++ = *pSrc++;
+    pDest = (volatile U32*)adr;
+    pSrc = (volatile U32*)buf;    // Always 32-bit aligned. Made sure by CMSIS-DAP firmware
     //
-    // Wait for operation to complete
+    // adr is always aligned to "Programming Page Size" specified in table in FlashDev.c
+    // sz is always a multiple of "Programming Page Size"
+    //
+    NumWords = sz >> 2;	
+    //
+    // Make sure that flash controller is in write mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_WRITE;
+    //
+    // Program word by word
     //
     do {
-      Status = FLASH_REG_READY;
-      if (Status & 1) {        // Flash controller ready?
-        break;
-      }
-      _FeedWDT();
-    } while(1);
-  } while(--NumWords);
-  //
-  // Bring back flash controller into read mode
-  //
-  FLASH_REG_CONFIG = FLASH_MODE_READ;
-  return (0);                                  // Finished without Errors
+        *pDest++ = *pSrc++;
+        //
+        // Wait for operation to complete
+        //
+        do {
+            Status = FLASH_REG_READY;
+            if (Status & 1) {        // Flash controller ready?
+                break;
+            }
+            _FeedWDT();
+        } while(1);
+    } while(--NumWords);
+    //
+    // Bring back flash controller into read mode
+    //
+    FLASH_REG_CONFIG = FLASH_MODE_READ;
+    return (0);                                  // Finished without Errors
 }
