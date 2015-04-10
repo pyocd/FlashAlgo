@@ -33,7 +33,6 @@
 
 #include "fsl_platform_common.h"
 #include "fsl_platform_status.h"
-#include "fsl_flash_features.h"
 #include "fsl_device_registers.h"
 #include "stdint.h"
 #include "stdbool.h"
@@ -467,7 +466,7 @@ status_t flash_get_property(flash_driver_t * driver, flash_property_t whichPrope
 static inline void flash_cache_enable(bool doEnable)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    HW_MCM_PLACR(MCM_BASE).B.DFCC = (uint32_t)doEnable;
+     MCM_WR_PLACR_DFCC(MCM, doEnable);
 #elif defined(CPU_MK66FN2M0VLQ18)
      HW_FMC_PFB01CR(FMC_BASE).B.B0DCE = (uint32_t)doEnable;
      HW_FMC_PFB23CR(FMC_BASE).B.B1DCE = (uint32_t)doEnable;
@@ -490,7 +489,7 @@ static inline void flash_cache_enable(bool doEnable)
 static inline void flash_cache_clear(void)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    HW_MCM_PLACR(MCM_BASE).B.CFCC = 1;
+     MCM_WR_PLACR_CFCC(MCM, 1);
 #elif defined(CPU_MK66FN2M0VLQ18)
      HW_FMC_PFB01CR(FMC_BASE).B.CINV_WAY = 0xf;
 

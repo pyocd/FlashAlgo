@@ -1,8 +1,8 @@
 common:
     target:
-        - frdm_kl46z
+        - cortex-m0
     include_paths:
-        - source/freescale/devices\MKL46Z4
+        - source/freescale/devices/MKL46Z4
     source_files:
         - source/freescale/driver/flash_densities_kl_series.c
     macros:
@@ -15,16 +15,34 @@ tool_specific:
         linker_file:
             - source/FlashAlgo.lin
         misc:
-            Cads:
-                MiscControls:
-                    - --debug
-                    - -g
-                    - --c99
-                Optim:
-                    - 0
+            Aads:
                 Ropi:
                     - enable
                 Rwpi:
+                    - enable
+                thumb:
+                    - enable
+            Cads:
+                MiscControls:
+                    - --c99
+                    - --diag_suppress=1 
+                    - --gnu
+                Optim:
+                    - 3
+                uC99:
+                    - enable
+                Ropi:
+                    - enable
+                Rwpi:
+                    - enable
+            LDads:
+                Misc:
+                    - --diag_suppress L6305
+                Ropi:
+                    - enable
+                Rwpi:
+                    - enable
+                RepFail:
                     - enable
         misc:
             TargetOption:

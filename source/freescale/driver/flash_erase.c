@@ -74,7 +74,7 @@ status_t flash_erase(flash_driver_t * driver, uint32_t start, uint32_t lengthInB
     {
         // preparing passing parameter to erase a flash block
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_ERASE_SECTOR);
+        FTFx_FCCOBx_WR(FTFx, 0, FTFx_ERASE_SECTOR);
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();

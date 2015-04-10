@@ -62,8 +62,8 @@ status_t flash_verify_program(flash_driver_t * driver,
     {
         // preparing passing parameter to program check the flash block
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_PROGRAM_CHECK);
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 4, margin);
+        FTFx_FCCOBx_WR(FTFx, 0, FTFx_PROGRAM_CHECK);
+        FTFx_FCCOBx_WR(FTFx, 4, margin);
         kFCCOBx[2] = *(uint32_t *)expectedData;
 
         // calling flash command sequence function to execute the command

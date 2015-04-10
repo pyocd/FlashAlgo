@@ -29,7 +29,7 @@
  */
 
 #include "SSD_FTFx_Common.h"
-#include "flash/flash.h"
+#include "flash.h"
 #include "fsl_platform_status.h"
 #include "fsl_platform_types.h"
 

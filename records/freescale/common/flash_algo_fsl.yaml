@@ -2,8 +2,8 @@ common:
     group_name:
         - flash_algo
     include_paths:
-        - source/freescale/device
-        - source/freescale/driver
+        - source\freescale\devices
+        - source\freescale\driver
     source_files:
         - source/freescale/driver/flash_get_property.c
         - source/freescale/driver/flash_erase.c
