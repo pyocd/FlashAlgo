@@ -16,9 +16,12 @@
 
 #include "FlashOS.H"        // FlashOS Structures
 
+#define FLASH_DRV_VERS (0x0100+VERS)   // Driver Version, do not modify!
+#define DEVICE_NAME    "MKXX"
+
 struct FlashDevice const FlashDevice = {
     FLASH_DRV_VERS,             // Driver Version, do not modify!
-    "MKXX",                     // Device Name
+    DEVICE_NAME,                // Device Name
     ONCHIP,                     // Device Type
     0x00000000,                 // Device Start Address
     0x00000000,                 // Device Size
@@ -27,7 +30,6 @@ struct FlashDevice const FlashDevice = {
     0xFF,                       // Initial Content of Erased Memory
     100,                        // Program Page Timeout 100 mSec
     3000,                       // Erase Sector Timeout 3000 mSec
-// Specify Size and Address of Sectors
-    0x000400, 0x000000,         // Sector Size  1kB
-    SECTOR_END
+    {{0x000400, 0x000000},         // Sector Size  1kB
+    {SECTOR_END}}
 };

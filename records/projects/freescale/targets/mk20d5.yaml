@@ -1,15 +1,9 @@
 common:
     target:
         - cortex-m4
-    include_paths:
-        - source/freescale/devices/MK20D5
     source_files:
+        - source/freescale/devices/MK20D5
         - source/freescale/driver/flash_densities_k_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MK20DX128VLF5
-tool_specific:
-    uvision:
-        mcu:
-            - cortex-m4
-

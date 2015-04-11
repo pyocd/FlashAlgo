@@ -8,8 +8,3 @@ common:
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MKL46Z256VLH4
-tool_specific:
-    uvision:
-        mcu:
-            - cortex-m0
-

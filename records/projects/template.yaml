@@ -1,4 +1,6 @@
 common:
+    target:
+        - cortex-m0
     macros:
         -
     source_files:

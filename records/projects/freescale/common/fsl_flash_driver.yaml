@@ -1,0 +1,21 @@
+common:
+    group_name:
+        - flash_driver
+    include_paths:
+        - source
+        - source/freescale
+        - source/freescale/driver
+        - source/freescale/devices
+    source_files:
+        - source/freescale/FlashDev.c
+        - source/freescale/FlashPrg.c
+        - source/freescale/driver/flash_init.c
+        - source/freescale/driver/flash_erase.c
+        - source/freescale/driver/flash_program.c
+        - source/freescale/driver/flash_erase_all.c
+        - source/freescale/driver/flash_verify_erase.c
+        - source/freescale/driver/flash_get_property.c
+        - source/freescale/driver/flash_verify_program.c
+        - source/freescale/driver/flash_verify_erase_all.c
+        - source/freescale/driver/flash_command_sequence.c
+

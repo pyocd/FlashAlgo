@@ -1,7 +1,8 @@
 common:
+    target:
+        - cortex-m0
     macros:
         -
     source_files:
         - source
         - source/nordic
-
