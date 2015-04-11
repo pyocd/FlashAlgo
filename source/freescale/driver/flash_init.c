@@ -33,7 +33,7 @@
 #include "fsl_device_registers.h"
 #include "fsl_platform_status.h"
 #include "flash_densities.h"
-#include "fsl_flash_features.h"
+#include "flash_features.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Definitions
@@ -48,16 +48,8 @@ enum
 // Variables
 ////////////////////////////////////////////////////////////////////////////////
 
-volatile uint32_t * const restrict kFCCOBx =
-#if FSL_FEATURE_FLASH_IS_FTFA
-    (volatile uint32_t *)&FTFA->FCCOB3;
-#elif FSL_FEATURE_FLASH_IS_FTFE
-    (volatile uint32_t *)&FTFE->FCCOB3;
-#elif FSL_FEATURE_FLASH_IS_FTFL
-    (volatile uint32_t *)&FTFL->FCCOB3;
-#else
-    #error "Unknown flash controller"
-#endif
+volatile uint32_t * const restrict kFCCOBx = (volatile uint32_t *)&FTFx->FCCOB3;
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +65,7 @@ status_t flash_init(flash_driver_t * driver)
     }
 
     // calculate the flash density from SIM_FCFG1.PFSIZE
-    uint32_t flashDensity = kFlashDensities[HW_SIM_FCFG1(SIM_BASE).B.PFSIZE] << 12;
+    uint32_t flashDensity = kFlashDensities[(SIM_FCFG1_REG(SIM) >> SIM_FCFG1_PFSIZE_SHIFT)] << 12;
     if (flashDensity == 0)
     {
         return kStatus_FlashSizeError;

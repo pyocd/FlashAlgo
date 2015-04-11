@@ -68,10 +68,10 @@ status_t flash_verify_erase(flash_driver_t * driver, uint32_t start, uint32_t le
 
         // Fill in verify section command parameters.
         kFCCOBx[0] = start;
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 0, FTFx_VERIFY_SECTION);
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 4, numberOfPhrases >> 8);
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 5, numberOfPhrases & 0xFF);
-        HW_FTFx_FCCOBx_WR(FTFx_BASE, 6, margin);
+        FTFx_FCCOBx_WR(FTFx, 0, FTFx_VERIFY_SECTION);
+        FTFx_FCCOBx_WR(FTFx, 4, numberOfPhrases >> 8);
+        FTFx_FCCOBx_WR(FTFx, 5, numberOfPhrases & 0xFF);
+        FTFx_FCCOBx_WR(FTFx, 6, margin);
 
         // calling flash command sequence function to execute the command
         returnCode = flash_command_sequence();

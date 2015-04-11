@@ -33,7 +33,6 @@
 
 #include "fsl_platform_common.h"
 #include "fsl_platform_status.h"
-#include "fsl_flash_features.h"
 #include "fsl_device_registers.h"
 #include "stdint.h"
 #include "stdbool.h"
@@ -467,17 +466,16 @@ status_t flash_get_property(flash_driver_t * driver, flash_property_t whichPrope
 static inline void flash_cache_enable(bool doEnable)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    HW_MCM_PLACR(MCM_BASE).B.DFCC = (uint32_t)doEnable;
+    MCM_WR_PLACR_DFCC(MCM, doEnable);
 #elif defined(CPU_MK66FN2M0VLQ18)
-     HW_FMC_PFB01CR(FMC_BASE).B.B0DCE = (uint32_t)doEnable;
-     HW_FMC_PFB23CR(FMC_BASE).B.B1DCE = (uint32_t)doEnable;
-
+		FMC_WR_PFB01CR_B0DCE(FMC, doEnable);
+	  FMC_WR_PFB23CR_B1DCE(FMC, doEnable);
 #elif FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS
-    HW_FMC_PFB0CR(FMC_BASE).B.B0DCE = (uint32_t)doEnable;
-    HW_FMC_PFB0CR(FMC_BASE).B.B0ICE = (uint32_t)doEnable;
+	  FMC_WR_PFB0CR_B0DCE(FMC, doEnable);
+	  FMC_WR_PFB0CR_B0ICE(FMC, doEnable);
 #ifdef FMC_PFB1CR_B1DCE_MASK // Some chips only have 1 flash bank (K20, K24S for example)
-    HW_FMC_PFB1CR(FMC_BASE).B.B1DCE = (uint32_t)doEnable;
-    HW_FMC_PFB1CR(FMC_BASE).B.B1ICE = (uint32_t)doEnable;
+	  FMC_WR_PFB1CR_B1DCE(FMC, doEnable);
+	  FMC_WR_PFB1CR_B1ICE(FMC, doEnable);
 #endif
 #else
     #error "Unknown flash cache controller"
@@ -490,13 +488,11 @@ static inline void flash_cache_enable(bool doEnable)
 static inline void flash_cache_clear(void)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    HW_MCM_PLACR(MCM_BASE).B.CFCC = 1;
+    MCM_WR_PLACR_CFCC(MCM, 1);
 #elif defined(CPU_MK66FN2M0VLQ18)
-     HW_FMC_PFB01CR(FMC_BASE).B.CINV_WAY = 0xf;
-
+	  FMC_WR_PFB01CR_CINV_WAY(FMC, 0xf);
 #elif FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS
-    // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS
-    HW_FMC_PFB0CR(FMC_BASE).B.CINV_WAY = 0xf;
+	  FMC_WR_PFB0CR_CINV_WAY(FMC, 0xf);
 #else
     #error "Unknown flash cache controller"
 #endif // FSL_FEATURE_FTFx_MCM_FLASH_CACHE_CONTROLS

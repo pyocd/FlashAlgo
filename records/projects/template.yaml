@@ -1,7 +1,0 @@
-common:
-    macros:
-        -
-    source_files:
-        - source
-        - source/template
-

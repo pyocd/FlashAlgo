@@ -38,6 +38,58 @@
 // See flash_densities.h for documentation of this table
 //! @note This table only applies to Kinetis L-series.
 const uint16_t kFlashDensities[] = {
+#if defined(KL03Z4_SERIES)
+        2,  // 0 - 8192
+        4,  // 1 - 16384
+        0,  // 2 - reserved
+        8,  // 3 - 32768
+        0,  // 4 - reserved
+        16, // 5 - 65536
+        0,  // 6 - reserved
+        32, // 7 - 131072
+        0,  // 8 - reserved
+        64, // 9 - 262144
+        0,  // 0xa - reserved
+        0,  // 0xb - reserved
+        0,  // 0xc - reserved
+        0,  // 0xd - reserved
+        0,  // 0xe - reserved
+        8,  // 0x0f - 32768
+#elif defined(KL27Z4_SERIES)
+        2,      // 0 - 8192
+        4,      // 1 - 16384
+        0,      // 2 - reserved
+        8,      // 3 - 32768
+        0,      // 4 - reserved
+        16,     // 5 - 65536
+        0,      // 6 - reserved
+        32,     // 7 - 131072
+        0,      // 8 - reserved
+        64,     // 9 - 262144
+        0,      // 0xa - reserved
+        0,      // 0xb - reserved
+        0,      // 0xc - reserved
+        0,      // 0xd - reserved
+        0,      // 0xe - reserved
+        16,     // 0x0f - 65536        
+#elif defined(KL43Z4_SERIES)
+        2,  // 0 - 8192
+        4,  // 1 - 16384
+        0,  // 2 - reserved
+        8,  // 3 - 32768
+        0,  // 4 - reserved
+        16, // 5 - 65536
+        0,  // 6 - reserved
+        32, // 7 - 131072
+        0,  // 8 - reserved
+        64, // 9 - 262144
+        0,  // 0xa - reserved
+        0,  // 0xb - reserved
+        0,  // 0xc - reserved
+        0,  // 0xd - reserved
+        0,  // 0xe - reserved
+        64, // 0x0f - 262144, which is the maximum flash size supported by KL43
+#else
         2,  // 0 - 8192
         4,  // 1 - 16384
         0,  // 2 - reserved
@@ -54,6 +106,7 @@ const uint16_t kFlashDensities[] = {
         0,  // 0xd - reserved
         0,  // 0xe - reserved
         32, // 0xf - 131072
+#endif
     };
 
 ////////////////////////////////////////////////////////////////////////////////

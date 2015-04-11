@@ -32,7 +32,7 @@
 #define _SSD_FTFx_COMMON_H_
 
 #include "flash.h"
-#include "fsl_flash_features.h"
+//#include "fsl_flash_features.h"
 #include "stdint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,56 +80,62 @@
 #define FLASH_BLOCK_BASE                   0x00
 
 #if defined(FTFA)
-    #define FTFx FTFA
-    #define FTFx_BASE FTFA_BASE
+    #define FTFx                           FTFA
+    #define FTFx_BASE                      FTFA_BASE
 
-    #define HW_FTFx_FSTAT HW_FTFA_FSTAT
-    #define HW_FTFx_FSTAT_WR HW_FTFA_FSTAT_WR
+    #define FTFx_FSTAT_RD(x)               FTFA_FSTAT_REG(x)
+    #define FTFx_FSTAT_WR(x, v)            FTFA_FSTAT_REG(x) = (v)
 
-    #define BM_FTFx_FSTAT_CCIF BM_FTFA_FSTAT_CCIF
-    #define BM_FTFx_FSTAT_RDCOLERR BM_FTFA_FSTAT_RDCOLERR
-    #define BM_FTFx_FSTAT_ACCERR BM_FTFA_FSTAT_ACCERR
-    #define BM_FTFx_FSTAT_FPVIOL BM_FTFA_FSTAT_FPVIOL
-    #define BM_FTFx_FSTAT_MGSTAT0 BM_FTFA_FSTAT_MGSTAT0
+    #define FTFx_FSTAT_CCIF_MASK           FTFA_FSTAT_CCIF_MASK
+    #define FTFx_FSTAT_RDCOLERR_MASK       FTFA_FSTAT_RDCOLERR_MASK
+    #define FTFx_FSTAT_ACCERR_MASK         FTFA_FSTAT_ACCERR_MASK
+    #define FTFx_FSTAT_FPVIOL_MASK         FTFA_FSTAT_FPVIOL_MASK
+    #define FTFx_FSTAT_MGSTAT0_MASK        FTFA_FSTAT_MGSTAT0_MASK
 
-    #define HW_FTFx_FCCOBx_WR(x, n, v) HW_FTFA_FCCOB##n##_WR(x, v)
+    //#define FTFx_FCCOBx_WR(x, n, v)        FTFA_WR_FCCOB##n(x, v)
+    #define FTFx_FCCOBx_WR(x, n, v)        FTFA_FCCOB##n##_REG(x) = (v)
 
-    #define BM_FTFx_FSEC_SEC BM_FTFA_FSEC_SEC
-    #define BM_FTFx_FSEC_KEYEN BM_FTFA_FSEC_KEYEN
+    #define FTFx_FSEC_SEC_MASK             FTFA_FSEC_SEC_MASK
+    #define FTFx_FSEC_KEYEN_MASK           FTFA_FSEC_KEYEN_MASK
+
 #elif defined(FTFE)
-    #define FTFx FTFE
-    #define FTFx_BASE FTFE_BASE
+    #define FTFx                           FTFE
+    #define FTFx_BASE                      FTFE_BASE
 
-    #define HW_FTFx_FSTAT HW_FTFE_FSTAT
-    #define HW_FTFx_FSTAT_WR HW_FTFE_FSTAT_WR
+    #define FTFx_FSTAT_RD(x)               FTFE_FSTAT_REG(x)
+    #define FTFx_FSTAT_WR(x, v)            FTFE_FSTAT_REG(x) = (v)
 
-    #define BM_FTFx_FSTAT_CCIF BM_FTFE_FSTAT_CCIF
-    #define BM_FTFx_FSTAT_RDCOLERR BM_FTFE_FSTAT_RDCOLERR
-    #define BM_FTFx_FSTAT_ACCERR BM_FTFE_FSTAT_ACCERR
-    #define BM_FTFx_FSTAT_FPVIOL BM_FTFE_FSTAT_FPVIOL
-    #define BM_FTFx_FSTAT_MGSTAT0 BM_FTFE_FSTAT_MGSTAT0
+    #define FTFx_FSTAT_CCIF_MASK           FTFE_FSTAT_CCIF_MASK
+    #define FTFx_FSTAT_RDCOLERR_MASK       FTFE_FSTAT_RDCOLERR_MASK
+    #define FTFx_FSTAT_ACCERR_MASK         FTFE_FSTAT_ACCERR_MASK
+    #define FTFx_FSTAT_FPVIOL_MASK         FTFE_FSTAT_FPVIOL_MASK
+    #define FTFx_FSTAT_MGSTAT0_MASK        FTFE_FSTAT_MGSTAT0_MASK
 
-    #define HW_FTFx_FCCOBx_WR(x, n, v) HW_FTFE_FCCOB##n##_WR(x, v)
+    //#define FTFx_FCCOBx_WR(x, n, v)        FTFE_WR_FCCOB##n(x, v)
+    #define FTFx_FCCOBx_WR(x, n, v)        FTFE_FCCOB##n##_REG(x) = (v)
 
-    #define BM_FTFx_FSEC_SEC BM_FTFE_FSEC_SEC
-    #define BM_FTFx_FSEC_KEYEN BM_FTFE_FSEC_KEYEN
+    #define FTFx_FSEC_SEC_MASK             FTFE_FSEC_SEC_MASK
+    #define FTFx_FSEC_KEYEN_MASK           FTFE_FSEC_KEYEN_MASK
+
 #elif defined(FTFL)
-    #define FTFx FTFL
-    #define FTFx_BASE FTFL_BASE
+    #define FTFx                           FTFL
+    #define FTFx_BASE                      FTFL_BASE
 
-    #define HW_FTFx_FSTAT HW_FTFL_FSTAT
-    #define HW_FTFx_FSTAT_WR HW_FTFL_FSTAT_WR
+    #define FTFx_FSTAT_RD(x)               FTFL_FSTAT_REG(x)
+    #define FTFx_FSTAT_WR(x, v)            FTFL_FSTAT_REG(x) = (v)
 
-    #define BM_FTFx_FSTAT_CCIF BM_FTFL_FSTAT_CCIF
-    #define BM_FTFx_FSTAT_RDCOLERR BM_FTFL_FSTAT_RDCOLERR
-    #define BM_FTFx_FSTAT_ACCERR BM_FTFL_FSTAT_ACCERR
-    #define BM_FTFx_FSTAT_FPVIOL BM_FTFL_FSTAT_FPVIOL
-    #define BM_FTFx_FSTAT_MGSTAT0 BM_FTFL_FSTAT_MGSTAT0
+    #define FTFx_FSTAT_CCIF_MASK           FTFL_FSTAT_CCIF_MASK
+    #define FTFx_FSTAT_RDCOLERR_MASK       FTFL_FSTAT_RDCOLERR_MASK
+    #define FTFx_FSTAT_ACCERR_MASK         FTFL_FSTAT_ACCERR_MASK
+    #define FTFx_FSTAT_FPVIOL_MASK         FTFL_FSTAT_FPVIOL_MASK
+    #define FTFx_FSTAT_MGSTAT0_MASK        FTFL_FSTAT_MGSTAT0_MASK
 
-    #define HW_FTFx_FCCOBx_WR(x, n, v) HW_FTFL_FCCOB##n##_WR(x, v)
+    //#define FTFx_FCCOBx_WR(x, n, v)        FTFL_WR_FCCOB##n(x, v)
+    #define FTFx_FCCOBx_WR(x, n, v)        FTFL_FCCOB##n##_REG(x) = (v)
 
-    #define BM_FTFx_FSEC_SEC BM_FTFL_FSEC_SEC
-    #define BM_FTFx_FSEC_KEYEN BM_FTFL_FSEC_KEYEN
+    #define FTFx_FSEC_SEC_MASK             FTFL_FSEC_SEC_MASK
+    #define FTFx_FSEC_KEYEN_MASK           FTFL_FSEC_KEYEN_MASK
+
 #else
     #error "Unknown flash controller"
 #endif

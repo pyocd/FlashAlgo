@@ -1,9 +1,9 @@
 projects:
-    template:
-        - records/projects/template.yaml
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml
-    nrf51xxx:
-        - records/projects/nordic/nrf51xxx.yaml
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml
+    frdm_mkl46z4_fla:
+        - records\freescale\common\flash_algo_fsl.yaml
+        - records\freescale\targets\frdm_mkl46z4.yaml
+    frdm_mk20d5_fla:
+        - records\freescale\common\flash_algo_fsl.yaml
+        - records\freescale\targets\frdm_mk20d5.yaml
+
+        

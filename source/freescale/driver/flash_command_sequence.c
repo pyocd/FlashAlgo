@@ -53,10 +53,10 @@ static void (*callFlashRunCommand)(FTFx_REG_ACCESS_TYPE);
 void flash_run_command(FTFx_REG_ACCESS_TYPE ftfx_fstat)
 {
     // clear CCIF bit
-    *ftfx_fstat = BM_FTFx_FSTAT_CCIF;
+    *ftfx_fstat = FTFx_FSTAT_CCIF_MASK;
 
     // check CCIF bit of the flash status register, wait till it is set
-    while (!((*ftfx_fstat) & BM_FTFx_FSTAT_CCIF));
+    while (!((*ftfx_fstat) & FTFx_FSTAT_CCIF_MASK));
 }
 
 //! @brief Be used for determining the size of flash_run_command()
@@ -101,7 +101,7 @@ void copy_flash_run_command(void)
 status_t flash_command_sequence(void)
 {
     // clear RDCOLERR & ACCERR & FPVIOL flag in flash status register
-    HW_FTFx_FSTAT_WR(FTFx_BASE, BM_FTFx_FSTAT_RDCOLERR | BM_FTFx_FSTAT_ACCERR | BM_FTFx_FSTAT_FPVIOL);
+    FTFx_FSTAT_WR(FTFx, FTFx_FSTAT_RDCOLERR_MASK | FTFx_FSTAT_ACCERR_MASK | FTFx_FSTAT_FPVIOL_MASK);
 
 #if BL_TARGET_FLASH
     // We pass the ftfx_fstat address as a parameter to flash_run_comamnd() instead of using
@@ -110,10 +110,10 @@ status_t flash_command_sequence(void)
     callFlashRunCommand((FTFx_REG_ACCESS_TYPE)(&HW_FTFx_FSTAT(FTFx_BASE)));
 #else
     // clear CCIF bit
-    HW_FTFx_FSTAT_WR(FTFx_BASE, BM_FTFx_FSTAT_CCIF);
+    FTFx_FSTAT_WR(FTFx, FTFx_FSTAT_CCIF_MASK);
 
     // check CCIF bit of the flash status register, wait till it is set
-    while (!(HW_FTFx_FSTAT(FTFx_BASE).B.CCIF));
+    while (!(FTFx_FSTAT_RD(FTFx) & FTFx_FSTAT_CCIF_MASK));
 #endif
 
     // Check error bits
@@ -121,17 +121,17 @@ status_t flash_command_sequence(void)
     uint8_t registerValue = FTFx->FSTAT;
 
     // checking access error
-    if (registerValue & BM_FTFx_FSTAT_ACCERR)
+    if (registerValue & FTFx_FSTAT_ACCERR_MASK)
     {
         return kStatus_FlashAccessError;
     }
     // checking protection error
-    else if (registerValue & BM_FTFx_FSTAT_FPVIOL)
+    else if (registerValue & FTFx_FSTAT_FPVIOL_MASK)
     {
         return kStatus_FlashProtectionViolation;
     }
     // checking MGSTAT0 non-correctable error
-    else if (registerValue & BM_FTFx_FSTAT_MGSTAT0)
+    else if (registerValue & FTFx_FSTAT_MGSTAT0_MASK)
     {
         return kStatus_FlashCommandFailure;
     }
