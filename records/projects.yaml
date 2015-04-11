@@ -1,9 +1,15 @@
 projects:
-    frdm_mkl46z4_fla:
-        - records\freescale\common\flash_algo_fsl.yaml
-        - records\freescale\targets\frdm_mkl46z4.yaml
-    frdm_mk20d5_fla:
-        - records\freescale\common\flash_algo_fsl.yaml
-        - records\freescale\targets\frdm_mk20d5.yaml
-
-        
+    template:
+        - records/projects/template.yaml
+        - records/tools/uvision4.yaml
+        - records/tools/gcc_make.yaml
+    nrf51xxx:
+        - records/projects/nordic/nrf51xxx.yaml
+        - records/tools/uvision4.yaml
+        - records/tools/gcc_make.yaml
+    mkl46z4:
+        - records/projects/freescale/common/flash_algo_fsl.yaml
+        - records/projects/freescale/targets/mkl46z4.yaml
+    mk20d5:
+        - records/projects/freescale/common/flash_algo_fsl.yaml
+        - records/projects/freescale/targets/mk20d5.yaml
