@@ -1,1 +1,2 @@
 project_generator>=0.5
+Jinja2

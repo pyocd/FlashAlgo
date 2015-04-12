@@ -23,14 +23,18 @@ and python programs (DAPLink Interface Firmware and pyDAPFlash)
 """
 from struct import unpack
 from os.path import join
-import sys
+from jinja2 import Template, StrictUndefined
+import sys, os
 
 # TODO
 # - create template for c and py files
 # - use template rather than hardcoded
 # FIXED LENGTH - remove and these (shrink offset to 4 for bkpt only)
 ALGO_OFFSET = 0x20
-ALGO_START = 0x20000000
+BLOB_START = 0x20000000
+BLOB_HEADER = "0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,"
+SP = BLOB_START + 1024
+PROG_PAGE_SIZE = 512
 
 class FlashInfo(object):
     def __init__(self, path):
@@ -76,80 +80,72 @@ class FlashInfo(object):
             print "Sectors[%d]: { 0x%08x, 0x%08x }" % (i, self.sectSize[i], self.sectAddr[i])
 
 
-def generate_c_blob(string):
-    ALGO_ELF_PATH_NAME = string
+def generate_blob(template_path_file, ext, data):
+    output = data['dir'] + '\\' + data['name'] + '_prog_blob.' + ext
     
-    ALGO_PATH = string
-    DEV_DSCR_PATH = join(ALGO_PATH, "DevDscr")
-    PRG_CODE_PATH = join(ALGO_PATH, "PrgCode")
-    ALGO_SYM_PATH = join(ALGO_PATH, "symbols")
-    # need some work here to name and locate to a collective folder
-    CBLOB_PATH = join(ALGO_PATH, "flash_algo.txt")
+    """ Fills data to the project template, using jinja2. """
+    template_path = template_path_file
+    template_text = open(template_path).read()
+    template = Template(template_text)
+    target_text = template.render(data)
 
+    open(output, "w").write(target_text)
+    return
+
+
+def decode_axf(string):
+    ELF_PATH = string
+    DEV_DSCR_PATH = join(ELF_PATH, "DevDscr")
+    PRG_CODE_PATH = join(ELF_PATH, "PrgCode")
+    ALGO_SYM_PATH = join(ELF_PATH, "symbols")
+    
+    # print some info about the build
     flash_info = FlashInfo(DEV_DSCR_PATH)
     flash_info.printInfo()
+    
+    # prepare data to write to the template
+    dic = {}
+    dic['name'] = ELF_PATH.split('\\')[-1]
+    dic['dir'] = ELF_PATH
+    dic['prog_header'] = BLOB_HEADER
+    dic['header_size'] = "0x%08x" % ALGO_OFFSET
+    dic['entry'] = "0x%08x" % BLOB_START
+    dic['prog_page_size'] = "0x%08x" % PROG_PAGE_SIZE
+    dic['stack_pointer'] = "0x%08x" % SP
+    dic['mem'] = ""
+    dic['func'] = ""
+    dic['static_base'] = ""
 
-    with open(PRG_CODE_PATH, "rb") as f1, open(CBLOB_PATH, mode="w+") as res:
-        # Flash Algorithm - these instructions are the ALGO_OFFSET
-        res.write("""
-const uint32_t flash_algorithm_blob[] = {
-    0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,
-    """);
+    nb_bytes = ALGO_OFFSET
 
-        nb_bytes = ALGO_OFFSET
-        prg_data = ''
-
+    with open(PRG_CODE_PATH, "rb") as f1:
         bytes_read = f1.read(1024)
         while bytes_read:
             bytes_read = unpack(str(len(bytes_read)/4) + 'I', bytes_read)
             for i in range(len(bytes_read)):
-                res.write(("0x%08x" % bytes_read[i]) + ", ")
+                dic['mem'] += "0x%08x" % bytes_read[i] + ", "
                 nb_bytes += 4
                 if (nb_bytes % 0x20) == 0:
-                    res.write("\n    ") # % nb_bytes)
+                    dic['mem'] += "\n    "
             bytes_read = f1.read(1024)
-        
-        res.write("\n};\n")
                 
         # Address of the functions within the flash algorithm
         with open(ALGO_SYM_PATH, "rb") as f2:
-            res.write("""
-    static const TARGET_FLASH flash_algorithm_struct = {
-    """)
             for line in list(f2):
                 t = line.strip().split()
                 if len(t) < 5: continue
                 name, loc, sec = t[1], t[2], t[4]
                 
                 if name in ['Init', 'UnInit', 'EraseChip', 'EraseSector', 'ProgramPage']:
-                    addr = ALGO_START + ALGO_OFFSET + int(loc, 16)
-                    res.write("    0x%08X, // %s\n" % (addr,  name))
+                    addr = BLOB_START + ALGO_OFFSET + int(loc, 16)
+                    dic['func'] += "0x%08X, // %s\n    " % (addr,  name)
 
                 if name == '$d.realdata':
                     if sec == '2':
-                        prg_data = int(loc, 16)
+                        dic['static_base'] = "0x%08x" % int(loc, 16)
 
-            res.write("    // breakpoint = RAM start + 1\n")
-            res.write("    // RSB : base address is address of Execution Region PrgData in map file\n")
-            res.write("    //       to access global/static data\n")
-            res.write("    // RSP : Initial stack pointer\n")
-            res.write("    {\n")
-            res.write("        0x%08X, // breakpoint instruction address\n" % (ALGO_START+1))
-            res.write("        0x%08X + 0x%X + 0x%X,  // static base register value (image start + header + static base offset)\n" % (ALGO_START, ALGO_OFFSET, prg_data))
-            res.write("        0x%08X // initial stack pointer\n" % (ALGO_START+2048))
-            res.write("    },\n\n")
-            res.write("    0x%08X, // flash_buffer, any valid RAM location with > 512 bytes of working room and proper alignment\n" % (ALGO_START+2048+256))
-            res.write("    0x%08X, // algo_start, start of RAM\n" % ALGO_START)
-            res.write("    sizeof(flash_algorithm_blob), // algo_size, size of array above\n")
-            res.write("    flash_algorithm, // image, flash algo instruction array\n")
-            res.write("    512              // ram_to_flash_bytes_to_be_written\n")
-            res.write("};\n\n")
+    return dic
 
-    return
-
-
-def generate_py_blob(string):
-    return
 
 if __name__ == '__main__':
     
@@ -157,6 +153,8 @@ if __name__ == '__main__':
         print "usage: >python gen_algo.py <abs_path_bin_algo_info>"
         sys.exit()
     
-    generate_c_blob(sys.argv[1])
-    generate_py_blob(sys.argv[1])
+    data = decode_axf(sys.argv[1])
+    #print data
+    generate_blob(os.path.dirname(os.path.realpath(__file__)) + '\\' + 'c_blob.tmpl', 'h', data)
+    generate_blob(os.path.dirname(os.path.realpath(__file__)) + '\\' + 'py_blob.tmpl', 'py', data)
 
