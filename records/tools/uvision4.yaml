@@ -1,7 +1,9 @@
+common:
+    target:
+        - cortex-m0
+
 tool_specific:
     uvision:
-        mcu:
-            - cortex-m0
         macros:
             -
         linker_file:

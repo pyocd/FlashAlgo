@@ -1,8 +1,6 @@
 common:
-    target:
-        - cortex-m0
-    macros:
-        -
+    group_name:
+        - flash_driver
     source_files:
         - source
         - source/nordic
