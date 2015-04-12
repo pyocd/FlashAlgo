@@ -18,22 +18,19 @@
 from flash import Flash
 
 flash_algo = { 
-    'load_address'    : {{entry}},
-    'instructions'    : [
+    'load_address' : {{entry}},
+    'instructions' : [
     {{prog_header}}
     {{mem}}
-                        ],
-    'pc_init'         : 0x2000002F,
-    'pc_eraseAll'     : 0x2000003D,
-    'pc_erase_sector' : 0x20000073,
-    'pc_program_page' : 0x200000AD,
-    'static_base'     : {{entry}} + {{header_size}} + {{static_base}},            
-    'begin_data'      : {{entry}} + 0x00000800,
-    'begin_stack'     : {{stack_pointer}},
-    'page_size'       : {{prog_page_size}},
+    ],
+    
+    {% for f,fa in func.items() %}'pc_{{f}}' : {{fa}},
+    {% endfor %}
+    'static_base' : {{entry}} + {{header_size}} + {{static_base}},            
+    'begin_data' : {{entry}} + 0x00000800,
+    'begin_stack' : {{stack_pointer}},
+    'page_size' : {{prog_page_size}},
 };
-
-{{func}}
               
 class Flash_{{name}}(Flash): 
     def __init__(self, target):

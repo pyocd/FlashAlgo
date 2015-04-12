@@ -20,7 +20,8 @@ static const uint32_t {{name}}_flash_prog_blob[] = {
 };
 
 static const TARGET_FLASH flash_algorithm_struct = {
-    {{func}}
+    {% for f,fa in func.items() %}{{fa}},    // {{f}}
+    {% endfor %}
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
     // RSP  : stack pointer
