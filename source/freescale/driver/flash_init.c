@@ -33,7 +33,7 @@
 #include "fsl_device_registers.h"
 #include "fsl_platform_status.h"
 #include "flash_densities.h"
-#include "flash_features.h"
+//#include "flash_features.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Definitions
