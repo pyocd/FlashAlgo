@@ -1,0 +1,12 @@
+common:
+    group_name:
+        - flash_driver
+    target:
+        - cortex-m0
+    include_paths:
+        -
+    source_files:
+        - source
+        - source/template
+    macros:
+        -

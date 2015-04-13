@@ -1,7 +1,6 @@
 common:
-    macros:
-        -
+    group_name:
+        - flash_driver
     source_files:
         - source
         - source/nordic
-

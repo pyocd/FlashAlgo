@@ -1,0 +1,7 @@
+common:
+    source_files:
+        - source/freescale/devices/MKL46Z4
+        - source/freescale/driver/flash_densities_kl_series.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKL46Z256VLH4
