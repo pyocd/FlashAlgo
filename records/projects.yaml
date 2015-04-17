@@ -1,17 +1,20 @@
+module:
+    tools: &module_tools
+    - records/tools/uvision4.yaml
+    - records/tools/gcc_make.yaml
+
 projects:
     template:
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml
+        - *module_tools
         - records/projects/template.yaml
     nrf51xxx:
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml        
+        - *module_tools
         - records/projects/nordic/nrf51xxx.yaml
     mkl46z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl46z4.yaml
     mk20d5:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mk20d5.yaml
