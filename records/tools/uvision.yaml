@@ -13,7 +13,6 @@ tool_specific:
                 MiscControls:
                     - --gnu
                     - --c99
-                    - --debug
                 Optim:
                     - 0
                 uC99:
