@@ -1,11 +1,18 @@
+settings:
+    export_dir:
+        - projectfiles/$tool$/$project_name$
+
+module:
+    tools: &module_tools
+    - records/tools/uvision.yaml
+    - records/tools/make_gcc_arm.yaml
+
 projects:
     template:
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml
+        - *module_tools
         - records/projects/template.yaml
     nrf51xxx:
-        - records/tools/uvision4.yaml
-        - records/tools/gcc_make.yaml        
+        - *module_tools
         - records/projects/nordic/nrf51xxx.yaml
     mkl02z4:
         - records/tools/uvision4.yaml
@@ -36,7 +43,7 @@ projects:
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl43z4.yaml
     mkl46z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl46z4.yaml
     mkv10z7:
@@ -52,7 +59,7 @@ projects:
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkw01z4.yaml
     mk20d5:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mk20d5.yaml
     mk64f12:
