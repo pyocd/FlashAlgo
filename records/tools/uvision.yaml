@@ -12,9 +12,8 @@ tool_specific:
             Cads:
                 MiscControls:
                     - --gnu
-                    - --c99
                 Optim:
-                    - 0
+                    - 2
                 uC99:
                     - enable
                 OneElfS:
@@ -23,14 +22,17 @@ tool_specific:
                     - enable
                 Rwpi:
                     - enable
+            LDads:
+                Misc:
+                    - --diag_suppress L6305
             TargetOption:
                 AfterMake:
                     RunUserProg1:
                         - enable
                     UserProg1Name:
-                        - ..\..\scripts\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
+                        - ..\..\..\scripts\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
                     RunUserProg2:
                         - enable
                     UserProg2Name:
-                        - python ..\..\scripts\generate_blobs.py $L@L
+                        - python ..\..\..\scripts\generate_blobs.py $L@L
 

@@ -20,8 +20,12 @@ static const uint32_t {{name}}_flash_prog_blob[] = {
 };
 
 static const TARGET_FLASH flash_algorithm_struct = {
-    {% for f,fa in func.items() %}{{fa}},    // {{f}}
-    {% endfor %}
+    {{func['Init']}}, // Init
+    {{func['UnInit']}}, // UnInit
+    {{func['EraseChip']}}, // EraseChip
+    {{func['EraseSector']}}, // EraseSector
+    {{func['ProgramPage']}}, // ProgramPage
+
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
     // RSP  : stack pointer
@@ -31,7 +35,7 @@ static const TARGET_FLASH flash_algorithm_struct = {
         {{stack_pointer}}
     },
 
-    {{entry}} + 0x00000800,   // mem buffer location
+    {{entry}} + 0x00000A00,   // mem buffer location
     {{entry}},                // location to write prog_blob in target RAM
     sizeof({{name}}_flash_prog_blob), // prog_blob size
     {{name}}_flash_prog_blob,         // address of prog_blob

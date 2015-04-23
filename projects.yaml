@@ -15,31 +15,31 @@ projects:
         - *module_tools
         - records/projects/nordic/nrf51xxx.yaml
     mkl02z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl02z4.yaml
     mkl05z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl05z4.yaml
     mkl25z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl25z4.yaml
     mkl26z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl26z4.yaml
     mkl27z644:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl27z644.yaml
     mkl27z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl27z4.yaml
     mkl43z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl43z4.yaml
     mkl46z4:
@@ -47,15 +47,15 @@ projects:
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkl46z4.yaml
     mkv10z7:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkv10z7.yaml
     mkv11z7:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkv11z7.yaml
     mkw01z4:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkw01z4.yaml
     mk20d5:
@@ -63,10 +63,14 @@ projects:
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mk20d5.yaml
     mk64f12:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mk64f12.yaml
     mk65f18:
-        - records/tools/uvision4.yaml
+        - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mk65f18.yaml
+    mk80f25615:
+        - *module_tools
+        - records/projects/freescale/common/fsl_flash_driver.yaml
+        - records/projects/freescale/targets/mk80f25615.yaml
