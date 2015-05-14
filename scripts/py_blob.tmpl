@@ -27,7 +27,7 @@ flash_algo = {
     {% for f,fa in func.items() %}'pc_{{f}}' : {{fa}},
     {% endfor %}
     'static_base' : {{entry}} + {{header_size}} + {{static_base}},            
-    'begin_data' : {{entry}} + 0x00000800,
+    'begin_data' : {{entry}} + 0x00000A00,
     'begin_stack' : {{stack_pointer}},
     'page_size' : {{prog_page_size}},
 };
