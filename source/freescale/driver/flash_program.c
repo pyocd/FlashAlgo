@@ -65,7 +65,7 @@ status_t flash_program(flash_driver_t * driver, uint32_t start, uint32_t * src, 
         FTFx_FCCOBx_WR(FTFx, 0, FTFx_PROGRAM_LONGWORD);
 #elif (FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE == 8)
         kFCCOBx[2] = *src++;
-        HW_FTFx_FCCOBx_WR(FTFx, 0, FTFx_PROGRAM_PHRASE);
+        FTFx_FCCOBx_WR(FTFx, 0, FTFx_PROGRAM_PHRASE);
 #else
         #error "Untreated program unit size"
 #endif

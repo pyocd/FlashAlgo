@@ -12,9 +12,8 @@ tool_specific:
             Cads:
                 MiscControls:
                     - --gnu
-                    - --c99
                 Optim:
-                    - 0
+                    - 2
                 uC99:
                     - enable
                 OneElfS:
@@ -23,6 +22,9 @@ tool_specific:
                     - enable
                 Rwpi:
                     - enable
+            LDads:
+                Misc:
+                    - --diag_suppress L6305
             TargetOption:
                 AfterMake:
                     RunUserProg1:

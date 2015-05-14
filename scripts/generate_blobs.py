@@ -32,7 +32,7 @@ import sys, os, collections
 ALGO_OFFSET = 0x20
 BLOB_START = 0x20000000
 BLOB_HEADER = '0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,'
-SP = BLOB_START + 1024
+SP = BLOB_START + 2048
 PROG_PAGE_SIZE = 512
 
 class FlashInfo(object):
@@ -147,7 +147,7 @@ def decode_axf(string):
                         dic['static_base'] = '0x%08x' % int(loc, 16)
 
     # order the flash programming functions - known order 
-    dic['func'] = collections.OrderedDict(sorted(dic['func'].items()))
+    #dic['func'] = collections.OrderedDict(sorted(dic['func'].items()))
     return dic
 
 
