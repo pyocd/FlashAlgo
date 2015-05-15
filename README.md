@@ -21,10 +21,9 @@ For adding new targets start from template and use these docs...
 
 ## Contribute
 Check out the issue tracker.
-```
 
 ##ToDo
-  - Create a test
-  - Document how to use
-  - Document how to contribute
+- Create a test
+- Document how to use
+- Document how to contribute
   
