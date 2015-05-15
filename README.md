@@ -2,6 +2,7 @@
 
 ## Setup
 Skip any step where a compatible tool already exists
+
 1. Install [Python 2.7.x](https://www.python.org/downloads/)
 2. Install [pip](https://pip.pypa.io/en/latest/installing.html)
 3. Install FlashAlgo dependencies
