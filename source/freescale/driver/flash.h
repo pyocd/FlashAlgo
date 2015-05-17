@@ -466,7 +466,11 @@ status_t flash_get_property(flash_driver_t * driver, flash_property_t whichPrope
 static inline void flash_cache_enable(bool doEnable)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    MCM_WR_PLACR_DFCC(MCM, doEnable);
+    #if defined(MCM0)
+        MCM_WR_PLACR_DFCC(MCM0, doEnable);
+    #else
+        MCM_WR_PLACR_DFCC(MCM, doEnable);
+    #endif
 #elif defined(CPU_MK66FN2M0VLQ18) || defined(CPU_MK65FN2M0VMI18)
 		FMC_WR_PFB01CR_B0DCE(FMC, doEnable);
 	  FMC_WR_PFB23CR_B1DCE(FMC, doEnable);
@@ -488,7 +492,11 @@ static inline void flash_cache_enable(bool doEnable)
 static inline void flash_cache_clear(void)
 {
 #if FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS
-    MCM_WR_PLACR_CFCC(MCM, 1);
+    #if defined(MCM0)
+        MCM_WR_PLACR_CFCC(MCM0, 1);
+    #else
+        MCM_WR_PLACR_CFCC(MCM, 1);
+    #endif
 #elif defined(CPU_MK66FN2M0VLQ18) || defined(CPU_MK65FN2M0VMI18)
 	  FMC_WR_PFB01CR_CINV_WAY(FMC, 0xf);
 #elif FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS

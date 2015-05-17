@@ -23,7 +23,11 @@ flash_driver_t g_flash;
 
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
 {
-#if defined (WDOG)
+#if defined(KL28Z7_SERIES)
+    WDOG0->CNT = WDOG_UPDATE_KEY;
+    WDOG0->TOVAL = 0xFFFF;
+    WDOG0->CS = (uint32_t) ((WDOG0->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
+#elif defined (WDOG)
     /* Write 0xC520 to the unlock register */
     WDOG->UNLOCK = 0xC520;
     /* Followed by 0xD928 to complete the unlock */
