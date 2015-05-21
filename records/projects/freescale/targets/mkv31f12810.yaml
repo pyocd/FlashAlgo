@@ -1,0 +1,9 @@
+common:
+    target:
+        - cortex-m4
+    source_files:
+        - source/freescale/devices/MKV31F12810
+        - source/freescale/driver/flash_densities_k_series.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKV31Z128VLH7

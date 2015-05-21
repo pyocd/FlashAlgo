@@ -47,8 +47,6 @@
 #ifndef __FSL_DEVICE_REGISTERS_H__
 #define __FSL_DEVICE_REGISTERS_H__
 
-//#include "regs.h"
-
 /*
  * Include the cpu specific register header files.
  *
@@ -812,17 +810,6 @@
     #include "MKV10Z7/MKV10Z7_extension.h"
     /* CPU specific feature definitions */
     #include "MKV10Z7/MKV10Z7_features.h"
-		
-#elif (defined(CPU_MKV11Z128VLH7))
-
-    #define KV11Z7_SERIES
-
-    /* CMSIS-style register definitions */
-    #include "MKV11Z7/MKV11Z7.h"
-    /* Extension register definitions */
-    #include "MKV11Z7/MKV11Z7_extension.h"
-    /* CPU specific feature definitions */
-    #include "MKV11Z7/MKV11Z7_features.h"
 
 #elif (defined(CPU_MKV30F128VFM10) || defined(CPU_MKV30F64VFM10) || defined(CPU_MKV30F128VLF10) || \
     defined(CPU_MKV30F64VLF10) || defined(CPU_MKV30F128VLH10) || defined(CPU_MKV30F64VLH10))
@@ -926,6 +913,20 @@
     #include "MKV46F15/MKV46F15_extension.h"
     /* CPU specific feature definitions */
     #include "MKV46F15/MKV46F15_features.h"
+
+#elif (defined(CPU_MKV58F1M0VMD22) || defined(CPU_MKV58F1M0VLQ22) || defined(CPU_MKV58F1M0VLL22) || \
+    defined(CPU_MKV56F1M0VMD22) || defined(CPU_MKV56F1M0VLQ22) || defined(CPU_MKV56F1M0VLL22) || \
+    defined(CPU_MKV58F512VMD22) || defined(CPU_MKV58F512VLQ22) || defined(CPU_MKV58F512VLL22) || \
+    defined(CPU_MKV56F512VMD22) || defined(CPU_MKV56F512VLQ22) || defined(CPU_MKV56F512VLL22))    
+
+    #define KV58F22_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKV58F22/MKV58F22.h"
+    /* Extension register definitions */
+    #include "MKV58F22/MKV58F22_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKV58F22/MKV58F22_features.h"
 
 #elif (defined(CPU_MKW01Z128CHN4))
 
