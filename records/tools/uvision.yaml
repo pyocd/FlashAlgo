@@ -30,7 +30,7 @@ tool_specific:
                     RunUserProg1:
                         - enable
                     UserProg1Name:
-                        - ..\..\..\scripts\fromelf_append.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols"
+                        - ..\..\..\scripts\post_build.bat "#KARM\ARMCC\bin\fromelf --bin $L@L.axf -o $L@L" "#KARM\ARMCC\bin\fromelf --text -s $L@L.axf -o $L@L\symbols" "#KARM\ARMCC\bin\armar --create $L@L\@L.ar $L*.o"
                     RunUserProg2:
                         - enable
                     UserProg2Name:

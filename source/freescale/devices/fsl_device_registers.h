@@ -693,6 +693,17 @@
     /* CPU specific feature definitions */
     #include "MKL27Z644/MKL27Z644_features.h"
 
+#elif (defined(CPU_MKL28Z256VLH7) || defined(CPU_MKL28Z512VLH7))
+
+    #define KL28Z7_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKL28Z7/MKL28Z7.h"
+    /* Extension register definitions */
+    #include "MKL28Z7/MKL28Z7_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKL28Z7/MKL28Z7_features.h"
+
 #elif (defined(CPU_MKL33Z128VLH4) || defined(CPU_MKL33Z256VLH4) || defined(CPU_MKL33Z128VMP4) || \
     defined(CPU_MKL33Z256VMP4))
 
@@ -810,6 +821,17 @@
     #include "MKV10Z7/MKV10Z7_extension.h"
     /* CPU specific feature definitions */
     #include "MKV10Z7/MKV10Z7_features.h"
+
+#elif (defined(CPU_MKV11Z128VLH7))
+
+    #define KV11Z7_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKV11Z7/MKV11Z7.h"
+    /* Extension register definitions */
+    #include "MKV11Z7/MKV11Z7_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKV11Z7/MKV11Z7_features.h"
 
 #elif (defined(CPU_MKV30F128VFM10) || defined(CPU_MKV30F64VFM10) || defined(CPU_MKV30F128VLF10) || \
     defined(CPU_MKV30F64VLF10) || defined(CPU_MKV30F128VLH10) || defined(CPU_MKV30F64VLH10))
