@@ -1,7 +1,7 @@
 common:
     target:
         - cortex-m4
-    source_files:
+    sources:
         - source/freescale/devices/MK20D5
         - source/freescale/driver/flash_densities_k_series.c
     macros:

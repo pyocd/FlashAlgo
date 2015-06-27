@@ -1,5 +1,5 @@
 common:
-    source_files:
+    sources:
         - source/freescale/devices/MKW01Z4
         - source/freescale/driver/flash_densities_kl_series.c
     macros:

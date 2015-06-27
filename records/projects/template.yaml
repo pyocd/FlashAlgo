@@ -3,9 +3,9 @@ common:
         - flash_driver
     target:
         - cortex-m0
-    include_paths:
+    includes:
         -
-    source_files:
+    sources:
         - source
         - source/template
     macros:

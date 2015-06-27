@@ -1,6 +1,6 @@
 common:
     group_name:
         - flash_driver
-    source_files:
+    sources:
         - source
         - source/nordic
