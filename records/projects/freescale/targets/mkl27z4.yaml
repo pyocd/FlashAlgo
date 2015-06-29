@@ -1,4 +1,6 @@
 common:
+    target:
+        - cortex-m0
     sources:
         - source/freescale/devices/MKL27Z4
         - source/freescale/driver/flash_densities_kl_series.c
