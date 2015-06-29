@@ -1,4 +1,6 @@
 common:
+    target:
+        - cortex-m0
     group_name:
         - flash_driver
     sources:
