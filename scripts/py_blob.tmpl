@@ -15,7 +15,7 @@
  limitations under the License.
 """ 
 
-from flash import Flash
+from flash_kinetis import Flash_Kinetis
 
 flash_algo = { 
     'load_address' : {{entry}},
@@ -24,15 +24,21 @@ flash_algo = {
     {{mem}}
     ],
     
-    {% for f,fa in func.items() %}'pc_{{f}}' : {{fa}},
-    {% endfor %}
-    'static_base' : {{entry}} + {{header_size}} + {{static_base}},            
+    'pc_init' : {{func['Init']}},
+    'pc_unInit': {{func['UnInit']}},
+    'pc_program_page': {{func['ProgramPage']}},
+    'pc_erase_sector': {{func['EraseSector']}},
+    'pc_eraseAll' : {{func['EraseChip']}},
+
+    'static_base' : {{entry}} + {{header_size}} + {{static_base}},
+    'begin_stack' : {{entry}} + 0x00000800,            
     'begin_data' : {{entry}} + 0x00000A00,
-    'begin_stack' : {{stack_pointer}},
     'page_size' : {{prog_page_size}},
+    'analyzer_supported' : False,
+    'analyzer_address' : 0x00000000  # ITCM, Analyzer 0x00000000..0x000000600
 };
               
-class Flash_{{name}}(Flash): 
+class Flash_{{name}}(Flash_Kinetis): 
     def __init__(self, target):
         super(Flash_{{name}}, self).__init__(target, flash_algo)
 

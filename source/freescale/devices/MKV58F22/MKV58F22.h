@@ -8,7 +8,7 @@
 **
 **     Reference manual:    KV5xP64M75RM Rev.0, November 2014
 **     Version:             rev. 0.1, 2015-02-24
-**     Build:               b150430
+**     Build:               b150312
 **
 **     Abstract:
 **         CMSIS Peripheral Access Layer for MKV58F22
@@ -135,9 +135,6 @@
 #define NUMBER_OF_INT_VECTORS 137                /**< Number of interrupts in the Vector table */
 
 typedef enum IRQn {
-  /* Auxiliary constants */
-  NotAvail_IRQn                = -128,             /**< Not available device specific interrupt */
-
   /* Core interrupts */
   NonMaskableInt_IRQn          = -14,              /**< Non Maskable Interrupt */
   HardFault_IRQn               = -13,              /**< Cortex-M7 SV Hard Fault Interrupt */
@@ -189,7 +186,7 @@ typedef enum IRQn {
   UART2_ERR_IRQn               = 36,               /**< UART2 error interrupt */
   ADC0_IRQn                    = 37,               /**< Analog-to-digital converter 0 */
   HSADC_ERR_IRQn               = 38,               /**< High speed analog-to-digital converter zero cross */
-  HSADC0_CCA_IRQn              = 39,               /**< High speed analog-to-digital converter 0 submodule A scan complete */
+  HSADC0A_IRQn                 = 39,               /**< High speed analog-to-digital converter 0 submodule A scan complete */
   CMP0_IRQn                    = 40,               /**< Comparator 0 */
   CMP1_IRQn                    = 41,               /**< Comparator 1 */
   FTM0_IRQn                    = 42,               /**< FlexTimer module 0 fault, overflow and channels interrupt */
@@ -223,8 +220,8 @@ typedef enum IRQn {
   CMP2_IRQn                    = 70,               /**< Comparator 2 */
   FTM3_IRQn                    = 71,               /**< FlexTimer module 3 fault, overflow and channels */
   Reserved88_IRQn              = 72,               /**< Reserved interrupt */
-  HSADC0_CCB_IRQn              = 73,               /**< High speed analog-to-digital converter 0 submodule B scan complete */
-  HSADC1_CCA_IRQn              = 74,               /**< High speed analog-to-digital converter 1 submodule A scan complete */
+  HSADC0B_IRQn                 = 73,               /**< High speed analog-to-digital converter 0 submodule B scan complete */
+  HSADC1C_IRQn                 = 74,               /**< High speed analog-to-digital converter 1 submodule C scan complete */
   CAN0_ORed_Message_buffer_IRQn = 75,              /**< Flex controller area network 0 message buffer */
   CAN0_Bus_Off_IRQn            = 76,               /**< Flex controller area network 0 bus off */
   CAN0_Error_IRQn              = 77,               /**< Flex controller area network 0 error */
@@ -243,7 +240,7 @@ typedef enum IRQn {
   PWMA_RERR_IRQn               = 90,               /**< Pulse width modulator A reload error */
   PWMA_FAULT_IRQn              = 91,               /**< Pulse width modulator A fault */
   CMP3_IRQn                    = 92,               /**< Comparator 3 */
-  HSADC1_CCB_IRQn              = 93,               /**< High speed analog-to-digital converter 1 submodule B scan complete */
+  HSADC1D_IRQn                 = 93,               /**< High speed analog-to-digital converter 1 submodule D scan complete */
   CAN1_ORed_Message_buffer_IRQn = 94,              /**< Flex controller area network 1 message buffer */
   CAN1_Bus_Off_IRQn            = 95,               /**< Flex controller area network 1 bus off */
   CAN1_Error_IRQn              = 96,               /**< Flex controller area network 1 error */
@@ -641,8 +638,6 @@ typedef struct {
 #define ADC_BASE_ADDRS                           { ADC0_BASE }
 /** Array initializer of ADC peripheral base pointers */
 #define ADC_BASE_PTRS                            { ADC0 }
-/** Interrupt vectors for the ADC peripheral type */
-#define ADC_IRQS                                 { ADC0_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- ADC - Register accessor macros
@@ -3295,13 +3290,6 @@ typedef struct {
 #define CAN_BASE_ADDRS                           { CAN0_BASE, CAN1_BASE, CAN2_BASE }
 /** Array initializer of CAN peripheral base pointers */
 #define CAN_BASE_PTRS                            { CAN0, CAN1, CAN2 }
-/** Interrupt vectors for the CAN peripheral type */
-#define CAN_Rx_Warning_IRQS                      { CAN0_Rx_Warning_IRQn, CAN1_Rx_Warning_IRQn, CAN2_Rx_Warning_IRQn }
-#define CAN_Tx_Warning_IRQS                      { CAN0_Tx_Warning_IRQn, CAN1_Tx_Warning_IRQn, CAN2_Tx_Warning_IRQn }
-#define CAN_Wake_Up_IRQS                         { CAN0_Wake_Up_IRQn, CAN1_Wake_Up_IRQn, CAN2_Wake_Up_IRQn }
-#define CAN_Error_IRQS                           { CAN0_Error_IRQn, CAN1_Error_IRQn, CAN2_Error_IRQn }
-#define CAN_Bus_Off_IRQS                         { CAN0_Bus_Off_IRQn, CAN1_Bus_Off_IRQn, CAN2_Bus_Off_IRQn }
-#define CAN_ORed_Message_buffer_IRQS             { CAN0_ORed_Message_buffer_IRQn, CAN1_ORed_Message_buffer_IRQn, CAN2_ORed_Message_buffer_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- CAN - Register accessor macros
@@ -4572,8 +4560,6 @@ typedef struct {
 #define CMP_BASE_ADDRS                           { CMP0_BASE, CMP1_BASE, CMP2_BASE, CMP3_BASE }
 /** Array initializer of CMP peripheral base pointers */
 #define CMP_BASE_PTRS                            { CMP0, CMP1, CMP2, CMP3 }
-/** Interrupt vectors for the CMP peripheral type */
-#define CMP_IRQS                                 { CMP0_IRQn, CMP1_IRQn, CMP2_IRQn, CMP3_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- CMP - Register accessor macros
@@ -4638,15 +4624,15 @@ typedef struct {
 typedef struct {
   union {                                          /* offset: 0x0 */
     struct {                                         /* offset: 0x0 */
-      __IO uint16_t DATAL;                             /**< CRC_DATAL register., offset: 0x0 */
-      __IO uint16_t DATAH;                             /**< CRC_DATAH register., offset: 0x2 */
+      __IO uint16_t CRCL;                              /**< CRC_CRCL register., offset: 0x0 */
+      __IO uint16_t CRCH;                              /**< CRC_CRCH register., offset: 0x2 */
     } ACCESS16BIT;
-    __IO uint32_t DATA;                              /**< CRC Data register, offset: 0x0 */
+    __IO uint32_t CRC;                               /**< CRC Data register, offset: 0x0 */
     struct {                                         /* offset: 0x0 */
-      __IO uint8_t DATALL;                             /**< CRC_DATALL register., offset: 0x0 */
-      __IO uint8_t DATALU;                             /**< CRC_DATALU register., offset: 0x1 */
-      __IO uint8_t DATAHL;                             /**< CRC_DATAHL register., offset: 0x2 */
-      __IO uint8_t DATAHU;                             /**< CRC_DATAHU register., offset: 0x3 */
+      __IO uint8_t CRCLL;                              /**< CRC_CRCLL register., offset: 0x0 */
+      __IO uint8_t CRCLU;                              /**< CRC_CRCLU register., offset: 0x1 */
+      __IO uint8_t CRCHL;                              /**< CRC_CRCHL register., offset: 0x2 */
+      __IO uint8_t CRCHU;                              /**< CRC_CRCHU register., offset: 0x3 */
     } ACCESS8BIT;
   };
   union {                                          /* offset: 0x4 */
@@ -4682,13 +4668,13 @@ typedef struct {
 
 
 /* CRC - Register accessors */
-#define CRC_DATAL_REG(base)                      ((base)->ACCESS16BIT.DATAL)
-#define CRC_DATAH_REG(base)                      ((base)->ACCESS16BIT.DATAH)
-#define CRC_DATA_REG(base)                       ((base)->DATA)
-#define CRC_DATALL_REG(base)                     ((base)->ACCESS8BIT.DATALL)
-#define CRC_DATALU_REG(base)                     ((base)->ACCESS8BIT.DATALU)
-#define CRC_DATAHL_REG(base)                     ((base)->ACCESS8BIT.DATAHL)
-#define CRC_DATAHU_REG(base)                     ((base)->ACCESS8BIT.DATAHU)
+#define CRC_CRCL_REG(base)                       ((base)->ACCESS16BIT.CRCL)
+#define CRC_CRCH_REG(base)                       ((base)->ACCESS16BIT.CRCH)
+#define CRC_CRC_REG(base)                        ((base)->CRC)
+#define CRC_CRCLL_REG(base)                      ((base)->ACCESS8BIT.CRCLL)
+#define CRC_CRCLU_REG(base)                      ((base)->ACCESS8BIT.CRCLU)
+#define CRC_CRCHL_REG(base)                      ((base)->ACCESS8BIT.CRCHL)
+#define CRC_CRCHU_REG(base)                      ((base)->ACCESS8BIT.CRCHU)
 #define CRC_GPOLYL_REG(base)                     ((base)->GPOLY_ACCESS16BIT.GPOLYL)
 #define CRC_GPOLYH_REG(base)                     ((base)->GPOLY_ACCESS16BIT.GPOLYH)
 #define CRC_GPOLY_REG(base)                      ((base)->GPOLY)
@@ -4713,53 +4699,53 @@ typedef struct {
  * @{
  */
 
-/* DATAL Bit Fields */
-#define CRC_DATAL_DATAL_MASK                     0xFFFFu
-#define CRC_DATAL_DATAL_SHIFT                    0
-#define CRC_DATAL_DATAL_WIDTH                    16
-#define CRC_DATAL_DATAL(x)                       (((uint16_t)(((uint16_t)(x))<<CRC_DATAL_DATAL_SHIFT))&CRC_DATAL_DATAL_MASK)
-/* DATAH Bit Fields */
-#define CRC_DATAH_DATAH_MASK                     0xFFFFu
-#define CRC_DATAH_DATAH_SHIFT                    0
-#define CRC_DATAH_DATAH_WIDTH                    16
-#define CRC_DATAH_DATAH(x)                       (((uint16_t)(((uint16_t)(x))<<CRC_DATAH_DATAH_SHIFT))&CRC_DATAH_DATAH_MASK)
-/* DATA Bit Fields */
-#define CRC_DATA_LL_MASK                         0xFFu
-#define CRC_DATA_LL_SHIFT                        0
-#define CRC_DATA_LL_WIDTH                        8
-#define CRC_DATA_LL(x)                           (((uint32_t)(((uint32_t)(x))<<CRC_DATA_LL_SHIFT))&CRC_DATA_LL_MASK)
-#define CRC_DATA_LU_MASK                         0xFF00u
-#define CRC_DATA_LU_SHIFT                        8
-#define CRC_DATA_LU_WIDTH                        8
-#define CRC_DATA_LU(x)                           (((uint32_t)(((uint32_t)(x))<<CRC_DATA_LU_SHIFT))&CRC_DATA_LU_MASK)
-#define CRC_DATA_HL_MASK                         0xFF0000u
-#define CRC_DATA_HL_SHIFT                        16
-#define CRC_DATA_HL_WIDTH                        8
-#define CRC_DATA_HL(x)                           (((uint32_t)(((uint32_t)(x))<<CRC_DATA_HL_SHIFT))&CRC_DATA_HL_MASK)
-#define CRC_DATA_HU_MASK                         0xFF000000u
-#define CRC_DATA_HU_SHIFT                        24
-#define CRC_DATA_HU_WIDTH                        8
-#define CRC_DATA_HU(x)                           (((uint32_t)(((uint32_t)(x))<<CRC_DATA_HU_SHIFT))&CRC_DATA_HU_MASK)
-/* DATALL Bit Fields */
-#define CRC_DATALL_DATALL_MASK                   0xFFu
-#define CRC_DATALL_DATALL_SHIFT                  0
-#define CRC_DATALL_DATALL_WIDTH                  8
-#define CRC_DATALL_DATALL(x)                     (((uint8_t)(((uint8_t)(x))<<CRC_DATALL_DATALL_SHIFT))&CRC_DATALL_DATALL_MASK)
-/* DATALU Bit Fields */
-#define CRC_DATALU_DATALU_MASK                   0xFFu
-#define CRC_DATALU_DATALU_SHIFT                  0
-#define CRC_DATALU_DATALU_WIDTH                  8
-#define CRC_DATALU_DATALU(x)                     (((uint8_t)(((uint8_t)(x))<<CRC_DATALU_DATALU_SHIFT))&CRC_DATALU_DATALU_MASK)
-/* DATAHL Bit Fields */
-#define CRC_DATAHL_DATAHL_MASK                   0xFFu
-#define CRC_DATAHL_DATAHL_SHIFT                  0
-#define CRC_DATAHL_DATAHL_WIDTH                  8
-#define CRC_DATAHL_DATAHL(x)                     (((uint8_t)(((uint8_t)(x))<<CRC_DATAHL_DATAHL_SHIFT))&CRC_DATAHL_DATAHL_MASK)
-/* DATAHU Bit Fields */
-#define CRC_DATAHU_DATAHU_MASK                   0xFFu
-#define CRC_DATAHU_DATAHU_SHIFT                  0
-#define CRC_DATAHU_DATAHU_WIDTH                  8
-#define CRC_DATAHU_DATAHU(x)                     (((uint8_t)(((uint8_t)(x))<<CRC_DATAHU_DATAHU_SHIFT))&CRC_DATAHU_DATAHU_MASK)
+/* CRCL Bit Fields */
+#define CRC_CRCL_CRCL_MASK                       0xFFFFu
+#define CRC_CRCL_CRCL_SHIFT                      0
+#define CRC_CRCL_CRCL_WIDTH                      16
+#define CRC_CRCL_CRCL(x)                         (((uint16_t)(((uint16_t)(x))<<CRC_CRCL_CRCL_SHIFT))&CRC_CRCL_CRCL_MASK)
+/* CRCH Bit Fields */
+#define CRC_CRCH_CRCH_MASK                       0xFFFFu
+#define CRC_CRCH_CRCH_SHIFT                      0
+#define CRC_CRCH_CRCH_WIDTH                      16
+#define CRC_CRCH_CRCH(x)                         (((uint16_t)(((uint16_t)(x))<<CRC_CRCH_CRCH_SHIFT))&CRC_CRCH_CRCH_MASK)
+/* CRC Bit Fields */
+#define CRC_CRC_LL_MASK                          0xFFu
+#define CRC_CRC_LL_SHIFT                         0
+#define CRC_CRC_LL_WIDTH                         8
+#define CRC_CRC_LL(x)                            (((uint32_t)(((uint32_t)(x))<<CRC_CRC_LL_SHIFT))&CRC_CRC_LL_MASK)
+#define CRC_CRC_LU_MASK                          0xFF00u
+#define CRC_CRC_LU_SHIFT                         8
+#define CRC_CRC_LU_WIDTH                         8
+#define CRC_CRC_LU(x)                            (((uint32_t)(((uint32_t)(x))<<CRC_CRC_LU_SHIFT))&CRC_CRC_LU_MASK)
+#define CRC_CRC_HL_MASK                          0xFF0000u
+#define CRC_CRC_HL_SHIFT                         16
+#define CRC_CRC_HL_WIDTH                         8
+#define CRC_CRC_HL(x)                            (((uint32_t)(((uint32_t)(x))<<CRC_CRC_HL_SHIFT))&CRC_CRC_HL_MASK)
+#define CRC_CRC_HU_MASK                          0xFF000000u
+#define CRC_CRC_HU_SHIFT                         24
+#define CRC_CRC_HU_WIDTH                         8
+#define CRC_CRC_HU(x)                            (((uint32_t)(((uint32_t)(x))<<CRC_CRC_HU_SHIFT))&CRC_CRC_HU_MASK)
+/* CRCLL Bit Fields */
+#define CRC_CRCLL_CRCLL_MASK                     0xFFu
+#define CRC_CRCLL_CRCLL_SHIFT                    0
+#define CRC_CRCLL_CRCLL_WIDTH                    8
+#define CRC_CRCLL_CRCLL(x)                       (((uint8_t)(((uint8_t)(x))<<CRC_CRCLL_CRCLL_SHIFT))&CRC_CRCLL_CRCLL_MASK)
+/* CRCLU Bit Fields */
+#define CRC_CRCLU_CRCLU_MASK                     0xFFu
+#define CRC_CRCLU_CRCLU_SHIFT                    0
+#define CRC_CRCLU_CRCLU_WIDTH                    8
+#define CRC_CRCLU_CRCLU(x)                       (((uint8_t)(((uint8_t)(x))<<CRC_CRCLU_CRCLU_SHIFT))&CRC_CRCLU_CRCLU_MASK)
+/* CRCHL Bit Fields */
+#define CRC_CRCHL_CRCHL_MASK                     0xFFu
+#define CRC_CRCHL_CRCHL_SHIFT                    0
+#define CRC_CRCHL_CRCHL_WIDTH                    8
+#define CRC_CRCHL_CRCHL(x)                       (((uint8_t)(((uint8_t)(x))<<CRC_CRCHL_CRCHL_SHIFT))&CRC_CRCHL_CRCHL_MASK)
+/* CRCHU Bit Fields */
+#define CRC_CRCHU_CRCHU_MASK                     0xFFu
+#define CRC_CRCHU_CRCHU_SHIFT                    0
+#define CRC_CRCHU_CRCHU_WIDTH                    8
+#define CRC_CRCHU_CRCHU(x)                       (((uint8_t)(((uint8_t)(x))<<CRC_CRCHU_CRCHU_SHIFT))&CRC_CRCHU_CRCHU_MASK)
 /* GPOLYL Bit Fields */
 #define CRC_GPOLYL_GPOLYL_MASK                   0xFFFFu
 #define CRC_GPOLYL_GPOLYL_SHIFT                  0
@@ -4870,13 +4856,13 @@ typedef struct {
 
 /* CRC - Register instance definitions */
 /* CRC */
-#define CRC_DATA                                 CRC_DATA_REG(CRC0)
-#define CRC_DATAL                                CRC_DATAL_REG(CRC0)
-#define CRC_DATALL                               CRC_DATALL_REG(CRC0)
-#define CRC_DATALU                               CRC_DATALU_REG(CRC0)
-#define CRC_DATAH                                CRC_DATAH_REG(CRC0)
-#define CRC_DATAHL                               CRC_DATAHL_REG(CRC0)
-#define CRC_DATAHU                               CRC_DATAHU_REG(CRC0)
+#define CRC_CRCL                                 CRC_CRCL_REG(CRC0)
+#define CRC_CRCLL                                CRC_CRCLL_REG(CRC0)
+#define CRC_DATA                                 CRC_CRC_REG(CRC0)
+#define CRC_CRCLU                                CRC_CRCLU_REG(CRC0)
+#define CRC_CRCH                                 CRC_CRCH_REG(CRC0)
+#define CRC_CRCHL                                CRC_CRCHL_REG(CRC0)
+#define CRC_CRCHU                                CRC_CRCHU_REG(CRC0)
 #define CRC_GPOLY                                CRC_GPOLY_REG(CRC0)
 #define CRC_GPOLYL                               CRC_GPOLYL_REG(CRC0)
 #define CRC_GPOLYLL                              CRC_GPOLYLL_REG(CRC0)
@@ -5050,8 +5036,6 @@ typedef struct {
 #define DAC_BASE_ADDRS                           { DAC0_BASE }
 /** Array initializer of DAC peripheral base pointers */
 #define DAC_BASE_PTRS                            { DAC0 }
-/** Interrupt vectors for the DAC peripheral type */
-#define DAC_IRQS                                 { DAC0_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- DAC - Register accessor macros
@@ -7015,9 +6999,6 @@ typedef struct {
 #define DMA_BASE_ADDRS                           { DMA_BASE }
 /** Array initializer of DMA peripheral base pointers */
 #define DMA_BASE_PTRS                            { DMA0 }
-/** Interrupt vectors for the DMA peripheral type */
-#define DMA_CHN_IRQS                             { DMA0_DMA16_IRQn, DMA1_DMA17_IRQn, DMA2_DMA18_IRQn, DMA3_DMA19_IRQn, DMA4_DMA20_IRQn, DMA5_DMA21_IRQn, DMA6_DMA22_IRQn, DMA7_DMA23_IRQn, DMA8_DMA24_IRQn, DMA9_DMA25_IRQn, DMA10_DMA26_IRQn, DMA11_DMA27_IRQn, DMA12_DMA28_IRQn, DMA13_DMA29_IRQn, DMA14_DMA30_IRQn, DMA15_DMA31_IRQn, DMA0_DMA16_IRQn, DMA1_DMA17_IRQn, DMA2_DMA18_IRQn, DMA3_DMA19_IRQn, DMA4_DMA20_IRQn, DMA5_DMA21_IRQn, DMA6_DMA22_IRQn, DMA7_DMA23_IRQn, DMA8_DMA24_IRQn, DMA9_DMA25_IRQn, DMA10_DMA26_IRQn, DMA11_DMA27_IRQn, DMA12_DMA28_IRQn, DMA13_DMA29_IRQn, DMA14_DMA30_IRQn, DMA15_DMA31_IRQn }
-#define DMA_ERROR_IRQS                           { DMA_Error_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- DMA - Register accessor macros
@@ -8064,11 +8045,6 @@ typedef struct {
 #define ENC_BASE_ADDRS                           { ENC_BASE }
 /** Array initializer of ENC peripheral base pointers */
 #define ENC_BASE_PTRS                            { ENC }
-/** Interrupt vectors for the ENC peripheral type */
-#define ENC_COMPARE_IRQS                         { ENC_COMPARE_IRQn }
-#define ENC_HOME_IRQS                            { ENC_HOME_IRQn }
-#define ENC_WDOG_IRQS                            { ENC_WDOG_SAB_IRQn }
-#define ENC_INDEX_IRQS                           { ENC_INDEX_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- ENC - Register accessor macros
@@ -9206,11 +9182,6 @@ typedef struct {
 #define ENET_BASE_ADDRS                          { ENET_BASE }
 /** Array initializer of ENET peripheral base pointers */
 #define ENET_BASE_PTRS                           { ENET }
-/** Interrupt vectors for the ENET peripheral type */
-#define ENET_Transmit_IRQS                       { ENET_Transmit_IRQn }
-#define ENET_Receive_IRQS                        { ENET_Receive_IRQn }
-#define ENET_Error_IRQS                          { ENET_Error_IRQn }
-#define ENET_1588_Timer_IRQS                     { ENET_1588_Timer_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- ENET - Register accessor macros
@@ -9450,8 +9421,6 @@ typedef struct {
 #define EWM_BASE_ADDRS                           { EWM_BASE }
 /** Array initializer of EWM peripheral base pointers */
 #define EWM_BASE_PTRS                            { EWM }
-/** Interrupt vectors for the EWM peripheral type */
-#define EWM_IRQS                                 { WDOG_EWM_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- EWM - Register accessor macros
@@ -10076,9 +10045,6 @@ typedef struct {
 #define FTFE_BASE_ADDRS                          { FTFE_BASE }
 /** Array initializer of FTFE peripheral base pointers */
 #define FTFE_BASE_PTRS                           { FTFE }
-/** Interrupt vectors for the FTFE peripheral type */
-#define FTFE_COMMAND_COMPLETE_IRQS               { FTFE_IRQn }
-#define FTFE_READ_COLLISION_IRQS                 { Read_Collision_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- FTFE - Register accessor macros
@@ -11000,8 +10966,6 @@ typedef struct {
 #define FTM_BASE_ADDRS                           { FTM0_BASE, FTM1_BASE, FTM2_BASE, FTM3_BASE }
 /** Array initializer of FTM peripheral base pointers */
 #define FTM_BASE_PTRS                            { FTM0, FTM1, FTM2, FTM3 }
-/** Interrupt vectors for the FTM peripheral type */
-#define FTM_IRQS                                 { FTM0_IRQn, FTM1_IRQn, FTM2_IRQn, FTM3_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- FTM - Register accessor macros
@@ -11916,9 +11880,6 @@ typedef struct {
 #define HSADC_BASE_ADDRS                         { HSADC0_BASE, HSADC1_BASE }
 /** Array initializer of HSADC peripheral base pointers */
 #define HSADC_BASE_PTRS                          { HSADC0, HSADC1 }
-/** Interrupt vectors for the HSADC peripheral type */
-#define HSADC_IRQS                               { { HSADC0_CCA_IRQn, HSADC0_CCB_IRQn }, { HSADC1_CCA_IRQn, HSADC1_CCB_IRQn } }
-#define HSADC_ERR_IRQS                           { HSADC_ERR_IRQn, HSADC_ERR_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- HSADC - Register accessor macros
@@ -12398,8 +12359,6 @@ typedef struct {
 #define I2C_BASE_ADDRS                           { I2C0_BASE, I2C1_BASE }
 /** Array initializer of I2C peripheral base pointers */
 #define I2C_BASE_PTRS                            { I2C0, I2C1 }
-/** Interrupt vectors for the I2C peripheral type */
-#define I2C_IRQS                                 { I2C0_IRQn, I2C1_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- I2C - Register accessor macros
@@ -12926,8 +12885,6 @@ typedef struct {
 #define LLWU_BASE_ADDRS                          { LLWU_BASE }
 /** Array initializer of LLWU peripheral base pointers */
 #define LLWU_BASE_PTRS                           { LLWU }
-/** Interrupt vectors for the LLWU peripheral type */
-#define LLWU_IRQS                                { LLWU_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- LLWU - Register accessor macros
@@ -13085,8 +13042,6 @@ typedef struct {
 #define LPTMR_BASE_ADDRS                         { LPTMR0_BASE }
 /** Array initializer of LPTMR peripheral base pointers */
 #define LPTMR_BASE_PTRS                          { LPTMR0 }
-/** Interrupt vectors for the LPTMR peripheral type */
-#define LPTMR_IRQS                               { LPTMR0_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- LPTMR - Register accessor macros
@@ -13138,7 +13093,7 @@ typedef struct {
        uint8_t RESERVED_1[1];
   __IO uint8_t ATCVH;                              /**< MCG Auto Trim Compare Value High Register, offset: 0xA */
   __IO uint8_t ATCVL;                              /**< MCG Auto Trim Compare Value Low Register, offset: 0xB */
-       uint8_t RESERVED_2[1];
+  __IO uint8_t C7;                                 /**< MCG Control 7 Register, offset: 0xC */
   __IO uint8_t C8;                                 /**< MCG Control 8 Register, offset: 0xD */
 } MCG_Type, *MCG_MemMapPtr;
 
@@ -13163,6 +13118,7 @@ typedef struct {
 #define MCG_SC_REG(base)                         ((base)->SC)
 #define MCG_ATCVH_REG(base)                      ((base)->ATCVH)
 #define MCG_ATCVL_REG(base)                      ((base)->ATCVL)
+#define MCG_C7_REG(base)                         ((base)->C7)
 #define MCG_C8_REG(base)                         ((base)->C8)
 
 /*!
@@ -13345,6 +13301,11 @@ typedef struct {
 #define MCG_ATCVL_ATCVL_SHIFT                    0
 #define MCG_ATCVL_ATCVL_WIDTH                    8
 #define MCG_ATCVL_ATCVL(x)                       (((uint8_t)(((uint8_t)(x))<<MCG_ATCVL_ATCVL_SHIFT))&MCG_ATCVL_ATCVL_MASK)
+/* C7 Bit Fields */
+#define MCG_C7_OSCSEL_MASK                       0x3u
+#define MCG_C7_OSCSEL_SHIFT                      0
+#define MCG_C7_OSCSEL_WIDTH                      2
+#define MCG_C7_OSCSEL(x)                         (((uint8_t)(((uint8_t)(x))<<MCG_C7_OSCSEL_SHIFT))&MCG_C7_OSCSEL_MASK)
 /* C8 Bit Fields */
 #define MCG_C8_LOCS1_MASK                        0x1u
 #define MCG_C8_LOCS1_SHIFT                       0
@@ -13378,8 +13339,6 @@ typedef struct {
 #define MCG_BASE_ADDRS                           { MCG_BASE }
 /** Array initializer of MCG peripheral base pointers */
 #define MCG_BASE_PTRS                            { MCG }
-/** Interrupt vectors for the MCG peripheral type */
-#define MCG_IRQS                                 { MCG_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- MCG - Register accessor macros
@@ -13403,6 +13362,7 @@ typedef struct {
 #define MCG_SC                                   MCG_SC_REG(MCG)
 #define MCG_ATCVH                                MCG_ATCVH_REG(MCG)
 #define MCG_ATCVL                                MCG_ATCVL_REG(MCG)
+#define MCG_C7                                   MCG_C7_REG(MCG)
 #define MCG_C8                                   MCG_C8_REG(MCG)
 
 /*!
@@ -13613,8 +13573,6 @@ typedef struct {
 #define MCM_BASE_ADDRS                           { MCM_BASE }
 /** Array initializer of MCM peripheral base pointers */
 #define MCM_BASE_PTRS                            { MCM }
-/** Interrupt vectors for the MCM peripheral type */
-#define MCM_IRQS                                 { MCM_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- MCM - Register accessor macros
@@ -14919,8 +14877,6 @@ typedef struct {
 #define PDB_BASE_ADDRS                           { PDB0_BASE, PDB1_BASE }
 /** Array initializer of PDB peripheral base pointers */
 #define PDB_BASE_PTRS                            { PDB0, PDB1 }
-/** Interrupt vectors for the PDB peripheral type */
-#define PDB_IRQS                                 { PDB0_IRQn, PDB1_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- PDB - Register accessor macros
@@ -15103,8 +15059,6 @@ typedef struct {
 #define PIT_BASE_ADDRS                           { PIT_BASE }
 /** Array initializer of PIT peripheral base pointers */
 #define PIT_BASE_PTRS                            { PIT }
-/** Interrupt vectors for the PIT peripheral type */
-#define PIT_IRQS                                 { PIT0_IRQn, PIT1_IRQn, PIT2_IRQn, PIT3_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- PIT - Register accessor macros
@@ -15292,8 +15246,6 @@ typedef struct {
 #define PMC_BASE_ADDRS                           { PMC_BASE }
 /** Array initializer of PMC peripheral base pointers */
 #define PMC_BASE_PTRS                            { PMC }
-/** Interrupt vectors for the PMC peripheral type */
-#define PMC_IRQS                                 { PMC_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- PMC - Register accessor macros
@@ -15515,8 +15467,6 @@ typedef struct {
 #define PORT_BASE_ADDRS                          { PORTA_BASE, PORTB_BASE, PORTC_BASE, PORTD_BASE, PORTE_BASE }
 /** Array initializer of PORT peripheral base pointers */
 #define PORT_BASE_PTRS                           { PORTA, PORTB, PORTC, PORTD, PORTE }
-/** Interrupt vectors for the PORT peripheral type */
-#define PORT_IRQS                                { PORTA_IRQn, PORTB_IRQn, PORTC_IRQn, PORTD_IRQn, PORTE_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- PORT - Register accessor macros
@@ -15786,8 +15736,7 @@ typedef struct {
     __IO uint16_t INTEN;                             /**< Interrupt Enable Register, array offset: 0x26, array step: 0x60 */
     __IO uint16_t DMAEN;                             /**< DMA Enable Register, array offset: 0x28, array step: 0x60 */
     __IO uint16_t TCTRL;                             /**< Output Trigger Control Register, array offset: 0x2A, array step: 0x60 */
-    __IO uint16_t DISMAP[1];                         /**< Fault Disable Mapping Register 0, array offset: 0x2C, array step: index*0x60, index2*0x2 */
-         uint8_t RESERVED_1[2];
+    __IO uint16_t DISMAP[2];                         /**< Fault Disable Mapping Register 0..Fault Disable Mapping Register 1, array offset: 0x2C, array step: index*0x60, index2*0x2 */
     __IO uint16_t DTCNT0;                            /**< Deadtime Count Register 0, array offset: 0x30, array step: 0x60 */
     __IO uint16_t DTCNT1;                            /**< Deadtime Count Register 1, array offset: 0x32, array step: 0x60 */
     __IO uint16_t CAPTCTRLA;                         /**< Capture Control A Register, array offset: 0x34, array step: 0x60 */
@@ -15808,7 +15757,7 @@ typedef struct {
     __I  uint16_t CVAL4CYC;                          /**< Capture Value 4 Cycle Register, array offset: 0x52, array step: 0x60 */
     __I  uint16_t CVAL5;                             /**< Capture Value 5 Register, array offset: 0x54, array step: 0x60 */
     __I  uint16_t CVAL5CYC;                          /**< Capture Value 5 Cycle Register, array offset: 0x56, array step: 0x60 */
-         uint8_t RESERVED_2[8];
+         uint8_t RESERVED_1[8];
   } SM[4];
   __IO uint16_t OUTEN;                             /**< Output Enable Register, offset: 0x180 */
   __IO uint16_t MASK;                              /**< Mask Register, offset: 0x182 */
@@ -15816,11 +15765,13 @@ typedef struct {
   __IO uint16_t DTSRCSEL;                          /**< PWM Source Select Register, offset: 0x186 */
   __IO uint16_t MCTRL;                             /**< Master Control Register, offset: 0x188 */
   __IO uint16_t MCTRL2;                            /**< Master Control 2 Register, offset: 0x18A */
-  __IO uint16_t FCTRL;                             /**< Fault Control Register, offset: 0x18C */
-  __IO uint16_t FSTS;                              /**< Fault Status Register, offset: 0x18E */
-  __IO uint16_t FFILT;                             /**< Fault Filter Register, offset: 0x190 */
-  __IO uint16_t FTST;                              /**< Fault Test Register, offset: 0x192 */
-  __IO uint16_t FCTRL2;                            /**< Fault Control 2 Register, offset: 0x194 */
+  struct {                                         /* offset: 0x18C, array step: 0xA */
+    __IO uint16_t FAULT_CTRL;                        /**< Fault Control Register, array offset: 0x18C, array step: 0xA */
+    __IO uint16_t FAULT_STS;                         /**< Fault Status Register, array offset: 0x18E, array step: 0xA */
+    __IO uint16_t FAULT_FILT;                        /**< Fault Filter Register, array offset: 0x190, array step: 0xA */
+    __IO uint16_t FAULT_TST;                         /**< Fault Test Register, array offset: 0x192, array step: 0xA */
+    __IO uint16_t FAULT_CTRL2;                       /**< Fault Control 2 Register, array offset: 0x194, array step: 0xA */
+  } FAULT[2];
 } PWM_Type, *PWM_MemMapPtr;
 
 /* ----------------------------------------------------------------------------
@@ -15878,7 +15829,7 @@ typedef struct {
 #define PWM_TCTRL_COUNT                          4
 #define PWM_DISMAP_REG(base,index,index2)        ((base)->SM[index].DISMAP[index2])
 #define PWM_DISMAP_COUNT                         4
-#define PWM_DISMAP_COUNT2                        1
+#define PWM_DISMAP_COUNT2                        2
 #define PWM_DTCNT0_REG(base,index)               ((base)->SM[index].DTCNT0)
 #define PWM_DTCNT0_COUNT                         4
 #define PWM_DTCNT1_REG(base,index)               ((base)->SM[index].DTCNT1)
@@ -15925,11 +15876,16 @@ typedef struct {
 #define PWM_DTSRCSEL_REG(base)                   ((base)->DTSRCSEL)
 #define PWM_MCTRL_REG(base)                      ((base)->MCTRL)
 #define PWM_MCTRL2_REG(base)                     ((base)->MCTRL2)
-#define PWM_FCTRL_REG(base)                      ((base)->FCTRL)
-#define PWM_FSTS_REG(base)                       ((base)->FSTS)
-#define PWM_FFILT_REG(base)                      ((base)->FFILT)
-#define PWM_FTST_REG(base)                       ((base)->FTST)
-#define PWM_FCTRL2_REG(base)                     ((base)->FCTRL2)
+#define PWM_FAULT_CTRL_REG(base,index)           ((base)->FAULT[index].FAULT_CTRL)
+#define PWM_FAULT_CTRL_COUNT                     2
+#define PWM_FAULT_STS_REG(base,index)            ((base)->FAULT[index].FAULT_STS)
+#define PWM_FAULT_STS_COUNT                      2
+#define PWM_FAULT_FILT_REG(base,index)           ((base)->FAULT[index].FAULT_FILT)
+#define PWM_FAULT_FILT_COUNT                     2
+#define PWM_FAULT_TST_REG(base,index)            ((base)->FAULT[index].FAULT_TST)
+#define PWM_FAULT_TST_COUNT                      2
+#define PWM_FAULT_CTRL2_REG(base,index)          ((base)->FAULT[index].FAULT_CTRL2)
+#define PWM_FAULT_CTRL2_COUNT                    2
 
 /*!
  * @}
@@ -16283,10 +16239,22 @@ typedef struct {
 #define PWM_DISMAP_DIS0A_SHIFT                   0
 #define PWM_DISMAP_DIS0A_WIDTH                   4
 #define PWM_DISMAP_DIS0A(x)                      (((uint16_t)(((uint16_t)(x))<<PWM_DISMAP_DIS0A_SHIFT))&PWM_DISMAP_DIS0A_MASK)
+#define PWM_DISMAP_DIS1A_MASK                    0xFu
+#define PWM_DISMAP_DIS1A_SHIFT                   0
+#define PWM_DISMAP_DIS1A_WIDTH                   4
+#define PWM_DISMAP_DIS1A(x)                      (((uint16_t)(((uint16_t)(x))<<PWM_DISMAP_DIS1A_SHIFT))&PWM_DISMAP_DIS1A_MASK)
 #define PWM_DISMAP_DIS0B_MASK                    0xF0u
 #define PWM_DISMAP_DIS0B_SHIFT                   4
 #define PWM_DISMAP_DIS0B_WIDTH                   4
 #define PWM_DISMAP_DIS0B(x)                      (((uint16_t)(((uint16_t)(x))<<PWM_DISMAP_DIS0B_SHIFT))&PWM_DISMAP_DIS0B_MASK)
+#define PWM_DISMAP_DIS1B_MASK                    0xF0u
+#define PWM_DISMAP_DIS1B_SHIFT                   4
+#define PWM_DISMAP_DIS1B_WIDTH                   4
+#define PWM_DISMAP_DIS1B(x)                      (((uint16_t)(((uint16_t)(x))<<PWM_DISMAP_DIS1B_SHIFT))&PWM_DISMAP_DIS1B_MASK)
+#define PWM_DISMAP_DIS1X_MASK                    0xF00u
+#define PWM_DISMAP_DIS1X_SHIFT                   8
+#define PWM_DISMAP_DIS1X_WIDTH                   4
+#define PWM_DISMAP_DIS1X(x)                      (((uint16_t)(((uint16_t)(x))<<PWM_DISMAP_DIS1X_SHIFT))&PWM_DISMAP_DIS1X_MASK)
 #define PWM_DISMAP_DIS0X_MASK                    0xF00u
 #define PWM_DISMAP_DIS0X_SHIFT                   8
 #define PWM_DISMAP_DIS0X_WIDTH                   4
@@ -16617,63 +16585,63 @@ typedef struct {
 #define PWM_MCTRL2_MONPLL_SHIFT                  0
 #define PWM_MCTRL2_MONPLL_WIDTH                  2
 #define PWM_MCTRL2_MONPLL(x)                     (((uint16_t)(((uint16_t)(x))<<PWM_MCTRL2_MONPLL_SHIFT))&PWM_MCTRL2_MONPLL_MASK)
-/* FCTRL Bit Fields */
-#define PWM_FCTRL_FIE_MASK                       0xFu
-#define PWM_FCTRL_FIE_SHIFT                      0
-#define PWM_FCTRL_FIE_WIDTH                      4
-#define PWM_FCTRL_FIE(x)                         (((uint16_t)(((uint16_t)(x))<<PWM_FCTRL_FIE_SHIFT))&PWM_FCTRL_FIE_MASK)
-#define PWM_FCTRL_FSAFE_MASK                     0xF0u
-#define PWM_FCTRL_FSAFE_SHIFT                    4
-#define PWM_FCTRL_FSAFE_WIDTH                    4
-#define PWM_FCTRL_FSAFE(x)                       (((uint16_t)(((uint16_t)(x))<<PWM_FCTRL_FSAFE_SHIFT))&PWM_FCTRL_FSAFE_MASK)
-#define PWM_FCTRL_FAUTO_MASK                     0xF00u
-#define PWM_FCTRL_FAUTO_SHIFT                    8
-#define PWM_FCTRL_FAUTO_WIDTH                    4
-#define PWM_FCTRL_FAUTO(x)                       (((uint16_t)(((uint16_t)(x))<<PWM_FCTRL_FAUTO_SHIFT))&PWM_FCTRL_FAUTO_MASK)
-#define PWM_FCTRL_FLVL_MASK                      0xF000u
-#define PWM_FCTRL_FLVL_SHIFT                     12
-#define PWM_FCTRL_FLVL_WIDTH                     4
-#define PWM_FCTRL_FLVL(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FCTRL_FLVL_SHIFT))&PWM_FCTRL_FLVL_MASK)
-/* FSTS Bit Fields */
-#define PWM_FSTS_FFLAG_MASK                      0xFu
-#define PWM_FSTS_FFLAG_SHIFT                     0
-#define PWM_FSTS_FFLAG_WIDTH                     4
-#define PWM_FSTS_FFLAG(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FSTS_FFLAG_SHIFT))&PWM_FSTS_FFLAG_MASK)
-#define PWM_FSTS_FFULL_MASK                      0xF0u
-#define PWM_FSTS_FFULL_SHIFT                     4
-#define PWM_FSTS_FFULL_WIDTH                     4
-#define PWM_FSTS_FFULL(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FSTS_FFULL_SHIFT))&PWM_FSTS_FFULL_MASK)
-#define PWM_FSTS_FFPIN_MASK                      0xF00u
-#define PWM_FSTS_FFPIN_SHIFT                     8
-#define PWM_FSTS_FFPIN_WIDTH                     4
-#define PWM_FSTS_FFPIN(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FSTS_FFPIN_SHIFT))&PWM_FSTS_FFPIN_MASK)
-#define PWM_FSTS_FHALF_MASK                      0xF000u
-#define PWM_FSTS_FHALF_SHIFT                     12
-#define PWM_FSTS_FHALF_WIDTH                     4
-#define PWM_FSTS_FHALF(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FSTS_FHALF_SHIFT))&PWM_FSTS_FHALF_MASK)
-/* FFILT Bit Fields */
-#define PWM_FFILT_FILT_PER_MASK                  0xFFu
-#define PWM_FFILT_FILT_PER_SHIFT                 0
-#define PWM_FFILT_FILT_PER_WIDTH                 8
-#define PWM_FFILT_FILT_PER(x)                    (((uint16_t)(((uint16_t)(x))<<PWM_FFILT_FILT_PER_SHIFT))&PWM_FFILT_FILT_PER_MASK)
-#define PWM_FFILT_FILT_CNT_MASK                  0x700u
-#define PWM_FFILT_FILT_CNT_SHIFT                 8
-#define PWM_FFILT_FILT_CNT_WIDTH                 3
-#define PWM_FFILT_FILT_CNT(x)                    (((uint16_t)(((uint16_t)(x))<<PWM_FFILT_FILT_CNT_SHIFT))&PWM_FFILT_FILT_CNT_MASK)
-#define PWM_FFILT_GSTR_MASK                      0x8000u
-#define PWM_FFILT_GSTR_SHIFT                     15
-#define PWM_FFILT_GSTR_WIDTH                     1
-#define PWM_FFILT_GSTR(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FFILT_GSTR_SHIFT))&PWM_FFILT_GSTR_MASK)
-/* FTST Bit Fields */
-#define PWM_FTST_FTEST_MASK                      0x1u
-#define PWM_FTST_FTEST_SHIFT                     0
-#define PWM_FTST_FTEST_WIDTH                     1
-#define PWM_FTST_FTEST(x)                        (((uint16_t)(((uint16_t)(x))<<PWM_FTST_FTEST_SHIFT))&PWM_FTST_FTEST_MASK)
-/* FCTRL2 Bit Fields */
-#define PWM_FCTRL2_NOCOMB_MASK                   0xFu
-#define PWM_FCTRL2_NOCOMB_SHIFT                  0
-#define PWM_FCTRL2_NOCOMB_WIDTH                  4
-#define PWM_FCTRL2_NOCOMB(x)                     (((uint16_t)(((uint16_t)(x))<<PWM_FCTRL2_NOCOMB_SHIFT))&PWM_FCTRL2_NOCOMB_MASK)
+/* FAULT_CTRL Bit Fields */
+#define PWM_FAULT_CTRL_FIE_MASK                  0xFu
+#define PWM_FAULT_CTRL_FIE_SHIFT                 0
+#define PWM_FAULT_CTRL_FIE_WIDTH                 4
+#define PWM_FAULT_CTRL_FIE(x)                    (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_CTRL_FIE_SHIFT))&PWM_FAULT_CTRL_FIE_MASK)
+#define PWM_FAULT_CTRL_FSAFE_MASK                0xF0u
+#define PWM_FAULT_CTRL_FSAFE_SHIFT               4
+#define PWM_FAULT_CTRL_FSAFE_WIDTH               4
+#define PWM_FAULT_CTRL_FSAFE(x)                  (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_CTRL_FSAFE_SHIFT))&PWM_FAULT_CTRL_FSAFE_MASK)
+#define PWM_FAULT_CTRL_FAUTO_MASK                0xF00u
+#define PWM_FAULT_CTRL_FAUTO_SHIFT               8
+#define PWM_FAULT_CTRL_FAUTO_WIDTH               4
+#define PWM_FAULT_CTRL_FAUTO(x)                  (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_CTRL_FAUTO_SHIFT))&PWM_FAULT_CTRL_FAUTO_MASK)
+#define PWM_FAULT_CTRL_FLVL_MASK                 0xF000u
+#define PWM_FAULT_CTRL_FLVL_SHIFT                12
+#define PWM_FAULT_CTRL_FLVL_WIDTH                4
+#define PWM_FAULT_CTRL_FLVL(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_CTRL_FLVL_SHIFT))&PWM_FAULT_CTRL_FLVL_MASK)
+/* FAULT_STS Bit Fields */
+#define PWM_FAULT_STS_FFLAG_MASK                 0xFu
+#define PWM_FAULT_STS_FFLAG_SHIFT                0
+#define PWM_FAULT_STS_FFLAG_WIDTH                4
+#define PWM_FAULT_STS_FFLAG(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_STS_FFLAG_SHIFT))&PWM_FAULT_STS_FFLAG_MASK)
+#define PWM_FAULT_STS_FFULL_MASK                 0xF0u
+#define PWM_FAULT_STS_FFULL_SHIFT                4
+#define PWM_FAULT_STS_FFULL_WIDTH                4
+#define PWM_FAULT_STS_FFULL(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_STS_FFULL_SHIFT))&PWM_FAULT_STS_FFULL_MASK)
+#define PWM_FAULT_STS_FFPIN_MASK                 0xF00u
+#define PWM_FAULT_STS_FFPIN_SHIFT                8
+#define PWM_FAULT_STS_FFPIN_WIDTH                4
+#define PWM_FAULT_STS_FFPIN(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_STS_FFPIN_SHIFT))&PWM_FAULT_STS_FFPIN_MASK)
+#define PWM_FAULT_STS_FHALF_MASK                 0xF000u
+#define PWM_FAULT_STS_FHALF_SHIFT                12
+#define PWM_FAULT_STS_FHALF_WIDTH                4
+#define PWM_FAULT_STS_FHALF(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_STS_FHALF_SHIFT))&PWM_FAULT_STS_FHALF_MASK)
+/* FAULT_FILT Bit Fields */
+#define PWM_FAULT_FILT_FILT_PER_MASK             0xFFu
+#define PWM_FAULT_FILT_FILT_PER_SHIFT            0
+#define PWM_FAULT_FILT_FILT_PER_WIDTH            8
+#define PWM_FAULT_FILT_FILT_PER(x)               (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_FILT_FILT_PER_SHIFT))&PWM_FAULT_FILT_FILT_PER_MASK)
+#define PWM_FAULT_FILT_FILT_CNT_MASK             0x700u
+#define PWM_FAULT_FILT_FILT_CNT_SHIFT            8
+#define PWM_FAULT_FILT_FILT_CNT_WIDTH            3
+#define PWM_FAULT_FILT_FILT_CNT(x)               (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_FILT_FILT_CNT_SHIFT))&PWM_FAULT_FILT_FILT_CNT_MASK)
+#define PWM_FAULT_FILT_GSTR_MASK                 0x8000u
+#define PWM_FAULT_FILT_GSTR_SHIFT                15
+#define PWM_FAULT_FILT_GSTR_WIDTH                1
+#define PWM_FAULT_FILT_GSTR(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_FILT_GSTR_SHIFT))&PWM_FAULT_FILT_GSTR_MASK)
+/* FAULT_TST Bit Fields */
+#define PWM_FAULT_TST_FTEST_MASK                 0x1u
+#define PWM_FAULT_TST_FTEST_SHIFT                0
+#define PWM_FAULT_TST_FTEST_WIDTH                1
+#define PWM_FAULT_TST_FTEST(x)                   (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_TST_FTEST_SHIFT))&PWM_FAULT_TST_FTEST_MASK)
+/* FAULT_CTRL2 Bit Fields */
+#define PWM_FAULT_CTRL2_NOCOMB_MASK              0xFu
+#define PWM_FAULT_CTRL2_NOCOMB_SHIFT             0
+#define PWM_FAULT_CTRL2_NOCOMB_WIDTH             4
+#define PWM_FAULT_CTRL2_NOCOMB(x)                (((uint16_t)(((uint16_t)(x))<<PWM_FAULT_CTRL2_NOCOMB_SHIFT))&PWM_FAULT_CTRL2_NOCOMB_MASK)
 
 /*!
  * @}
@@ -16695,12 +16663,6 @@ typedef struct {
 #define PWM_BASE_ADDRS                           { PWMA_BASE, PWMB_BASE }
 /** Array initializer of PWM peripheral base pointers */
 #define PWM_BASE_PTRS                            { PWMA, PWMB }
-/** Interrupt vectors for the PWM peripheral type */
-#define PWM_CMP_IRQS                             { { PWMA_CMP0_IRQn, PWMA_CMP1_IRQn, PWMA_CMP2_IRQn, PWMA_CMP3_IRQn }, { PWMB_CMP0_IRQn, PWMB_CMP1_IRQn, PWMB_CMP2_IRQn, PWMB_CMP3_IRQn } }
-#define PWM_RELOAD_IRQS                          { { PWMA_RELOAD0_IRQn, PWMA_RELOAD1_IRQn, PWMA_RELOAD2_IRQn, PWMA_RELOAD3_IRQn }, { PWMB_RELOAD0_IRQn, PWMB_RELOAD1_IRQn, PWMB_RELOAD2_IRQn, PWMB_RELOAD3_IRQn } }
-#define PWM_CAP_IRQS                             { PWMA_CAP_IRQn, PWMB_CAP_IRQn }
-#define PWM_RERR_IRQS                            { PWMA_RERR_IRQn, PWMB_RERR_IRQn }
-#define PWM_FAULT_IRQS                           { PWMA_FAULT_IRQn, PWMB_FAULT_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- PWM - Register accessor macros
@@ -16888,11 +16850,11 @@ typedef struct {
 #define PWMA_DTSRCSEL                            PWM_DTSRCSEL_REG(PWMA)
 #define PWMA_MCTRL                               PWM_MCTRL_REG(PWMA)
 #define PWMA_MCTRL2                              PWM_MCTRL2_REG(PWMA)
-#define PWMA_FCTRL                               PWM_FCTRL_REG(PWMA)
-#define PWMA_FSTS                                PWM_FSTS_REG(PWMA)
-#define PWMA_FFILT                               PWM_FFILT_REG(PWMA)
-#define PWMA_FTST                                PWM_FTST_REG(PWMA)
-#define PWMA_FCTRL2                              PWM_FCTRL2_REG(PWMA)
+#define PWMA_FCTRL                               PWM_FAULT_CTRL_REG(PWMA,0)
+#define PWMA_FSTS                                PWM_FAULT_STS_REG(PWMA,0)
+#define PWMA_FFILT                               PWM_FAULT_FILT_REG(PWMA,0)
+#define PWMA_FTST                                PWM_FAULT_TST_REG(PWMA,0)
+#define PWMA_FCTRL2                              PWM_FAULT_CTRL2_REG(PWMA,0)
 /* PWMB */
 #define PWMB_SM0CNT                              PWM_CNT_REG(PWMB,0)
 #define PWMB_SM0INIT                             PWM_INIT_REG(PWMB,0)
@@ -16916,6 +16878,7 @@ typedef struct {
 #define PWMB_SM0DMAEN                            PWM_DMAEN_REG(PWMB,0)
 #define PWMB_SM0TCTRL                            PWM_TCTRL_REG(PWMB,0)
 #define PWMB_SM0DISMAP0                          PWM_DISMAP_REG(PWMB,0,0)
+#define PWMB_SM0DISMAP1                          PWM_DISMAP_REG(PWMB,0,1)
 #define PWMB_SM0DTCNT0                           PWM_DTCNT0_REG(PWMB,0)
 #define PWMB_SM0DTCNT1                           PWM_DTCNT1_REG(PWMB,0)
 #define PWMB_SM0CAPTCTRLA                        PWM_CAPTCTRLA_REG(PWMB,0)
@@ -16958,6 +16921,7 @@ typedef struct {
 #define PWMB_SM1DMAEN                            PWM_DMAEN_REG(PWMB,1)
 #define PWMB_SM1TCTRL                            PWM_TCTRL_REG(PWMB,1)
 #define PWMB_SM1DISMAP0                          PWM_DISMAP_REG(PWMB,1,0)
+#define PWMB_SM1DISMAP1                          PWM_DISMAP_REG(PWMB,1,1)
 #define PWMB_SM1DTCNT0                           PWM_DTCNT0_REG(PWMB,1)
 #define PWMB_SM1DTCNT1                           PWM_DTCNT1_REG(PWMB,1)
 #define PWMB_SM1CAPTCTRLA                        PWM_CAPTCTRLA_REG(PWMB,1)
@@ -17000,6 +16964,7 @@ typedef struct {
 #define PWMB_SM2DMAEN                            PWM_DMAEN_REG(PWMB,2)
 #define PWMB_SM2TCTRL                            PWM_TCTRL_REG(PWMB,2)
 #define PWMB_SM2DISMAP0                          PWM_DISMAP_REG(PWMB,2,0)
+#define PWMB_SM2DISMAP1                          PWM_DISMAP_REG(PWMB,2,1)
 #define PWMB_SM2DTCNT0                           PWM_DTCNT0_REG(PWMB,2)
 #define PWMB_SM2DTCNT1                           PWM_DTCNT1_REG(PWMB,2)
 #define PWMB_SM2CAPTCTRLA                        PWM_CAPTCTRLA_REG(PWMB,2)
@@ -17042,6 +17007,7 @@ typedef struct {
 #define PWMB_SM3DMAEN                            PWM_DMAEN_REG(PWMB,3)
 #define PWMB_SM3TCTRL                            PWM_TCTRL_REG(PWMB,3)
 #define PWMB_SM3DISMAP0                          PWM_DISMAP_REG(PWMB,3,0)
+#define PWMB_SM3DISMAP1                          PWM_DISMAP_REG(PWMB,3,1)
 #define PWMB_SM3DTCNT0                           PWM_DTCNT0_REG(PWMB,3)
 #define PWMB_SM3DTCNT1                           PWM_DTCNT1_REG(PWMB,3)
 #define PWMB_SM3CAPTCTRLA                        PWM_CAPTCTRLA_REG(PWMB,3)
@@ -17067,10 +17033,14 @@ typedef struct {
 #define PWMB_SWCOUT                              PWM_SWCOUT_REG(PWMB)
 #define PWMB_DTSRCSEL                            PWM_DTSRCSEL_REG(PWMB)
 #define PWMB_MCTRL                               PWM_MCTRL_REG(PWMB)
-#define PWMB_FCTRL                               PWM_FCTRL_REG(PWMB)
-#define PWMB_FSTS                                PWM_FSTS_REG(PWMB)
-#define PWMB_FFILT                               PWM_FFILT_REG(PWMB)
-#define PWMB_FTST                                PWM_FTST_REG(PWMB)
+#define PWMB_FCTRL0                              PWM_FAULT_CTRL_REG(PWMB,0)
+#define PWMB_FSTS0                               PWM_FAULT_STS_REG(PWMB,0)
+#define PWMB_FFILT0                              PWM_FAULT_FILT_REG(PWMB,0)
+#define PWMB_FTST0                               PWM_FAULT_TST_REG(PWMB,0)
+#define PWMB_FCTRL1                              PWM_FAULT_CTRL_REG(PWMB,1)
+#define PWMB_FSTS1                               PWM_FAULT_STS_REG(PWMB,1)
+#define PWMB_FFILT1                              PWM_FAULT_FILT_REG(PWMB,1)
+#define PWMB_FTST1                               PWM_FAULT_TST_REG(PWMB,1)
 
 /* PWM - Register array accessors */
 #define PWMA_CNT(index)                          PWM_CNT_REG(PWMA,index)
@@ -17157,6 +17127,15 @@ typedef struct {
 #define PWMB_CVAL5(index)                        PWM_CVAL5_REG(PWMB,index)
 #define PWMA_CVAL5CYC(index)                     PWM_CVAL5CYC_REG(PWMA,index)
 #define PWMB_CVAL5CYC(index)                     PWM_CVAL5CYC_REG(PWMB,index)
+#define PWMA_FAULT_CTRL(index)                   PWM_FAULT_CTRL_REG(PWMA,index)
+#define PWMB_FAULT_CTRL(index)                   PWM_FAULT_CTRL_REG(PWMB,index)
+#define PWMA_FAULT_STS(index)                    PWM_FAULT_STS_REG(PWMA,index)
+#define PWMB_FAULT_STS(index)                    PWM_FAULT_STS_REG(PWMB,index)
+#define PWMA_FAULT_FILT(index)                   PWM_FAULT_FILT_REG(PWMA,index)
+#define PWMB_FAULT_FILT(index)                   PWM_FAULT_FILT_REG(PWMB,index)
+#define PWMA_FAULT_TST(index)                    PWM_FAULT_TST_REG(PWMA,index)
+#define PWMB_FAULT_TST(index)                    PWM_FAULT_TST_REG(PWMB,index)
+#define PWMA_FAULT_CTRL2(index)                  PWM_FAULT_CTRL2_REG(PWMA,index)
 
 /*!
  * @}
@@ -19038,8 +19017,6 @@ typedef struct {
 #define SPI_BASE_ADDRS                           { SPI0_BASE, SPI1_BASE, SPI2_BASE }
 /** Array initializer of SPI peripheral base pointers */
 #define SPI_BASE_PTRS                            { SPI0, SPI1, SPI2 }
-/** Interrupt vectors for the SPI peripheral type */
-#define SPI_IRQS                                 { SPI0_IRQn, SPI1_IRQn, SPI2_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- SPI - Register accessor macros
@@ -19139,68 +19116,83 @@ typedef struct {
 
 /** TRNG - Register Layout Typedef */
 typedef struct {
-  __IO uint32_t MCTL;                              /**< RNG Miscellaneous Control Register, offset: 0x0 */
-  __IO uint32_t SCMISC;                            /**< RNG Statistical Check Miscellaneous Register, offset: 0x4 */
-  __IO uint32_t PKRRNG;                            /**< RNG Poker Range Register, offset: 0x8 */
+  __IO uint32_t RTMCTL;                            /**< RNG Miscellaneous Control Register, offset: 0x0 */
+  __IO uint32_t RTSCMISC;                          /**< RNG Statistical Check Miscellaneous Register, offset: 0x4 */
+  __IO uint32_t RTPKRRNG;                          /**< RNG Poker Range Register, offset: 0x8 */
   union {                                          /* offset: 0xC */
-    __IO uint32_t PKRMAX;                            /**< RNG Poker Maximum Limit Register, offset: 0xC */
-    __I  uint32_t PKRSQ;                             /**< RNG Poker Square Calculation Result Register, offset: 0xC */
+    __IO uint32_t RTPKRMAX;                          /**< RNG Poker Maximum Limit Register, offset: 0xC */
+    __I  uint32_t RTPKRSQ;                           /**< RNG Poker Square Calculation Result Register, offset: 0xC */
   };
-  __IO uint32_t SDCTL;                             /**< RNG Seed Control Register, offset: 0x10 */
+  __IO uint32_t RTSDCTL;                           /**< RNG Seed Control Register, offset: 0x10 */
   union {                                          /* offset: 0x14 */
-    __IO uint32_t SBLIM;                             /**< RNG Sparse Bit Limit Register, offset: 0x14 */
-    __I  uint32_t TOTSAM;                            /**< RNG Total Samples Register, offset: 0x14 */
+    __IO uint32_t RTSBLIM;                           /**< RNG Sparse Bit Limit Register, offset: 0x14 */
+    __I  uint32_t RTTOTSAM;                          /**< RNG Total Samples Register, offset: 0x14 */
   };
-  __IO uint32_t FRQMIN;                            /**< RNG Frequency Count Minimum Limit Register, offset: 0x18 */
+  __IO uint32_t RTFRQMIN;                          /**< RNG Frequency Count Minimum Limit Register, offset: 0x18 */
   union {                                          /* offset: 0x1C */
-    __I  uint32_t FRQCNT;                            /**< RNG Frequency Count Register, offset: 0x1C */
-    __IO uint32_t FRQMAX;                            /**< RNG Frequency Count Maximum Limit Register, offset: 0x1C */
+    __I  uint32_t RTFRQCNT;                          /**< RNG Frequency Count Register, offset: 0x1C */
+    __IO uint32_t RTFRQMAX;                          /**< RNG Frequency Count Maximum Limit Register, offset: 0x1C */
   };
   union {                                          /* offset: 0x20 */
-    __I  uint32_t SCMC;                              /**< RNG Statistical Check Monobit Count Register, offset: 0x20 */
-    __IO uint32_t SCML;                              /**< RNG Statistical Check Monobit Limit Register, offset: 0x20 */
+    __I  uint32_t RTSCMC;                            /**< RNG Statistical Check Monobit Count Register, offset: 0x20 */
+    __IO uint32_t RTSCML;                            /**< RNG Statistical Check Monobit Limit Register, offset: 0x20 */
   };
   union {                                          /* offset: 0x24 */
-    __I  uint32_t SCR1C;                             /**< RNG Statistical Check Run Length 1 Count Register, offset: 0x24 */
-    __IO uint32_t SCR1L;                             /**< RNG Statistical Check Run Length 1 Limit Register, offset: 0x24 */
+    __I  uint32_t RTSCR1C;                           /**< RNG Statistical Check Run Length 1 Count Register, offset: 0x24 */
+    __IO uint32_t RTSCR1L;                           /**< RNG Statistical Check Run Length 1 Limit Register, offset: 0x24 */
   };
   union {                                          /* offset: 0x28 */
-    __I  uint32_t SCR2C;                             /**< RNG Statistical Check Run Length 2 Count Register, offset: 0x28 */
-    __IO uint32_t SCR2L;                             /**< RNG Statistical Check Run Length 2 Limit Register, offset: 0x28 */
+    __I  uint32_t RTSCR2C;                           /**< RNG Statistical Check Run Length 2 Count Register, offset: 0x28 */
+    __IO uint32_t RTSCR2L;                           /**< RNG Statistical Check Run Length 2 Limit Register, offset: 0x28 */
   };
   union {                                          /* offset: 0x2C */
-    __I  uint32_t SCR3C;                             /**< RNG Statistical Check Run Length 3 Count Register, offset: 0x2C */
-    __IO uint32_t SCR3L;                             /**< RNG Statistical Check Run Length 3 Limit Register, offset: 0x2C */
+    __I  uint32_t RTSCR3C;                           /**< RNG Statistical Check Run Length 3 Count Register, offset: 0x2C */
+    __IO uint32_t RTSCR3L;                           /**< RNG Statistical Check Run Length 3 Limit Register, offset: 0x2C */
   };
   union {                                          /* offset: 0x30 */
-    __I  uint32_t SCR4C;                             /**< RNG Statistical Check Run Length 4 Count Register, offset: 0x30 */
-    __IO uint32_t SCR4L;                             /**< RNG Statistical Check Run Length 4 Limit Register, offset: 0x30 */
+    __I  uint32_t RTSCR4C;                           /**< RNG Statistical Check Run Length 4 Count Register, offset: 0x30 */
+    __IO uint32_t RTSCR4L;                           /**< RNG Statistical Check Run Length 4 Limit Register, offset: 0x30 */
   };
   union {                                          /* offset: 0x34 */
-    __I  uint32_t SCR5C;                             /**< RNG Statistical Check Run Length 5 Count Register, offset: 0x34 */
-    __IO uint32_t SCR5L;                             /**< RNG Statistical Check Run Length 5 Limit Register, offset: 0x34 */
+    __I  uint32_t RTSCR5C;                           /**< RNG Statistical Check Run Length 5 Count Register, offset: 0x34 */
+    __IO uint32_t RTSCR5L;                           /**< RNG Statistical Check Run Length 5 Limit Register, offset: 0x34 */
   };
   union {                                          /* offset: 0x38 */
-    __I  uint32_t SCR6PC;                            /**< RNG Statistical Check Run Length 6+ Count Register, offset: 0x38 */
-    __IO uint32_t SCR6PL;                            /**< RNG Statistical Check Run Length 6+ Limit Register, offset: 0x38 */
+    __I  uint32_t RTSCR6PC;                          /**< RNG Statistical Check Run Length 6+ Count Register, offset: 0x38 */
+    __IO uint32_t RTSCR6PL;                          /**< RNG Statistical Check Run Length 6+ Limit Register, offset: 0x38 */
   };
-  __I  uint32_t STATUS;                            /**< RNG Status Register, offset: 0x3C */
-  __I  uint32_t ENT[16];                           /**< RNG TRNG Entropy Read Register, array offset: 0x40, array step: 0x4 */
-  __I  uint32_t PKRCNT10;                          /**< RNG Statistical Check Poker Count 1 and 0 Register, offset: 0x80 */
-  __I  uint32_t PKRCNT32;                          /**< RNG Statistical Check Poker Count 3 and 2 Register, offset: 0x84 */
-  __I  uint32_t PKRCNT54;                          /**< RNG Statistical Check Poker Count 5 and 4 Register, offset: 0x88 */
-  __I  uint32_t PKRCNT76;                          /**< RNG Statistical Check Poker Count 7 and 6 Register, offset: 0x8C */
-  __I  uint32_t PKRCNT98;                          /**< RNG Statistical Check Poker Count 9 and 8 Register, offset: 0x90 */
-  __I  uint32_t PKRCNTBA;                          /**< RNG Statistical Check Poker Count B and A Register, offset: 0x94 */
-  __I  uint32_t PKRCNTDC;                          /**< RNG Statistical Check Poker Count D and C Register, offset: 0x98 */
-  __I  uint32_t PKRCNTFE;                          /**< RNG Statistical Check Poker Count F and E Register, offset: 0x9C */
-  __IO uint32_t SEC_CFG;                           /**< RNG Security Configuration Register, offset: 0xA0 */
-  __IO uint32_t INT_CTRL;                          /**< RNG Interrupt Control Register, offset: 0xA4 */
-  __IO uint32_t INT_MASK;                          /**< RNG Mask Register, offset: 0xA8 */
-  __IO uint32_t INT_STATUS;                        /**< RNG Interrupt Status Register, offset: 0xAC */
+  __I  uint32_t RTSTATUS;                          /**< RNG Status Register, offset: 0x3C */
+  __I  uint32_t RTENT0;                            /**< RNG TRNG Entropy Read Register, offset: 0x40 */
+  __I  uint32_t RTENT1;                            /**< RNG TRNG Entropy Read Register, offset: 0x44 */
+  __I  uint32_t RTENT2;                            /**< RNG TRNG Entropy Read Register, offset: 0x48 */
+  __I  uint32_t RTENT3;                            /**< RNG TRNG Entropy Read Register, offset: 0x4C */
+  __I  uint32_t RTENT4;                            /**< RNG TRNG Entropy Read Register, offset: 0x50 */
+  __I  uint32_t RTENT5;                            /**< RNG TRNG Entropy Read Register, offset: 0x54 */
+  __I  uint32_t RTENT6;                            /**< RNG TRNG Entropy Read Register, offset: 0x58 */
+  __I  uint32_t RTENT7;                            /**< RNG TRNG Entropy Read Register, offset: 0x5C */
+  __I  uint32_t RTENT8;                            /**< RNG TRNG Entropy Read Register, offset: 0x60 */
+  __I  uint32_t RTENT9;                            /**< RNG TRNG Entropy Read Register, offset: 0x64 */
+  __I  uint32_t RTENT10;                           /**< RNG TRNG Entropy Read Register, offset: 0x68 */
+  __I  uint32_t RTENT11;                           /**< RNG TRNG Entropy Read Register, offset: 0x6C */
+  __I  uint32_t RTENT12;                           /**< RNG TRNG Entropy Read Register, offset: 0x70 */
+  __I  uint32_t RTENT13;                           /**< RNG TRNG Entropy Read Register, offset: 0x74 */
+  __I  uint32_t RTENT14;                           /**< RNG TRNG Entropy Read Register, offset: 0x78 */
+  __I  uint32_t RTENT15;                           /**< RNG TRNG Entropy Read Register, offset: 0x7C */
+  __I  uint32_t RTPKRCNT10;                        /**< RNG Statistical Check Poker Count 1 and 0 Register, offset: 0x80 */
+  __I  uint32_t RTPKRCNT32;                        /**< RNG Statistical Check Poker Count 3 and 2 Register, offset: 0x84 */
+  __I  uint32_t RTPKRCNT54;                        /**< RNG Statistical Check Poker Count 5 and 4 Register, offset: 0x88 */
+  __I  uint32_t RTPKRCNT76;                        /**< RNG Statistical Check Poker Count 7 and 6 Register, offset: 0x8C */
+  __I  uint32_t RTPKRCNT98;                        /**< RNG Statistical Check Poker Count 9 and 8 Register, offset: 0x90 */
+  __I  uint32_t RTPKRCNTBA;                        /**< RNG Statistical Check Poker Count B and A Register, offset: 0x94 */
+  __I  uint32_t RTPKRCNTDC;                        /**< RNG Statistical Check Poker Count D and C Register, offset: 0x98 */
+  __I  uint32_t RTPKRCNTFE;                        /**< RNG Statistical Check Poker Count F and E Register, offset: 0x9C */
+  __IO uint32_t SA_TRNG_SEC_CFG;                   /**< RNG Security Configuration Register, offset: 0xA0 */
+  __IO uint32_t SA_TRNG_INT_CTRL;                  /**< RNG Interrupt Control Register, offset: 0xA4 */
+  __IO uint32_t SA_TRNG_INT_MASK;                  /**< RNG Mask Register, offset: 0xA8 */
+  __IO uint32_t SA_TRNG_INT_STATUS;                /**< RNG Interrupt Status Register, offset: 0xAC */
        uint8_t RESERVED_0[64];
-  __I  uint32_t VID1;                              /**< RNG Version ID Register (MS), offset: 0xF0 */
-  __I  uint32_t VID2;                              /**< RNG Version ID Register (LS), offset: 0xF4 */
+  __I  uint32_t SA_TRNG_VID1;                      /**< RNG Version ID Register (MS), offset: 0xF0 */
+  __I  uint32_t SA_TRNG_VID2;                      /**< RNG Version ID Register (LS), offset: 0xF4 */
 } TRNG_Type, *TRNG_MemMapPtr;
 
 /* ----------------------------------------------------------------------------
@@ -19214,48 +19206,62 @@ typedef struct {
 
 
 /* TRNG - Register accessors */
-#define TRNG_MCTL_REG(base)                      ((base)->MCTL)
-#define TRNG_SCMISC_REG(base)                    ((base)->SCMISC)
-#define TRNG_PKRRNG_REG(base)                    ((base)->PKRRNG)
-#define TRNG_PKRMAX_REG(base)                    ((base)->PKRMAX)
-#define TRNG_PKRSQ_REG(base)                     ((base)->PKRSQ)
-#define TRNG_SDCTL_REG(base)                     ((base)->SDCTL)
-#define TRNG_SBLIM_REG(base)                     ((base)->SBLIM)
-#define TRNG_TOTSAM_REG(base)                    ((base)->TOTSAM)
-#define TRNG_FRQMIN_REG(base)                    ((base)->FRQMIN)
-#define TRNG_FRQCNT_REG(base)                    ((base)->FRQCNT)
-#define TRNG_FRQMAX_REG(base)                    ((base)->FRQMAX)
-#define TRNG_SCMC_REG(base)                      ((base)->SCMC)
-#define TRNG_SCML_REG(base)                      ((base)->SCML)
-#define TRNG_SCR1C_REG(base)                     ((base)->SCR1C)
-#define TRNG_SCR1L_REG(base)                     ((base)->SCR1L)
-#define TRNG_SCR2C_REG(base)                     ((base)->SCR2C)
-#define TRNG_SCR2L_REG(base)                     ((base)->SCR2L)
-#define TRNG_SCR3C_REG(base)                     ((base)->SCR3C)
-#define TRNG_SCR3L_REG(base)                     ((base)->SCR3L)
-#define TRNG_SCR4C_REG(base)                     ((base)->SCR4C)
-#define TRNG_SCR4L_REG(base)                     ((base)->SCR4L)
-#define TRNG_SCR5C_REG(base)                     ((base)->SCR5C)
-#define TRNG_SCR5L_REG(base)                     ((base)->SCR5L)
-#define TRNG_SCR6PC_REG(base)                    ((base)->SCR6PC)
-#define TRNG_SCR6PL_REG(base)                    ((base)->SCR6PL)
-#define TRNG_STATUS_REG(base)                    ((base)->STATUS)
-#define TRNG_ENT_REG(base,index)                 ((base)->ENT[index])
-#define TRNG_ENT_COUNT                           16
-#define TRNG_PKRCNT10_REG(base)                  ((base)->PKRCNT10)
-#define TRNG_PKRCNT32_REG(base)                  ((base)->PKRCNT32)
-#define TRNG_PKRCNT54_REG(base)                  ((base)->PKRCNT54)
-#define TRNG_PKRCNT76_REG(base)                  ((base)->PKRCNT76)
-#define TRNG_PKRCNT98_REG(base)                  ((base)->PKRCNT98)
-#define TRNG_PKRCNTBA_REG(base)                  ((base)->PKRCNTBA)
-#define TRNG_PKRCNTDC_REG(base)                  ((base)->PKRCNTDC)
-#define TRNG_PKRCNTFE_REG(base)                  ((base)->PKRCNTFE)
-#define TRNG_SEC_CFG_REG(base)                   ((base)->SEC_CFG)
-#define TRNG_INT_CTRL_REG(base)                  ((base)->INT_CTRL)
-#define TRNG_INT_MASK_REG(base)                  ((base)->INT_MASK)
-#define TRNG_INT_STATUS_REG(base)                ((base)->INT_STATUS)
-#define TRNG_VID1_REG(base)                      ((base)->VID1)
-#define TRNG_VID2_REG(base)                      ((base)->VID2)
+#define TRNG_RTMCTL_REG(base)                    ((base)->RTMCTL)
+#define TRNG_RTSCMISC_REG(base)                  ((base)->RTSCMISC)
+#define TRNG_RTPKRRNG_REG(base)                  ((base)->RTPKRRNG)
+#define TRNG_RTPKRMAX_REG(base)                  ((base)->RTPKRMAX)
+#define TRNG_RTPKRSQ_REG(base)                   ((base)->RTPKRSQ)
+#define TRNG_RTSDCTL_REG(base)                   ((base)->RTSDCTL)
+#define TRNG_RTSBLIM_REG(base)                   ((base)->RTSBLIM)
+#define TRNG_RTTOTSAM_REG(base)                  ((base)->RTTOTSAM)
+#define TRNG_RTFRQMIN_REG(base)                  ((base)->RTFRQMIN)
+#define TRNG_RTFRQCNT_REG(base)                  ((base)->RTFRQCNT)
+#define TRNG_RTFRQMAX_REG(base)                  ((base)->RTFRQMAX)
+#define TRNG_RTSCMC_REG(base)                    ((base)->RTSCMC)
+#define TRNG_RTSCML_REG(base)                    ((base)->RTSCML)
+#define TRNG_RTSCR1C_REG(base)                   ((base)->RTSCR1C)
+#define TRNG_RTSCR1L_REG(base)                   ((base)->RTSCR1L)
+#define TRNG_RTSCR2C_REG(base)                   ((base)->RTSCR2C)
+#define TRNG_RTSCR2L_REG(base)                   ((base)->RTSCR2L)
+#define TRNG_RTSCR3C_REG(base)                   ((base)->RTSCR3C)
+#define TRNG_RTSCR3L_REG(base)                   ((base)->RTSCR3L)
+#define TRNG_RTSCR4C_REG(base)                   ((base)->RTSCR4C)
+#define TRNG_RTSCR4L_REG(base)                   ((base)->RTSCR4L)
+#define TRNG_RTSCR5C_REG(base)                   ((base)->RTSCR5C)
+#define TRNG_RTSCR5L_REG(base)                   ((base)->RTSCR5L)
+#define TRNG_RTSCR6PC_REG(base)                  ((base)->RTSCR6PC)
+#define TRNG_RTSCR6PL_REG(base)                  ((base)->RTSCR6PL)
+#define TRNG_RTSTATUS_REG(base)                  ((base)->RTSTATUS)
+#define TRNG_RTENT0_REG(base)                    ((base)->RTENT0)
+#define TRNG_RTENT1_REG(base)                    ((base)->RTENT1)
+#define TRNG_RTENT2_REG(base)                    ((base)->RTENT2)
+#define TRNG_RTENT3_REG(base)                    ((base)->RTENT3)
+#define TRNG_RTENT4_REG(base)                    ((base)->RTENT4)
+#define TRNG_RTENT5_REG(base)                    ((base)->RTENT5)
+#define TRNG_RTENT6_REG(base)                    ((base)->RTENT6)
+#define TRNG_RTENT7_REG(base)                    ((base)->RTENT7)
+#define TRNG_RTENT8_REG(base)                    ((base)->RTENT8)
+#define TRNG_RTENT9_REG(base)                    ((base)->RTENT9)
+#define TRNG_RTENT10_REG(base)                   ((base)->RTENT10)
+#define TRNG_RTENT11_REG(base)                   ((base)->RTENT11)
+#define TRNG_RTENT12_REG(base)                   ((base)->RTENT12)
+#define TRNG_RTENT13_REG(base)                   ((base)->RTENT13)
+#define TRNG_RTENT14_REG(base)                   ((base)->RTENT14)
+#define TRNG_RTENT15_REG(base)                   ((base)->RTENT15)
+#define TRNG_RTPKRCNT10_REG(base)                ((base)->RTPKRCNT10)
+#define TRNG_RTPKRCNT32_REG(base)                ((base)->RTPKRCNT32)
+#define TRNG_RTPKRCNT54_REG(base)                ((base)->RTPKRCNT54)
+#define TRNG_RTPKRCNT76_REG(base)                ((base)->RTPKRCNT76)
+#define TRNG_RTPKRCNT98_REG(base)                ((base)->RTPKRCNT98)
+#define TRNG_RTPKRCNTBA_REG(base)                ((base)->RTPKRCNTBA)
+#define TRNG_RTPKRCNTDC_REG(base)                ((base)->RTPKRCNTDC)
+#define TRNG_RTPKRCNTFE_REG(base)                ((base)->RTPKRCNTFE)
+#define TRNG_SA_TRNG_SEC_CFG_REG(base)           ((base)->SA_TRNG_SEC_CFG)
+#define TRNG_SA_TRNG_INT_CTRL_REG(base)          ((base)->SA_TRNG_INT_CTRL)
+#define TRNG_SA_TRNG_INT_MASK_REG(base)          ((base)->SA_TRNG_INT_MASK)
+#define TRNG_SA_TRNG_INT_STATUS_REG(base)        ((base)->SA_TRNG_INT_STATUS)
+#define TRNG_SA_TRNG_VID1_REG(base)              ((base)->SA_TRNG_VID1)
+#define TRNG_SA_TRNG_VID2_REG(base)              ((base)->SA_TRNG_VID2)
 
 /*!
  * @}
@@ -19271,471 +19277,546 @@ typedef struct {
  * @{
  */
 
-/* MCTL Bit Fields */
-#define TRNG_MCTL_SAMP_MODE_MASK                 0x3u
-#define TRNG_MCTL_SAMP_MODE_SHIFT                0
-#define TRNG_MCTL_SAMP_MODE_WIDTH                2
-#define TRNG_MCTL_SAMP_MODE(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_SAMP_MODE_SHIFT))&TRNG_MCTL_SAMP_MODE_MASK)
-#define TRNG_MCTL_OSC_DIV_MASK                   0xCu
-#define TRNG_MCTL_OSC_DIV_SHIFT                  2
-#define TRNG_MCTL_OSC_DIV_WIDTH                  2
-#define TRNG_MCTL_OSC_DIV(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_OSC_DIV_SHIFT))&TRNG_MCTL_OSC_DIV_MASK)
-#define TRNG_MCTL_UNUSED_MASK                    0x10u
-#define TRNG_MCTL_UNUSED_SHIFT                   4
-#define TRNG_MCTL_UNUSED_WIDTH                   1
-#define TRNG_MCTL_UNUSED(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_UNUSED_SHIFT))&TRNG_MCTL_UNUSED_MASK)
-#define TRNG_MCTL_TRNG_ACC_MASK                  0x20u
-#define TRNG_MCTL_TRNG_ACC_SHIFT                 5
-#define TRNG_MCTL_TRNG_ACC_WIDTH                 1
-#define TRNG_MCTL_TRNG_ACC(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_TRNG_ACC_SHIFT))&TRNG_MCTL_TRNG_ACC_MASK)
-#define TRNG_MCTL_RST_DEF_MASK                   0x40u
-#define TRNG_MCTL_RST_DEF_SHIFT                  6
-#define TRNG_MCTL_RST_DEF_WIDTH                  1
-#define TRNG_MCTL_RST_DEF(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_RST_DEF_SHIFT))&TRNG_MCTL_RST_DEF_MASK)
-#define TRNG_MCTL_FOR_SCLK_MASK                  0x80u
-#define TRNG_MCTL_FOR_SCLK_SHIFT                 7
-#define TRNG_MCTL_FOR_SCLK_WIDTH                 1
-#define TRNG_MCTL_FOR_SCLK(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_FOR_SCLK_SHIFT))&TRNG_MCTL_FOR_SCLK_MASK)
-#define TRNG_MCTL_FCT_FAIL_MASK                  0x100u
-#define TRNG_MCTL_FCT_FAIL_SHIFT                 8
-#define TRNG_MCTL_FCT_FAIL_WIDTH                 1
-#define TRNG_MCTL_FCT_FAIL(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_FCT_FAIL_SHIFT))&TRNG_MCTL_FCT_FAIL_MASK)
-#define TRNG_MCTL_FCT_VAL_MASK                   0x200u
-#define TRNG_MCTL_FCT_VAL_SHIFT                  9
-#define TRNG_MCTL_FCT_VAL_WIDTH                  1
-#define TRNG_MCTL_FCT_VAL(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_FCT_VAL_SHIFT))&TRNG_MCTL_FCT_VAL_MASK)
-#define TRNG_MCTL_ENT_VAL_MASK                   0x400u
-#define TRNG_MCTL_ENT_VAL_SHIFT                  10
-#define TRNG_MCTL_ENT_VAL_WIDTH                  1
-#define TRNG_MCTL_ENT_VAL(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_ENT_VAL_SHIFT))&TRNG_MCTL_ENT_VAL_MASK)
-#define TRNG_MCTL_TST_OUT_MASK                   0x800u
-#define TRNG_MCTL_TST_OUT_SHIFT                  11
-#define TRNG_MCTL_TST_OUT_WIDTH                  1
-#define TRNG_MCTL_TST_OUT(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_TST_OUT_SHIFT))&TRNG_MCTL_TST_OUT_MASK)
-#define TRNG_MCTL_ERR_MASK                       0x1000u
-#define TRNG_MCTL_ERR_SHIFT                      12
-#define TRNG_MCTL_ERR_WIDTH                      1
-#define TRNG_MCTL_ERR(x)                         (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_ERR_SHIFT))&TRNG_MCTL_ERR_MASK)
-#define TRNG_MCTL_TSTOP_OK_MASK                  0x2000u
-#define TRNG_MCTL_TSTOP_OK_SHIFT                 13
-#define TRNG_MCTL_TSTOP_OK_WIDTH                 1
-#define TRNG_MCTL_TSTOP_OK(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_TSTOP_OK_SHIFT))&TRNG_MCTL_TSTOP_OK_MASK)
-#define TRNG_MCTL_PRGM_MASK                      0x10000u
-#define TRNG_MCTL_PRGM_SHIFT                     16
-#define TRNG_MCTL_PRGM_WIDTH                     1
-#define TRNG_MCTL_PRGM(x)                        (((uint32_t)(((uint32_t)(x))<<TRNG_MCTL_PRGM_SHIFT))&TRNG_MCTL_PRGM_MASK)
-/* SCMISC Bit Fields */
-#define TRNG_SCMISC_LRUN_MAX_MASK                0xFFu
-#define TRNG_SCMISC_LRUN_MAX_SHIFT               0
-#define TRNG_SCMISC_LRUN_MAX_WIDTH               8
-#define TRNG_SCMISC_LRUN_MAX(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_SCMISC_LRUN_MAX_SHIFT))&TRNG_SCMISC_LRUN_MAX_MASK)
-#define TRNG_SCMISC_RTY_CT_MASK                  0xF0000u
-#define TRNG_SCMISC_RTY_CT_SHIFT                 16
-#define TRNG_SCMISC_RTY_CT_WIDTH                 4
-#define TRNG_SCMISC_RTY_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCMISC_RTY_CT_SHIFT))&TRNG_SCMISC_RTY_CT_MASK)
-/* PKRRNG Bit Fields */
-#define TRNG_PKRRNG_PKR_RNG_MASK                 0xFFFFu
-#define TRNG_PKRRNG_PKR_RNG_SHIFT                0
-#define TRNG_PKRRNG_PKR_RNG_WIDTH                16
-#define TRNG_PKRRNG_PKR_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_PKRRNG_PKR_RNG_SHIFT))&TRNG_PKRRNG_PKR_RNG_MASK)
-/* PKRMAX Bit Fields */
-#define TRNG_PKRMAX_PKR_MAX_MASK                 0xFFFFFFu
-#define TRNG_PKRMAX_PKR_MAX_SHIFT                0
-#define TRNG_PKRMAX_PKR_MAX_WIDTH                24
-#define TRNG_PKRMAX_PKR_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_PKRMAX_PKR_MAX_SHIFT))&TRNG_PKRMAX_PKR_MAX_MASK)
-/* PKRSQ Bit Fields */
-#define TRNG_PKRSQ_PKR_SQ_MASK                   0xFFFFFFu
-#define TRNG_PKRSQ_PKR_SQ_SHIFT                  0
-#define TRNG_PKRSQ_PKR_SQ_WIDTH                  24
-#define TRNG_PKRSQ_PKR_SQ(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_PKRSQ_PKR_SQ_SHIFT))&TRNG_PKRSQ_PKR_SQ_MASK)
-/* SDCTL Bit Fields */
-#define TRNG_SDCTL_SAMP_SIZE_MASK                0xFFFFu
-#define TRNG_SDCTL_SAMP_SIZE_SHIFT               0
-#define TRNG_SDCTL_SAMP_SIZE_WIDTH               16
-#define TRNG_SDCTL_SAMP_SIZE(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_SDCTL_SAMP_SIZE_SHIFT))&TRNG_SDCTL_SAMP_SIZE_MASK)
-#define TRNG_SDCTL_ENT_DLY_MASK                  0xFFFF0000u
-#define TRNG_SDCTL_ENT_DLY_SHIFT                 16
-#define TRNG_SDCTL_ENT_DLY_WIDTH                 16
-#define TRNG_SDCTL_ENT_DLY(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SDCTL_ENT_DLY_SHIFT))&TRNG_SDCTL_ENT_DLY_MASK)
-/* SBLIM Bit Fields */
-#define TRNG_SBLIM_SB_LIM_MASK                   0x3FFu
-#define TRNG_SBLIM_SB_LIM_SHIFT                  0
-#define TRNG_SBLIM_SB_LIM_WIDTH                  10
-#define TRNG_SBLIM_SB_LIM(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_SBLIM_SB_LIM_SHIFT))&TRNG_SBLIM_SB_LIM_MASK)
-/* TOTSAM Bit Fields */
-#define TRNG_TOTSAM_TOT_SAM_MASK                 0xFFFFFu
-#define TRNG_TOTSAM_TOT_SAM_SHIFT                0
-#define TRNG_TOTSAM_TOT_SAM_WIDTH                20
-#define TRNG_TOTSAM_TOT_SAM(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_TOTSAM_TOT_SAM_SHIFT))&TRNG_TOTSAM_TOT_SAM_MASK)
-/* FRQMIN Bit Fields */
-#define TRNG_FRQMIN_FRQ_MIN_MASK                 0x3FFFFFu
-#define TRNG_FRQMIN_FRQ_MIN_SHIFT                0
-#define TRNG_FRQMIN_FRQ_MIN_WIDTH                22
-#define TRNG_FRQMIN_FRQ_MIN(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_FRQMIN_FRQ_MIN_SHIFT))&TRNG_FRQMIN_FRQ_MIN_MASK)
-/* FRQCNT Bit Fields */
-#define TRNG_FRQCNT_FRQ_CT_MASK                  0x3FFFFFu
-#define TRNG_FRQCNT_FRQ_CT_SHIFT                 0
-#define TRNG_FRQCNT_FRQ_CT_WIDTH                 22
-#define TRNG_FRQCNT_FRQ_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_FRQCNT_FRQ_CT_SHIFT))&TRNG_FRQCNT_FRQ_CT_MASK)
-/* FRQMAX Bit Fields */
-#define TRNG_FRQMAX_FRQ_MAX_MASK                 0x3FFFFFu
-#define TRNG_FRQMAX_FRQ_MAX_SHIFT                0
-#define TRNG_FRQMAX_FRQ_MAX_WIDTH                22
-#define TRNG_FRQMAX_FRQ_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_FRQMAX_FRQ_MAX_SHIFT))&TRNG_FRQMAX_FRQ_MAX_MASK)
-/* SCMC Bit Fields */
-#define TRNG_SCMC_MONO_CT_MASK                   0xFFFFu
-#define TRNG_SCMC_MONO_CT_SHIFT                  0
-#define TRNG_SCMC_MONO_CT_WIDTH                  16
-#define TRNG_SCMC_MONO_CT(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_SCMC_MONO_CT_SHIFT))&TRNG_SCMC_MONO_CT_MASK)
-/* SCML Bit Fields */
-#define TRNG_SCML_MONO_MAX_MASK                  0xFFFFu
-#define TRNG_SCML_MONO_MAX_SHIFT                 0
-#define TRNG_SCML_MONO_MAX_WIDTH                 16
-#define TRNG_SCML_MONO_MAX(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCML_MONO_MAX_SHIFT))&TRNG_SCML_MONO_MAX_MASK)
-#define TRNG_SCML_MONO_RNG_MASK                  0xFFFF0000u
-#define TRNG_SCML_MONO_RNG_SHIFT                 16
-#define TRNG_SCML_MONO_RNG_WIDTH                 16
-#define TRNG_SCML_MONO_RNG(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCML_MONO_RNG_SHIFT))&TRNG_SCML_MONO_RNG_MASK)
-/* SCR1C Bit Fields */
-#define TRNG_SCR1C_R1_0_CT_MASK                  0x7FFFu
-#define TRNG_SCR1C_R1_0_CT_SHIFT                 0
-#define TRNG_SCR1C_R1_0_CT_WIDTH                 15
-#define TRNG_SCR1C_R1_0_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR1C_R1_0_CT_SHIFT))&TRNG_SCR1C_R1_0_CT_MASK)
-#define TRNG_SCR1C_R1_1_CT_MASK                  0x7FFF0000u
-#define TRNG_SCR1C_R1_1_CT_SHIFT                 16
-#define TRNG_SCR1C_R1_1_CT_WIDTH                 15
-#define TRNG_SCR1C_R1_1_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR1C_R1_1_CT_SHIFT))&TRNG_SCR1C_R1_1_CT_MASK)
-/* SCR1L Bit Fields */
-#define TRNG_SCR1L_RUN1_MAX_MASK                 0x7FFFu
-#define TRNG_SCR1L_RUN1_MAX_SHIFT                0
-#define TRNG_SCR1L_RUN1_MAX_WIDTH                15
-#define TRNG_SCR1L_RUN1_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR1L_RUN1_MAX_SHIFT))&TRNG_SCR1L_RUN1_MAX_MASK)
-#define TRNG_SCR1L_RUN1_RNG_MASK                 0x7FFF0000u
-#define TRNG_SCR1L_RUN1_RNG_SHIFT                16
-#define TRNG_SCR1L_RUN1_RNG_WIDTH                15
-#define TRNG_SCR1L_RUN1_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR1L_RUN1_RNG_SHIFT))&TRNG_SCR1L_RUN1_RNG_MASK)
-/* SCR2C Bit Fields */
-#define TRNG_SCR2C_R2_0_CT_MASK                  0x3FFFu
-#define TRNG_SCR2C_R2_0_CT_SHIFT                 0
-#define TRNG_SCR2C_R2_0_CT_WIDTH                 14
-#define TRNG_SCR2C_R2_0_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR2C_R2_0_CT_SHIFT))&TRNG_SCR2C_R2_0_CT_MASK)
-#define TRNG_SCR2C_R2_1_CT_MASK                  0x3FFF0000u
-#define TRNG_SCR2C_R2_1_CT_SHIFT                 16
-#define TRNG_SCR2C_R2_1_CT_WIDTH                 14
-#define TRNG_SCR2C_R2_1_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR2C_R2_1_CT_SHIFT))&TRNG_SCR2C_R2_1_CT_MASK)
-/* SCR2L Bit Fields */
-#define TRNG_SCR2L_RUN2_MAX_MASK                 0x3FFFu
-#define TRNG_SCR2L_RUN2_MAX_SHIFT                0
-#define TRNG_SCR2L_RUN2_MAX_WIDTH                14
-#define TRNG_SCR2L_RUN2_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR2L_RUN2_MAX_SHIFT))&TRNG_SCR2L_RUN2_MAX_MASK)
-#define TRNG_SCR2L_RUN2_RNG_MASK                 0x3FFF0000u
-#define TRNG_SCR2L_RUN2_RNG_SHIFT                16
-#define TRNG_SCR2L_RUN2_RNG_WIDTH                14
-#define TRNG_SCR2L_RUN2_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR2L_RUN2_RNG_SHIFT))&TRNG_SCR2L_RUN2_RNG_MASK)
-/* SCR3C Bit Fields */
-#define TRNG_SCR3C_R3_0_CT_MASK                  0x1FFFu
-#define TRNG_SCR3C_R3_0_CT_SHIFT                 0
-#define TRNG_SCR3C_R3_0_CT_WIDTH                 13
-#define TRNG_SCR3C_R3_0_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR3C_R3_0_CT_SHIFT))&TRNG_SCR3C_R3_0_CT_MASK)
-#define TRNG_SCR3C_R3_1_CT_MASK                  0x1FFF0000u
-#define TRNG_SCR3C_R3_1_CT_SHIFT                 16
-#define TRNG_SCR3C_R3_1_CT_WIDTH                 13
-#define TRNG_SCR3C_R3_1_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR3C_R3_1_CT_SHIFT))&TRNG_SCR3C_R3_1_CT_MASK)
-/* SCR3L Bit Fields */
-#define TRNG_SCR3L_RUN3_MAX_MASK                 0x1FFFu
-#define TRNG_SCR3L_RUN3_MAX_SHIFT                0
-#define TRNG_SCR3L_RUN3_MAX_WIDTH                13
-#define TRNG_SCR3L_RUN3_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR3L_RUN3_MAX_SHIFT))&TRNG_SCR3L_RUN3_MAX_MASK)
-#define TRNG_SCR3L_RUN3_RNG_MASK                 0x1FFF0000u
-#define TRNG_SCR3L_RUN3_RNG_SHIFT                16
-#define TRNG_SCR3L_RUN3_RNG_WIDTH                13
-#define TRNG_SCR3L_RUN3_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR3L_RUN3_RNG_SHIFT))&TRNG_SCR3L_RUN3_RNG_MASK)
-/* SCR4C Bit Fields */
-#define TRNG_SCR4C_R4_0_CT_MASK                  0xFFFu
-#define TRNG_SCR4C_R4_0_CT_SHIFT                 0
-#define TRNG_SCR4C_R4_0_CT_WIDTH                 12
-#define TRNG_SCR4C_R4_0_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR4C_R4_0_CT_SHIFT))&TRNG_SCR4C_R4_0_CT_MASK)
-#define TRNG_SCR4C_R4_1_CT_MASK                  0xFFF0000u
-#define TRNG_SCR4C_R4_1_CT_SHIFT                 16
-#define TRNG_SCR4C_R4_1_CT_WIDTH                 12
-#define TRNG_SCR4C_R4_1_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR4C_R4_1_CT_SHIFT))&TRNG_SCR4C_R4_1_CT_MASK)
-/* SCR4L Bit Fields */
-#define TRNG_SCR4L_RUN4_MAX_MASK                 0xFFFu
-#define TRNG_SCR4L_RUN4_MAX_SHIFT                0
-#define TRNG_SCR4L_RUN4_MAX_WIDTH                12
-#define TRNG_SCR4L_RUN4_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR4L_RUN4_MAX_SHIFT))&TRNG_SCR4L_RUN4_MAX_MASK)
-#define TRNG_SCR4L_RUN4_RNG_MASK                 0xFFF0000u
-#define TRNG_SCR4L_RUN4_RNG_SHIFT                16
-#define TRNG_SCR4L_RUN4_RNG_WIDTH                12
-#define TRNG_SCR4L_RUN4_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR4L_RUN4_RNG_SHIFT))&TRNG_SCR4L_RUN4_RNG_MASK)
-/* SCR5C Bit Fields */
-#define TRNG_SCR5C_R5_0_CT_MASK                  0x7FFu
-#define TRNG_SCR5C_R5_0_CT_SHIFT                 0
-#define TRNG_SCR5C_R5_0_CT_WIDTH                 11
-#define TRNG_SCR5C_R5_0_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR5C_R5_0_CT_SHIFT))&TRNG_SCR5C_R5_0_CT_MASK)
-#define TRNG_SCR5C_R5_1_CT_MASK                  0x7FF0000u
-#define TRNG_SCR5C_R5_1_CT_SHIFT                 16
-#define TRNG_SCR5C_R5_1_CT_WIDTH                 11
-#define TRNG_SCR5C_R5_1_CT(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_SCR5C_R5_1_CT_SHIFT))&TRNG_SCR5C_R5_1_CT_MASK)
-/* SCR5L Bit Fields */
-#define TRNG_SCR5L_RUN5_MAX_MASK                 0x7FFu
-#define TRNG_SCR5L_RUN5_MAX_SHIFT                0
-#define TRNG_SCR5L_RUN5_MAX_WIDTH                11
-#define TRNG_SCR5L_RUN5_MAX(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR5L_RUN5_MAX_SHIFT))&TRNG_SCR5L_RUN5_MAX_MASK)
-#define TRNG_SCR5L_RUN5_RNG_MASK                 0x7FF0000u
-#define TRNG_SCR5L_RUN5_RNG_SHIFT                16
-#define TRNG_SCR5L_RUN5_RNG_WIDTH                11
-#define TRNG_SCR5L_RUN5_RNG(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SCR5L_RUN5_RNG_SHIFT))&TRNG_SCR5L_RUN5_RNG_MASK)
-/* SCR6PC Bit Fields */
-#define TRNG_SCR6PC_R6P_0_CT_MASK                0x7FFu
-#define TRNG_SCR6PC_R6P_0_CT_SHIFT               0
-#define TRNG_SCR6PC_R6P_0_CT_WIDTH               11
-#define TRNG_SCR6PC_R6P_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_SCR6PC_R6P_0_CT_SHIFT))&TRNG_SCR6PC_R6P_0_CT_MASK)
-#define TRNG_SCR6PC_R6P_1_CT_MASK                0x7FF0000u
-#define TRNG_SCR6PC_R6P_1_CT_SHIFT               16
-#define TRNG_SCR6PC_R6P_1_CT_WIDTH               11
-#define TRNG_SCR6PC_R6P_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_SCR6PC_R6P_1_CT_SHIFT))&TRNG_SCR6PC_R6P_1_CT_MASK)
-/* SCR6PL Bit Fields */
-#define TRNG_SCR6PL_RUN6P_MAX_MASK               0x7FFu
-#define TRNG_SCR6PL_RUN6P_MAX_SHIFT              0
-#define TRNG_SCR6PL_RUN6P_MAX_WIDTH              11
-#define TRNG_SCR6PL_RUN6P_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_SCR6PL_RUN6P_MAX_SHIFT))&TRNG_SCR6PL_RUN6P_MAX_MASK)
-#define TRNG_SCR6PL_RUN6P_RNG_MASK               0x7FF0000u
-#define TRNG_SCR6PL_RUN6P_RNG_SHIFT              16
-#define TRNG_SCR6PL_RUN6P_RNG_WIDTH              11
-#define TRNG_SCR6PL_RUN6P_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_SCR6PL_RUN6P_RNG_SHIFT))&TRNG_SCR6PL_RUN6P_RNG_MASK)
-/* STATUS Bit Fields */
-#define TRNG_STATUS_TF1BR0_MASK                  0x1u
-#define TRNG_STATUS_TF1BR0_SHIFT                 0
-#define TRNG_STATUS_TF1BR0_WIDTH                 1
-#define TRNG_STATUS_TF1BR0(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF1BR0_SHIFT))&TRNG_STATUS_TF1BR0_MASK)
-#define TRNG_STATUS_TF1BR1_MASK                  0x2u
-#define TRNG_STATUS_TF1BR1_SHIFT                 1
-#define TRNG_STATUS_TF1BR1_WIDTH                 1
-#define TRNG_STATUS_TF1BR1(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF1BR1_SHIFT))&TRNG_STATUS_TF1BR1_MASK)
-#define TRNG_STATUS_TF2BR0_MASK                  0x4u
-#define TRNG_STATUS_TF2BR0_SHIFT                 2
-#define TRNG_STATUS_TF2BR0_WIDTH                 1
-#define TRNG_STATUS_TF2BR0(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF2BR0_SHIFT))&TRNG_STATUS_TF2BR0_MASK)
-#define TRNG_STATUS_TF2BR1_MASK                  0x8u
-#define TRNG_STATUS_TF2BR1_SHIFT                 3
-#define TRNG_STATUS_TF2BR1_WIDTH                 1
-#define TRNG_STATUS_TF2BR1(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF2BR1_SHIFT))&TRNG_STATUS_TF2BR1_MASK)
-#define TRNG_STATUS_TF3BR0_MASK                  0x10u
-#define TRNG_STATUS_TF3BR0_SHIFT                 4
-#define TRNG_STATUS_TF3BR0_WIDTH                 1
-#define TRNG_STATUS_TF3BR0(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF3BR0_SHIFT))&TRNG_STATUS_TF3BR0_MASK)
-#define TRNG_STATUS_TF3BR1_MASK                  0x20u
-#define TRNG_STATUS_TF3BR1_SHIFT                 5
-#define TRNG_STATUS_TF3BR1_WIDTH                 1
-#define TRNG_STATUS_TF3BR1(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF3BR1_SHIFT))&TRNG_STATUS_TF3BR1_MASK)
-#define TRNG_STATUS_TF4BR0_MASK                  0x40u
-#define TRNG_STATUS_TF4BR0_SHIFT                 6
-#define TRNG_STATUS_TF4BR0_WIDTH                 1
-#define TRNG_STATUS_TF4BR0(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF4BR0_SHIFT))&TRNG_STATUS_TF4BR0_MASK)
-#define TRNG_STATUS_TF4BR1_MASK                  0x80u
-#define TRNG_STATUS_TF4BR1_SHIFT                 7
-#define TRNG_STATUS_TF4BR1_WIDTH                 1
-#define TRNG_STATUS_TF4BR1(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF4BR1_SHIFT))&TRNG_STATUS_TF4BR1_MASK)
-#define TRNG_STATUS_TF5BR0_MASK                  0x100u
-#define TRNG_STATUS_TF5BR0_SHIFT                 8
-#define TRNG_STATUS_TF5BR0_WIDTH                 1
-#define TRNG_STATUS_TF5BR0(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF5BR0_SHIFT))&TRNG_STATUS_TF5BR0_MASK)
-#define TRNG_STATUS_TF5BR1_MASK                  0x200u
-#define TRNG_STATUS_TF5BR1_SHIFT                 9
-#define TRNG_STATUS_TF5BR1_WIDTH                 1
-#define TRNG_STATUS_TF5BR1(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF5BR1_SHIFT))&TRNG_STATUS_TF5BR1_MASK)
-#define TRNG_STATUS_TF6PBR0_MASK                 0x400u
-#define TRNG_STATUS_TF6PBR0_SHIFT                10
-#define TRNG_STATUS_TF6PBR0_WIDTH                1
-#define TRNG_STATUS_TF6PBR0(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF6PBR0_SHIFT))&TRNG_STATUS_TF6PBR0_MASK)
-#define TRNG_STATUS_TF6PBR1_MASK                 0x800u
-#define TRNG_STATUS_TF6PBR1_SHIFT                11
-#define TRNG_STATUS_TF6PBR1_WIDTH                1
-#define TRNG_STATUS_TF6PBR1(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TF6PBR1_SHIFT))&TRNG_STATUS_TF6PBR1_MASK)
-#define TRNG_STATUS_TFSB_MASK                    0x1000u
-#define TRNG_STATUS_TFSB_SHIFT                   12
-#define TRNG_STATUS_TFSB_WIDTH                   1
-#define TRNG_STATUS_TFSB(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TFSB_SHIFT))&TRNG_STATUS_TFSB_MASK)
-#define TRNG_STATUS_TFLR_MASK                    0x2000u
-#define TRNG_STATUS_TFLR_SHIFT                   13
-#define TRNG_STATUS_TFLR_WIDTH                   1
-#define TRNG_STATUS_TFLR(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TFLR_SHIFT))&TRNG_STATUS_TFLR_MASK)
-#define TRNG_STATUS_TFP_MASK                     0x4000u
-#define TRNG_STATUS_TFP_SHIFT                    14
-#define TRNG_STATUS_TFP_WIDTH                    1
-#define TRNG_STATUS_TFP(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TFP_SHIFT))&TRNG_STATUS_TFP_MASK)
-#define TRNG_STATUS_TFMB_MASK                    0x8000u
-#define TRNG_STATUS_TFMB_SHIFT                   15
-#define TRNG_STATUS_TFMB_WIDTH                   1
-#define TRNG_STATUS_TFMB(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_TFMB_SHIFT))&TRNG_STATUS_TFMB_MASK)
-#define TRNG_STATUS_RETRY_CT_MASK                0xF0000u
-#define TRNG_STATUS_RETRY_CT_SHIFT               16
-#define TRNG_STATUS_RETRY_CT_WIDTH               4
-#define TRNG_STATUS_RETRY_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_STATUS_RETRY_CT_SHIFT))&TRNG_STATUS_RETRY_CT_MASK)
-/* ENT Bit Fields */
-#define TRNG_ENT_ENT_MASK                        0xFFFFFFFFu
-#define TRNG_ENT_ENT_SHIFT                       0
-#define TRNG_ENT_ENT_WIDTH                       32
-#define TRNG_ENT_ENT(x)                          (((uint32_t)(((uint32_t)(x))<<TRNG_ENT_ENT_SHIFT))&TRNG_ENT_ENT_MASK)
-/* PKRCNT10 Bit Fields */
-#define TRNG_PKRCNT10_PKR_0_CT_MASK              0xFFFFu
-#define TRNG_PKRCNT10_PKR_0_CT_SHIFT             0
-#define TRNG_PKRCNT10_PKR_0_CT_WIDTH             16
-#define TRNG_PKRCNT10_PKR_0_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT10_PKR_0_CT_SHIFT))&TRNG_PKRCNT10_PKR_0_CT_MASK)
-#define TRNG_PKRCNT10_PKR_1_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNT10_PKR_1_CT_SHIFT             16
-#define TRNG_PKRCNT10_PKR_1_CT_WIDTH             16
-#define TRNG_PKRCNT10_PKR_1_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT10_PKR_1_CT_SHIFT))&TRNG_PKRCNT10_PKR_1_CT_MASK)
-/* PKRCNT32 Bit Fields */
-#define TRNG_PKRCNT32_PKR_2_CT_MASK              0xFFFFu
-#define TRNG_PKRCNT32_PKR_2_CT_SHIFT             0
-#define TRNG_PKRCNT32_PKR_2_CT_WIDTH             16
-#define TRNG_PKRCNT32_PKR_2_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT32_PKR_2_CT_SHIFT))&TRNG_PKRCNT32_PKR_2_CT_MASK)
-#define TRNG_PKRCNT32_PKR_3_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNT32_PKR_3_CT_SHIFT             16
-#define TRNG_PKRCNT32_PKR_3_CT_WIDTH             16
-#define TRNG_PKRCNT32_PKR_3_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT32_PKR_3_CT_SHIFT))&TRNG_PKRCNT32_PKR_3_CT_MASK)
-/* PKRCNT54 Bit Fields */
-#define TRNG_PKRCNT54_PKR_4_CT_MASK              0xFFFFu
-#define TRNG_PKRCNT54_PKR_4_CT_SHIFT             0
-#define TRNG_PKRCNT54_PKR_4_CT_WIDTH             16
-#define TRNG_PKRCNT54_PKR_4_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT54_PKR_4_CT_SHIFT))&TRNG_PKRCNT54_PKR_4_CT_MASK)
-#define TRNG_PKRCNT54_PKR_5_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNT54_PKR_5_CT_SHIFT             16
-#define TRNG_PKRCNT54_PKR_5_CT_WIDTH             16
-#define TRNG_PKRCNT54_PKR_5_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT54_PKR_5_CT_SHIFT))&TRNG_PKRCNT54_PKR_5_CT_MASK)
-/* PKRCNT76 Bit Fields */
-#define TRNG_PKRCNT76_PKR_6_CT_MASK              0xFFFFu
-#define TRNG_PKRCNT76_PKR_6_CT_SHIFT             0
-#define TRNG_PKRCNT76_PKR_6_CT_WIDTH             16
-#define TRNG_PKRCNT76_PKR_6_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT76_PKR_6_CT_SHIFT))&TRNG_PKRCNT76_PKR_6_CT_MASK)
-#define TRNG_PKRCNT76_PKR_7_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNT76_PKR_7_CT_SHIFT             16
-#define TRNG_PKRCNT76_PKR_7_CT_WIDTH             16
-#define TRNG_PKRCNT76_PKR_7_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT76_PKR_7_CT_SHIFT))&TRNG_PKRCNT76_PKR_7_CT_MASK)
-/* PKRCNT98 Bit Fields */
-#define TRNG_PKRCNT98_PKR_8_CT_MASK              0xFFFFu
-#define TRNG_PKRCNT98_PKR_8_CT_SHIFT             0
-#define TRNG_PKRCNT98_PKR_8_CT_WIDTH             16
-#define TRNG_PKRCNT98_PKR_8_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT98_PKR_8_CT_SHIFT))&TRNG_PKRCNT98_PKR_8_CT_MASK)
-#define TRNG_PKRCNT98_PKR_9_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNT98_PKR_9_CT_SHIFT             16
-#define TRNG_PKRCNT98_PKR_9_CT_WIDTH             16
-#define TRNG_PKRCNT98_PKR_9_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNT98_PKR_9_CT_SHIFT))&TRNG_PKRCNT98_PKR_9_CT_MASK)
-/* PKRCNTBA Bit Fields */
-#define TRNG_PKRCNTBA_PKR_A_CT_MASK              0xFFFFu
-#define TRNG_PKRCNTBA_PKR_A_CT_SHIFT             0
-#define TRNG_PKRCNTBA_PKR_A_CT_WIDTH             16
-#define TRNG_PKRCNTBA_PKR_A_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTBA_PKR_A_CT_SHIFT))&TRNG_PKRCNTBA_PKR_A_CT_MASK)
-#define TRNG_PKRCNTBA_PKR_B_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNTBA_PKR_B_CT_SHIFT             16
-#define TRNG_PKRCNTBA_PKR_B_CT_WIDTH             16
-#define TRNG_PKRCNTBA_PKR_B_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTBA_PKR_B_CT_SHIFT))&TRNG_PKRCNTBA_PKR_B_CT_MASK)
-/* PKRCNTDC Bit Fields */
-#define TRNG_PKRCNTDC_PKR_C_CT_MASK              0xFFFFu
-#define TRNG_PKRCNTDC_PKR_C_CT_SHIFT             0
-#define TRNG_PKRCNTDC_PKR_C_CT_WIDTH             16
-#define TRNG_PKRCNTDC_PKR_C_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTDC_PKR_C_CT_SHIFT))&TRNG_PKRCNTDC_PKR_C_CT_MASK)
-#define TRNG_PKRCNTDC_PKR_D_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNTDC_PKR_D_CT_SHIFT             16
-#define TRNG_PKRCNTDC_PKR_D_CT_WIDTH             16
-#define TRNG_PKRCNTDC_PKR_D_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTDC_PKR_D_CT_SHIFT))&TRNG_PKRCNTDC_PKR_D_CT_MASK)
-/* PKRCNTFE Bit Fields */
-#define TRNG_PKRCNTFE_PKR_E_CT_MASK              0xFFFFu
-#define TRNG_PKRCNTFE_PKR_E_CT_SHIFT             0
-#define TRNG_PKRCNTFE_PKR_E_CT_WIDTH             16
-#define TRNG_PKRCNTFE_PKR_E_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTFE_PKR_E_CT_SHIFT))&TRNG_PKRCNTFE_PKR_E_CT_MASK)
-#define TRNG_PKRCNTFE_PKR_F_CT_MASK              0xFFFF0000u
-#define TRNG_PKRCNTFE_PKR_F_CT_SHIFT             16
-#define TRNG_PKRCNTFE_PKR_F_CT_WIDTH             16
-#define TRNG_PKRCNTFE_PKR_F_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_PKRCNTFE_PKR_F_CT_SHIFT))&TRNG_PKRCNTFE_PKR_F_CT_MASK)
-/* SEC_CFG Bit Fields */
-#define TRNG_SEC_CFG_SH0_MASK                    0x1u
-#define TRNG_SEC_CFG_SH0_SHIFT                   0
-#define TRNG_SEC_CFG_SH0_WIDTH                   1
-#define TRNG_SEC_CFG_SH0(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_SEC_CFG_SH0_SHIFT))&TRNG_SEC_CFG_SH0_MASK)
-#define TRNG_SEC_CFG_NO_PRGM_MASK                0x2u
-#define TRNG_SEC_CFG_NO_PRGM_SHIFT               1
-#define TRNG_SEC_CFG_NO_PRGM_WIDTH               1
-#define TRNG_SEC_CFG_NO_PRGM(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_SEC_CFG_NO_PRGM_SHIFT))&TRNG_SEC_CFG_NO_PRGM_MASK)
-#define TRNG_SEC_CFG_SK_VAL_MASK                 0x4u
-#define TRNG_SEC_CFG_SK_VAL_SHIFT                2
-#define TRNG_SEC_CFG_SK_VAL_WIDTH                1
-#define TRNG_SEC_CFG_SK_VAL(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_SEC_CFG_SK_VAL_SHIFT))&TRNG_SEC_CFG_SK_VAL_MASK)
-/* INT_CTRL Bit Fields */
-#define TRNG_INT_CTRL_HW_ERR_MASK                0x1u
-#define TRNG_INT_CTRL_HW_ERR_SHIFT               0
-#define TRNG_INT_CTRL_HW_ERR_WIDTH               1
-#define TRNG_INT_CTRL_HW_ERR(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_INT_CTRL_HW_ERR_SHIFT))&TRNG_INT_CTRL_HW_ERR_MASK)
-#define TRNG_INT_CTRL_ENT_VAL_MASK               0x2u
-#define TRNG_INT_CTRL_ENT_VAL_SHIFT              1
-#define TRNG_INT_CTRL_ENT_VAL_WIDTH              1
-#define TRNG_INT_CTRL_ENT_VAL(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_INT_CTRL_ENT_VAL_SHIFT))&TRNG_INT_CTRL_ENT_VAL_MASK)
-#define TRNG_INT_CTRL_FRQ_CT_FAIL_MASK           0x4u
-#define TRNG_INT_CTRL_FRQ_CT_FAIL_SHIFT          2
-#define TRNG_INT_CTRL_FRQ_CT_FAIL_WIDTH          1
-#define TRNG_INT_CTRL_FRQ_CT_FAIL(x)             (((uint32_t)(((uint32_t)(x))<<TRNG_INT_CTRL_FRQ_CT_FAIL_SHIFT))&TRNG_INT_CTRL_FRQ_CT_FAIL_MASK)
-#define TRNG_INT_CTRL_UNUSED_MASK                0xFFFFFFF8u
-#define TRNG_INT_CTRL_UNUSED_SHIFT               3
-#define TRNG_INT_CTRL_UNUSED_WIDTH               29
-#define TRNG_INT_CTRL_UNUSED(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_INT_CTRL_UNUSED_SHIFT))&TRNG_INT_CTRL_UNUSED_MASK)
-/* INT_MASK Bit Fields */
-#define TRNG_INT_MASK_HW_ERR_MASK                0x1u
-#define TRNG_INT_MASK_HW_ERR_SHIFT               0
-#define TRNG_INT_MASK_HW_ERR_WIDTH               1
-#define TRNG_INT_MASK_HW_ERR(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_INT_MASK_HW_ERR_SHIFT))&TRNG_INT_MASK_HW_ERR_MASK)
-#define TRNG_INT_MASK_ENT_VAL_MASK               0x2u
-#define TRNG_INT_MASK_ENT_VAL_SHIFT              1
-#define TRNG_INT_MASK_ENT_VAL_WIDTH              1
-#define TRNG_INT_MASK_ENT_VAL(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_INT_MASK_ENT_VAL_SHIFT))&TRNG_INT_MASK_ENT_VAL_MASK)
-#define TRNG_INT_MASK_FRQ_CT_FAIL_MASK           0x4u
-#define TRNG_INT_MASK_FRQ_CT_FAIL_SHIFT          2
-#define TRNG_INT_MASK_FRQ_CT_FAIL_WIDTH          1
-#define TRNG_INT_MASK_FRQ_CT_FAIL(x)             (((uint32_t)(((uint32_t)(x))<<TRNG_INT_MASK_FRQ_CT_FAIL_SHIFT))&TRNG_INT_MASK_FRQ_CT_FAIL_MASK)
-/* INT_STATUS Bit Fields */
-#define TRNG_INT_STATUS_HW_ERR_MASK              0x1u
-#define TRNG_INT_STATUS_HW_ERR_SHIFT             0
-#define TRNG_INT_STATUS_HW_ERR_WIDTH             1
-#define TRNG_INT_STATUS_HW_ERR(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_INT_STATUS_HW_ERR_SHIFT))&TRNG_INT_STATUS_HW_ERR_MASK)
-#define TRNG_INT_STATUS_ENT_VAL_MASK             0x2u
-#define TRNG_INT_STATUS_ENT_VAL_SHIFT            1
-#define TRNG_INT_STATUS_ENT_VAL_WIDTH            1
-#define TRNG_INT_STATUS_ENT_VAL(x)               (((uint32_t)(((uint32_t)(x))<<TRNG_INT_STATUS_ENT_VAL_SHIFT))&TRNG_INT_STATUS_ENT_VAL_MASK)
-#define TRNG_INT_STATUS_FRQ_CT_FAIL_MASK         0x4u
-#define TRNG_INT_STATUS_FRQ_CT_FAIL_SHIFT        2
-#define TRNG_INT_STATUS_FRQ_CT_FAIL_WIDTH        1
-#define TRNG_INT_STATUS_FRQ_CT_FAIL(x)           (((uint32_t)(((uint32_t)(x))<<TRNG_INT_STATUS_FRQ_CT_FAIL_SHIFT))&TRNG_INT_STATUS_FRQ_CT_FAIL_MASK)
-/* VID1 Bit Fields */
-#define TRNG_VID1_RNG_MIN_REV_MASK               0xFFu
-#define TRNG_VID1_RNG_MIN_REV_SHIFT              0
-#define TRNG_VID1_RNG_MIN_REV_WIDTH              8
-#define TRNG_VID1_RNG_MIN_REV(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_VID1_RNG_MIN_REV_SHIFT))&TRNG_VID1_RNG_MIN_REV_MASK)
-#define TRNG_VID1_RNG_MAJ_REV_MASK               0xFF00u
-#define TRNG_VID1_RNG_MAJ_REV_SHIFT              8
-#define TRNG_VID1_RNG_MAJ_REV_WIDTH              8
-#define TRNG_VID1_RNG_MAJ_REV(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_VID1_RNG_MAJ_REV_SHIFT))&TRNG_VID1_RNG_MAJ_REV_MASK)
-#define TRNG_VID1_RNG_IP_ID_MASK                 0xFFFF0000u
-#define TRNG_VID1_RNG_IP_ID_SHIFT                16
-#define TRNG_VID1_RNG_IP_ID_WIDTH                16
-#define TRNG_VID1_RNG_IP_ID(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_VID1_RNG_IP_ID_SHIFT))&TRNG_VID1_RNG_IP_ID_MASK)
-/* VID2 Bit Fields */
-#define TRNG_VID2_RNG_CONFIG_OPT_MASK            0xFFu
-#define TRNG_VID2_RNG_CONFIG_OPT_SHIFT           0
-#define TRNG_VID2_RNG_CONFIG_OPT_WIDTH           8
-#define TRNG_VID2_RNG_CONFIG_OPT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_VID2_RNG_CONFIG_OPT_SHIFT))&TRNG_VID2_RNG_CONFIG_OPT_MASK)
-#define TRNG_VID2_RNG_ECO_REV_MASK               0xFF00u
-#define TRNG_VID2_RNG_ECO_REV_SHIFT              8
-#define TRNG_VID2_RNG_ECO_REV_WIDTH              8
-#define TRNG_VID2_RNG_ECO_REV(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_VID2_RNG_ECO_REV_SHIFT))&TRNG_VID2_RNG_ECO_REV_MASK)
-#define TRNG_VID2_RNG_INTG_OPT_MASK              0xFF0000u
-#define TRNG_VID2_RNG_INTG_OPT_SHIFT             16
-#define TRNG_VID2_RNG_INTG_OPT_WIDTH             8
-#define TRNG_VID2_RNG_INTG_OPT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_VID2_RNG_INTG_OPT_SHIFT))&TRNG_VID2_RNG_INTG_OPT_MASK)
-#define TRNG_VID2_RNG_ERA_MASK                   0xFF000000u
-#define TRNG_VID2_RNG_ERA_SHIFT                  24
-#define TRNG_VID2_RNG_ERA_WIDTH                  8
-#define TRNG_VID2_RNG_ERA(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_VID2_RNG_ERA_SHIFT))&TRNG_VID2_RNG_ERA_MASK)
+/* RTMCTL Bit Fields */
+#define TRNG_RTMCTL_SAMP_MODE_MASK               0x3u
+#define TRNG_RTMCTL_SAMP_MODE_SHIFT              0
+#define TRNG_RTMCTL_SAMP_MODE_WIDTH              2
+#define TRNG_RTMCTL_SAMP_MODE(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_SAMP_MODE_SHIFT))&TRNG_RTMCTL_SAMP_MODE_MASK)
+#define TRNG_RTMCTL_OSC_DIV_MASK                 0xCu
+#define TRNG_RTMCTL_OSC_DIV_SHIFT                2
+#define TRNG_RTMCTL_OSC_DIV_WIDTH                2
+#define TRNG_RTMCTL_OSC_DIV(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_OSC_DIV_SHIFT))&TRNG_RTMCTL_OSC_DIV_MASK)
+#define TRNG_RTMCTL_UNUSED_MASK                  0x10u
+#define TRNG_RTMCTL_UNUSED_SHIFT                 4
+#define TRNG_RTMCTL_UNUSED_WIDTH                 1
+#define TRNG_RTMCTL_UNUSED(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_UNUSED_SHIFT))&TRNG_RTMCTL_UNUSED_MASK)
+#define TRNG_RTMCTL_TRNG_ACC_MASK                0x20u
+#define TRNG_RTMCTL_TRNG_ACC_SHIFT               5
+#define TRNG_RTMCTL_TRNG_ACC_WIDTH               1
+#define TRNG_RTMCTL_TRNG_ACC(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_TRNG_ACC_SHIFT))&TRNG_RTMCTL_TRNG_ACC_MASK)
+#define TRNG_RTMCTL_RST_DEF_MASK                 0x40u
+#define TRNG_RTMCTL_RST_DEF_SHIFT                6
+#define TRNG_RTMCTL_RST_DEF_WIDTH                1
+#define TRNG_RTMCTL_RST_DEF(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_RST_DEF_SHIFT))&TRNG_RTMCTL_RST_DEF_MASK)
+#define TRNG_RTMCTL_FOR_SCLK_MASK                0x80u
+#define TRNG_RTMCTL_FOR_SCLK_SHIFT               7
+#define TRNG_RTMCTL_FOR_SCLK_WIDTH               1
+#define TRNG_RTMCTL_FOR_SCLK(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_FOR_SCLK_SHIFT))&TRNG_RTMCTL_FOR_SCLK_MASK)
+#define TRNG_RTMCTL_FCT_FAIL_MASK                0x100u
+#define TRNG_RTMCTL_FCT_FAIL_SHIFT               8
+#define TRNG_RTMCTL_FCT_FAIL_WIDTH               1
+#define TRNG_RTMCTL_FCT_FAIL(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_FCT_FAIL_SHIFT))&TRNG_RTMCTL_FCT_FAIL_MASK)
+#define TRNG_RTMCTL_FCT_VAL_MASK                 0x200u
+#define TRNG_RTMCTL_FCT_VAL_SHIFT                9
+#define TRNG_RTMCTL_FCT_VAL_WIDTH                1
+#define TRNG_RTMCTL_FCT_VAL(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_FCT_VAL_SHIFT))&TRNG_RTMCTL_FCT_VAL_MASK)
+#define TRNG_RTMCTL_ENT_VAL_MASK                 0x400u
+#define TRNG_RTMCTL_ENT_VAL_SHIFT                10
+#define TRNG_RTMCTL_ENT_VAL_WIDTH                1
+#define TRNG_RTMCTL_ENT_VAL(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_ENT_VAL_SHIFT))&TRNG_RTMCTL_ENT_VAL_MASK)
+#define TRNG_RTMCTL_TST_OUT_MASK                 0x800u
+#define TRNG_RTMCTL_TST_OUT_SHIFT                11
+#define TRNG_RTMCTL_TST_OUT_WIDTH                1
+#define TRNG_RTMCTL_TST_OUT(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_TST_OUT_SHIFT))&TRNG_RTMCTL_TST_OUT_MASK)
+#define TRNG_RTMCTL_ERR_MASK                     0x1000u
+#define TRNG_RTMCTL_ERR_SHIFT                    12
+#define TRNG_RTMCTL_ERR_WIDTH                    1
+#define TRNG_RTMCTL_ERR(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_ERR_SHIFT))&TRNG_RTMCTL_ERR_MASK)
+#define TRNG_RTMCTL_TSTOP_OK_MASK                0x2000u
+#define TRNG_RTMCTL_TSTOP_OK_SHIFT               13
+#define TRNG_RTMCTL_TSTOP_OK_WIDTH               1
+#define TRNG_RTMCTL_TSTOP_OK(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_TSTOP_OK_SHIFT))&TRNG_RTMCTL_TSTOP_OK_MASK)
+#define TRNG_RTMCTL_PRGM_MASK                    0x10000u
+#define TRNG_RTMCTL_PRGM_SHIFT                   16
+#define TRNG_RTMCTL_PRGM_WIDTH                   1
+#define TRNG_RTMCTL_PRGM(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTMCTL_PRGM_SHIFT))&TRNG_RTMCTL_PRGM_MASK)
+/* RTSCMISC Bit Fields */
+#define TRNG_RTSCMISC_LRUN_MAX_MASK              0xFFu
+#define TRNG_RTSCMISC_LRUN_MAX_SHIFT             0
+#define TRNG_RTSCMISC_LRUN_MAX_WIDTH             8
+#define TRNG_RTSCMISC_LRUN_MAX(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCMISC_LRUN_MAX_SHIFT))&TRNG_RTSCMISC_LRUN_MAX_MASK)
+#define TRNG_RTSCMISC_RTY_CT_MASK                0xF0000u
+#define TRNG_RTSCMISC_RTY_CT_SHIFT               16
+#define TRNG_RTSCMISC_RTY_CT_WIDTH               4
+#define TRNG_RTSCMISC_RTY_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCMISC_RTY_CT_SHIFT))&TRNG_RTSCMISC_RTY_CT_MASK)
+/* RTPKRRNG Bit Fields */
+#define TRNG_RTPKRRNG_PKR_RNG_MASK               0xFFFFu
+#define TRNG_RTPKRRNG_PKR_RNG_SHIFT              0
+#define TRNG_RTPKRRNG_PKR_RNG_WIDTH              16
+#define TRNG_RTPKRRNG_PKR_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRRNG_PKR_RNG_SHIFT))&TRNG_RTPKRRNG_PKR_RNG_MASK)
+/* RTPKRMAX Bit Fields */
+#define TRNG_RTPKRMAX_PKR_MAX_MASK               0xFFFFFFu
+#define TRNG_RTPKRMAX_PKR_MAX_SHIFT              0
+#define TRNG_RTPKRMAX_PKR_MAX_WIDTH              24
+#define TRNG_RTPKRMAX_PKR_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRMAX_PKR_MAX_SHIFT))&TRNG_RTPKRMAX_PKR_MAX_MASK)
+/* RTPKRSQ Bit Fields */
+#define TRNG_RTPKRSQ_PKR_SQ_MASK                 0xFFFFFFu
+#define TRNG_RTPKRSQ_PKR_SQ_SHIFT                0
+#define TRNG_RTPKRSQ_PKR_SQ_WIDTH                24
+#define TRNG_RTPKRSQ_PKR_SQ(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRSQ_PKR_SQ_SHIFT))&TRNG_RTPKRSQ_PKR_SQ_MASK)
+/* RTSDCTL Bit Fields */
+#define TRNG_RTSDCTL_SAMP_SIZE_MASK              0xFFFFu
+#define TRNG_RTSDCTL_SAMP_SIZE_SHIFT             0
+#define TRNG_RTSDCTL_SAMP_SIZE_WIDTH             16
+#define TRNG_RTSDCTL_SAMP_SIZE(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_RTSDCTL_SAMP_SIZE_SHIFT))&TRNG_RTSDCTL_SAMP_SIZE_MASK)
+#define TRNG_RTSDCTL_ENT_DLY_MASK                0xFFFF0000u
+#define TRNG_RTSDCTL_ENT_DLY_SHIFT               16
+#define TRNG_RTSDCTL_ENT_DLY_WIDTH               16
+#define TRNG_RTSDCTL_ENT_DLY(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSDCTL_ENT_DLY_SHIFT))&TRNG_RTSDCTL_ENT_DLY_MASK)
+/* RTSBLIM Bit Fields */
+#define TRNG_RTSBLIM_SB_LIM_MASK                 0x3FFu
+#define TRNG_RTSBLIM_SB_LIM_SHIFT                0
+#define TRNG_RTSBLIM_SB_LIM_WIDTH                10
+#define TRNG_RTSBLIM_SB_LIM(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTSBLIM_SB_LIM_SHIFT))&TRNG_RTSBLIM_SB_LIM_MASK)
+/* RTTOTSAM Bit Fields */
+#define TRNG_RTTOTSAM_TOT_SAM_MASK               0xFFFFFu
+#define TRNG_RTTOTSAM_TOT_SAM_SHIFT              0
+#define TRNG_RTTOTSAM_TOT_SAM_WIDTH              20
+#define TRNG_RTTOTSAM_TOT_SAM(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTTOTSAM_TOT_SAM_SHIFT))&TRNG_RTTOTSAM_TOT_SAM_MASK)
+/* RTFRQMIN Bit Fields */
+#define TRNG_RTFRQMIN_FRQ_MIN_MASK               0x3FFFFFu
+#define TRNG_RTFRQMIN_FRQ_MIN_SHIFT              0
+#define TRNG_RTFRQMIN_FRQ_MIN_WIDTH              22
+#define TRNG_RTFRQMIN_FRQ_MIN(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTFRQMIN_FRQ_MIN_SHIFT))&TRNG_RTFRQMIN_FRQ_MIN_MASK)
+/* RTFRQCNT Bit Fields */
+#define TRNG_RTFRQCNT_FRQ_CT_MASK                0x3FFFFFu
+#define TRNG_RTFRQCNT_FRQ_CT_SHIFT               0
+#define TRNG_RTFRQCNT_FRQ_CT_WIDTH               22
+#define TRNG_RTFRQCNT_FRQ_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTFRQCNT_FRQ_CT_SHIFT))&TRNG_RTFRQCNT_FRQ_CT_MASK)
+/* RTFRQMAX Bit Fields */
+#define TRNG_RTFRQMAX_FRQ_MAX_MASK               0x3FFFFFu
+#define TRNG_RTFRQMAX_FRQ_MAX_SHIFT              0
+#define TRNG_RTFRQMAX_FRQ_MAX_WIDTH              22
+#define TRNG_RTFRQMAX_FRQ_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTFRQMAX_FRQ_MAX_SHIFT))&TRNG_RTFRQMAX_FRQ_MAX_MASK)
+/* RTSCMC Bit Fields */
+#define TRNG_RTSCMC_MONO_CT_MASK                 0xFFFFu
+#define TRNG_RTSCMC_MONO_CT_SHIFT                0
+#define TRNG_RTSCMC_MONO_CT_WIDTH                16
+#define TRNG_RTSCMC_MONO_CT(x)                   (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCMC_MONO_CT_SHIFT))&TRNG_RTSCMC_MONO_CT_MASK)
+/* RTSCML Bit Fields */
+#define TRNG_RTSCML_MONO_MAX_MASK                0xFFFFu
+#define TRNG_RTSCML_MONO_MAX_SHIFT               0
+#define TRNG_RTSCML_MONO_MAX_WIDTH               16
+#define TRNG_RTSCML_MONO_MAX(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCML_MONO_MAX_SHIFT))&TRNG_RTSCML_MONO_MAX_MASK)
+#define TRNG_RTSCML_MONO_RNG_MASK                0xFFFF0000u
+#define TRNG_RTSCML_MONO_RNG_SHIFT               16
+#define TRNG_RTSCML_MONO_RNG_WIDTH               16
+#define TRNG_RTSCML_MONO_RNG(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCML_MONO_RNG_SHIFT))&TRNG_RTSCML_MONO_RNG_MASK)
+/* RTSCR1C Bit Fields */
+#define TRNG_RTSCR1C_R1_0_CT_MASK                0x7FFFu
+#define TRNG_RTSCR1C_R1_0_CT_SHIFT               0
+#define TRNG_RTSCR1C_R1_0_CT_WIDTH               15
+#define TRNG_RTSCR1C_R1_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR1C_R1_0_CT_SHIFT))&TRNG_RTSCR1C_R1_0_CT_MASK)
+#define TRNG_RTSCR1C_R1_1_CT_MASK                0x7FFF0000u
+#define TRNG_RTSCR1C_R1_1_CT_SHIFT               16
+#define TRNG_RTSCR1C_R1_1_CT_WIDTH               15
+#define TRNG_RTSCR1C_R1_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR1C_R1_1_CT_SHIFT))&TRNG_RTSCR1C_R1_1_CT_MASK)
+/* RTSCR1L Bit Fields */
+#define TRNG_RTSCR1L_RUN1_MAX_MASK               0x7FFFu
+#define TRNG_RTSCR1L_RUN1_MAX_SHIFT              0
+#define TRNG_RTSCR1L_RUN1_MAX_WIDTH              15
+#define TRNG_RTSCR1L_RUN1_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR1L_RUN1_MAX_SHIFT))&TRNG_RTSCR1L_RUN1_MAX_MASK)
+#define TRNG_RTSCR1L_RUN1_RNG_MASK               0x7FFF0000u
+#define TRNG_RTSCR1L_RUN1_RNG_SHIFT              16
+#define TRNG_RTSCR1L_RUN1_RNG_WIDTH              15
+#define TRNG_RTSCR1L_RUN1_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR1L_RUN1_RNG_SHIFT))&TRNG_RTSCR1L_RUN1_RNG_MASK)
+/* RTSCR2C Bit Fields */
+#define TRNG_RTSCR2C_R2_0_CT_MASK                0x3FFFu
+#define TRNG_RTSCR2C_R2_0_CT_SHIFT               0
+#define TRNG_RTSCR2C_R2_0_CT_WIDTH               14
+#define TRNG_RTSCR2C_R2_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR2C_R2_0_CT_SHIFT))&TRNG_RTSCR2C_R2_0_CT_MASK)
+#define TRNG_RTSCR2C_R2_1_CT_MASK                0x3FFF0000u
+#define TRNG_RTSCR2C_R2_1_CT_SHIFT               16
+#define TRNG_RTSCR2C_R2_1_CT_WIDTH               14
+#define TRNG_RTSCR2C_R2_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR2C_R2_1_CT_SHIFT))&TRNG_RTSCR2C_R2_1_CT_MASK)
+/* RTSCR2L Bit Fields */
+#define TRNG_RTSCR2L_RUN2_MAX_MASK               0x3FFFu
+#define TRNG_RTSCR2L_RUN2_MAX_SHIFT              0
+#define TRNG_RTSCR2L_RUN2_MAX_WIDTH              14
+#define TRNG_RTSCR2L_RUN2_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR2L_RUN2_MAX_SHIFT))&TRNG_RTSCR2L_RUN2_MAX_MASK)
+#define TRNG_RTSCR2L_RUN2_RNG_MASK               0x3FFF0000u
+#define TRNG_RTSCR2L_RUN2_RNG_SHIFT              16
+#define TRNG_RTSCR2L_RUN2_RNG_WIDTH              14
+#define TRNG_RTSCR2L_RUN2_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR2L_RUN2_RNG_SHIFT))&TRNG_RTSCR2L_RUN2_RNG_MASK)
+/* RTSCR3C Bit Fields */
+#define TRNG_RTSCR3C_R3_0_CT_MASK                0x1FFFu
+#define TRNG_RTSCR3C_R3_0_CT_SHIFT               0
+#define TRNG_RTSCR3C_R3_0_CT_WIDTH               13
+#define TRNG_RTSCR3C_R3_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR3C_R3_0_CT_SHIFT))&TRNG_RTSCR3C_R3_0_CT_MASK)
+#define TRNG_RTSCR3C_R3_1_CT_MASK                0x1FFF0000u
+#define TRNG_RTSCR3C_R3_1_CT_SHIFT               16
+#define TRNG_RTSCR3C_R3_1_CT_WIDTH               13
+#define TRNG_RTSCR3C_R3_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR3C_R3_1_CT_SHIFT))&TRNG_RTSCR3C_R3_1_CT_MASK)
+/* RTSCR3L Bit Fields */
+#define TRNG_RTSCR3L_RUN3_MAX_MASK               0x1FFFu
+#define TRNG_RTSCR3L_RUN3_MAX_SHIFT              0
+#define TRNG_RTSCR3L_RUN3_MAX_WIDTH              13
+#define TRNG_RTSCR3L_RUN3_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR3L_RUN3_MAX_SHIFT))&TRNG_RTSCR3L_RUN3_MAX_MASK)
+#define TRNG_RTSCR3L_RUN3_RNG_MASK               0x1FFF0000u
+#define TRNG_RTSCR3L_RUN3_RNG_SHIFT              16
+#define TRNG_RTSCR3L_RUN3_RNG_WIDTH              13
+#define TRNG_RTSCR3L_RUN3_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR3L_RUN3_RNG_SHIFT))&TRNG_RTSCR3L_RUN3_RNG_MASK)
+/* RTSCR4C Bit Fields */
+#define TRNG_RTSCR4C_R4_0_CT_MASK                0xFFFu
+#define TRNG_RTSCR4C_R4_0_CT_SHIFT               0
+#define TRNG_RTSCR4C_R4_0_CT_WIDTH               12
+#define TRNG_RTSCR4C_R4_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR4C_R4_0_CT_SHIFT))&TRNG_RTSCR4C_R4_0_CT_MASK)
+#define TRNG_RTSCR4C_R4_1_CT_MASK                0xFFF0000u
+#define TRNG_RTSCR4C_R4_1_CT_SHIFT               16
+#define TRNG_RTSCR4C_R4_1_CT_WIDTH               12
+#define TRNG_RTSCR4C_R4_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR4C_R4_1_CT_SHIFT))&TRNG_RTSCR4C_R4_1_CT_MASK)
+/* RTSCR4L Bit Fields */
+#define TRNG_RTSCR4L_RUN4_MAX_MASK               0xFFFu
+#define TRNG_RTSCR4L_RUN4_MAX_SHIFT              0
+#define TRNG_RTSCR4L_RUN4_MAX_WIDTH              12
+#define TRNG_RTSCR4L_RUN4_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR4L_RUN4_MAX_SHIFT))&TRNG_RTSCR4L_RUN4_MAX_MASK)
+#define TRNG_RTSCR4L_RUN4_RNG_MASK               0xFFF0000u
+#define TRNG_RTSCR4L_RUN4_RNG_SHIFT              16
+#define TRNG_RTSCR4L_RUN4_RNG_WIDTH              12
+#define TRNG_RTSCR4L_RUN4_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR4L_RUN4_RNG_SHIFT))&TRNG_RTSCR4L_RUN4_RNG_MASK)
+/* RTSCR5C Bit Fields */
+#define TRNG_RTSCR5C_R5_0_CT_MASK                0x7FFu
+#define TRNG_RTSCR5C_R5_0_CT_SHIFT               0
+#define TRNG_RTSCR5C_R5_0_CT_WIDTH               11
+#define TRNG_RTSCR5C_R5_0_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR5C_R5_0_CT_SHIFT))&TRNG_RTSCR5C_R5_0_CT_MASK)
+#define TRNG_RTSCR5C_R5_1_CT_MASK                0x7FF0000u
+#define TRNG_RTSCR5C_R5_1_CT_SHIFT               16
+#define TRNG_RTSCR5C_R5_1_CT_WIDTH               11
+#define TRNG_RTSCR5C_R5_1_CT(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR5C_R5_1_CT_SHIFT))&TRNG_RTSCR5C_R5_1_CT_MASK)
+/* RTSCR5L Bit Fields */
+#define TRNG_RTSCR5L_RUN5_MAX_MASK               0x7FFu
+#define TRNG_RTSCR5L_RUN5_MAX_SHIFT              0
+#define TRNG_RTSCR5L_RUN5_MAX_WIDTH              11
+#define TRNG_RTSCR5L_RUN5_MAX(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR5L_RUN5_MAX_SHIFT))&TRNG_RTSCR5L_RUN5_MAX_MASK)
+#define TRNG_RTSCR5L_RUN5_RNG_MASK               0x7FF0000u
+#define TRNG_RTSCR5L_RUN5_RNG_SHIFT              16
+#define TRNG_RTSCR5L_RUN5_RNG_WIDTH              11
+#define TRNG_RTSCR5L_RUN5_RNG(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR5L_RUN5_RNG_SHIFT))&TRNG_RTSCR5L_RUN5_RNG_MASK)
+/* RTSCR6PC Bit Fields */
+#define TRNG_RTSCR6PC_R6P_0_CT_MASK              0x7FFu
+#define TRNG_RTSCR6PC_R6P_0_CT_SHIFT             0
+#define TRNG_RTSCR6PC_R6P_0_CT_WIDTH             11
+#define TRNG_RTSCR6PC_R6P_0_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR6PC_R6P_0_CT_SHIFT))&TRNG_RTSCR6PC_R6P_0_CT_MASK)
+#define TRNG_RTSCR6PC_R6P_1_CT_MASK              0x7FF0000u
+#define TRNG_RTSCR6PC_R6P_1_CT_SHIFT             16
+#define TRNG_RTSCR6PC_R6P_1_CT_WIDTH             11
+#define TRNG_RTSCR6PC_R6P_1_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR6PC_R6P_1_CT_SHIFT))&TRNG_RTSCR6PC_R6P_1_CT_MASK)
+/* RTSCR6PL Bit Fields */
+#define TRNG_RTSCR6PL_RUN6P_MAX_MASK             0x7FFu
+#define TRNG_RTSCR6PL_RUN6P_MAX_SHIFT            0
+#define TRNG_RTSCR6PL_RUN6P_MAX_WIDTH            11
+#define TRNG_RTSCR6PL_RUN6P_MAX(x)               (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR6PL_RUN6P_MAX_SHIFT))&TRNG_RTSCR6PL_RUN6P_MAX_MASK)
+#define TRNG_RTSCR6PL_RUN6P_RNG_MASK             0x7FF0000u
+#define TRNG_RTSCR6PL_RUN6P_RNG_SHIFT            16
+#define TRNG_RTSCR6PL_RUN6P_RNG_WIDTH            11
+#define TRNG_RTSCR6PL_RUN6P_RNG(x)               (((uint32_t)(((uint32_t)(x))<<TRNG_RTSCR6PL_RUN6P_RNG_SHIFT))&TRNG_RTSCR6PL_RUN6P_RNG_MASK)
+/* RTSTATUS Bit Fields */
+#define TRNG_RTSTATUS_TF1BR0_MASK                0x1u
+#define TRNG_RTSTATUS_TF1BR0_SHIFT               0
+#define TRNG_RTSTATUS_TF1BR0_WIDTH               1
+#define TRNG_RTSTATUS_TF1BR0(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF1BR0_SHIFT))&TRNG_RTSTATUS_TF1BR0_MASK)
+#define TRNG_RTSTATUS_TF1BR1_MASK                0x2u
+#define TRNG_RTSTATUS_TF1BR1_SHIFT               1
+#define TRNG_RTSTATUS_TF1BR1_WIDTH               1
+#define TRNG_RTSTATUS_TF1BR1(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF1BR1_SHIFT))&TRNG_RTSTATUS_TF1BR1_MASK)
+#define TRNG_RTSTATUS_TF2BR0_MASK                0x4u
+#define TRNG_RTSTATUS_TF2BR0_SHIFT               2
+#define TRNG_RTSTATUS_TF2BR0_WIDTH               1
+#define TRNG_RTSTATUS_TF2BR0(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF2BR0_SHIFT))&TRNG_RTSTATUS_TF2BR0_MASK)
+#define TRNG_RTSTATUS_TF2BR1_MASK                0x8u
+#define TRNG_RTSTATUS_TF2BR1_SHIFT               3
+#define TRNG_RTSTATUS_TF2BR1_WIDTH               1
+#define TRNG_RTSTATUS_TF2BR1(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF2BR1_SHIFT))&TRNG_RTSTATUS_TF2BR1_MASK)
+#define TRNG_RTSTATUS_TF3BR0_MASK                0x10u
+#define TRNG_RTSTATUS_TF3BR0_SHIFT               4
+#define TRNG_RTSTATUS_TF3BR0_WIDTH               1
+#define TRNG_RTSTATUS_TF3BR0(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF3BR0_SHIFT))&TRNG_RTSTATUS_TF3BR0_MASK)
+#define TRNG_RTSTATUS_TF3BR1_MASK                0x20u
+#define TRNG_RTSTATUS_TF3BR1_SHIFT               5
+#define TRNG_RTSTATUS_TF3BR1_WIDTH               1
+#define TRNG_RTSTATUS_TF3BR1(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF3BR1_SHIFT))&TRNG_RTSTATUS_TF3BR1_MASK)
+#define TRNG_RTSTATUS_TF4BR0_MASK                0x40u
+#define TRNG_RTSTATUS_TF4BR0_SHIFT               6
+#define TRNG_RTSTATUS_TF4BR0_WIDTH               1
+#define TRNG_RTSTATUS_TF4BR0(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF4BR0_SHIFT))&TRNG_RTSTATUS_TF4BR0_MASK)
+#define TRNG_RTSTATUS_TF4BR1_MASK                0x80u
+#define TRNG_RTSTATUS_TF4BR1_SHIFT               7
+#define TRNG_RTSTATUS_TF4BR1_WIDTH               1
+#define TRNG_RTSTATUS_TF4BR1(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF4BR1_SHIFT))&TRNG_RTSTATUS_TF4BR1_MASK)
+#define TRNG_RTSTATUS_TF5BR0_MASK                0x100u
+#define TRNG_RTSTATUS_TF5BR0_SHIFT               8
+#define TRNG_RTSTATUS_TF5BR0_WIDTH               1
+#define TRNG_RTSTATUS_TF5BR0(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF5BR0_SHIFT))&TRNG_RTSTATUS_TF5BR0_MASK)
+#define TRNG_RTSTATUS_TF5BR1_MASK                0x200u
+#define TRNG_RTSTATUS_TF5BR1_SHIFT               9
+#define TRNG_RTSTATUS_TF5BR1_WIDTH               1
+#define TRNG_RTSTATUS_TF5BR1(x)                  (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF5BR1_SHIFT))&TRNG_RTSTATUS_TF5BR1_MASK)
+#define TRNG_RTSTATUS_TF6PBR0_MASK               0x400u
+#define TRNG_RTSTATUS_TF6PBR0_SHIFT              10
+#define TRNG_RTSTATUS_TF6PBR0_WIDTH              1
+#define TRNG_RTSTATUS_TF6PBR0(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF6PBR0_SHIFT))&TRNG_RTSTATUS_TF6PBR0_MASK)
+#define TRNG_RTSTATUS_TF6PBR1_MASK               0x800u
+#define TRNG_RTSTATUS_TF6PBR1_SHIFT              11
+#define TRNG_RTSTATUS_TF6PBR1_WIDTH              1
+#define TRNG_RTSTATUS_TF6PBR1(x)                 (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TF6PBR1_SHIFT))&TRNG_RTSTATUS_TF6PBR1_MASK)
+#define TRNG_RTSTATUS_TFSB_MASK                  0x1000u
+#define TRNG_RTSTATUS_TFSB_SHIFT                 12
+#define TRNG_RTSTATUS_TFSB_WIDTH                 1
+#define TRNG_RTSTATUS_TFSB(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TFSB_SHIFT))&TRNG_RTSTATUS_TFSB_MASK)
+#define TRNG_RTSTATUS_TFLR_MASK                  0x2000u
+#define TRNG_RTSTATUS_TFLR_SHIFT                 13
+#define TRNG_RTSTATUS_TFLR_WIDTH                 1
+#define TRNG_RTSTATUS_TFLR(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TFLR_SHIFT))&TRNG_RTSTATUS_TFLR_MASK)
+#define TRNG_RTSTATUS_TFP_MASK                   0x4000u
+#define TRNG_RTSTATUS_TFP_SHIFT                  14
+#define TRNG_RTSTATUS_TFP_WIDTH                  1
+#define TRNG_RTSTATUS_TFP(x)                     (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TFP_SHIFT))&TRNG_RTSTATUS_TFP_MASK)
+#define TRNG_RTSTATUS_TFMB_MASK                  0x8000u
+#define TRNG_RTSTATUS_TFMB_SHIFT                 15
+#define TRNG_RTSTATUS_TFMB_WIDTH                 1
+#define TRNG_RTSTATUS_TFMB(x)                    (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_TFMB_SHIFT))&TRNG_RTSTATUS_TFMB_MASK)
+#define TRNG_RTSTATUS_RETRY_CT_MASK              0xF0000u
+#define TRNG_RTSTATUS_RETRY_CT_SHIFT             16
+#define TRNG_RTSTATUS_RETRY_CT_WIDTH             4
+#define TRNG_RTSTATUS_RETRY_CT(x)                (((uint32_t)(((uint32_t)(x))<<TRNG_RTSTATUS_RETRY_CT_SHIFT))&TRNG_RTSTATUS_RETRY_CT_MASK)
+/* RTENT0 Bit Fields */
+#define TRNG_RTENT0_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT0_ENT_SHIFT                    0
+#define TRNG_RTENT0_ENT_WIDTH                    32
+#define TRNG_RTENT0_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT0_ENT_SHIFT))&TRNG_RTENT0_ENT_MASK)
+/* RTENT1 Bit Fields */
+#define TRNG_RTENT1_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT1_ENT_SHIFT                    0
+#define TRNG_RTENT1_ENT_WIDTH                    32
+#define TRNG_RTENT1_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT1_ENT_SHIFT))&TRNG_RTENT1_ENT_MASK)
+/* RTENT2 Bit Fields */
+#define TRNG_RTENT2_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT2_ENT_SHIFT                    0
+#define TRNG_RTENT2_ENT_WIDTH                    32
+#define TRNG_RTENT2_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT2_ENT_SHIFT))&TRNG_RTENT2_ENT_MASK)
+/* RTENT3 Bit Fields */
+#define TRNG_RTENT3_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT3_ENT_SHIFT                    0
+#define TRNG_RTENT3_ENT_WIDTH                    32
+#define TRNG_RTENT3_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT3_ENT_SHIFT))&TRNG_RTENT3_ENT_MASK)
+/* RTENT4 Bit Fields */
+#define TRNG_RTENT4_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT4_ENT_SHIFT                    0
+#define TRNG_RTENT4_ENT_WIDTH                    32
+#define TRNG_RTENT4_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT4_ENT_SHIFT))&TRNG_RTENT4_ENT_MASK)
+/* RTENT5 Bit Fields */
+#define TRNG_RTENT5_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT5_ENT_SHIFT                    0
+#define TRNG_RTENT5_ENT_WIDTH                    32
+#define TRNG_RTENT5_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT5_ENT_SHIFT))&TRNG_RTENT5_ENT_MASK)
+/* RTENT6 Bit Fields */
+#define TRNG_RTENT6_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT6_ENT_SHIFT                    0
+#define TRNG_RTENT6_ENT_WIDTH                    32
+#define TRNG_RTENT6_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT6_ENT_SHIFT))&TRNG_RTENT6_ENT_MASK)
+/* RTENT7 Bit Fields */
+#define TRNG_RTENT7_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT7_ENT_SHIFT                    0
+#define TRNG_RTENT7_ENT_WIDTH                    32
+#define TRNG_RTENT7_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT7_ENT_SHIFT))&TRNG_RTENT7_ENT_MASK)
+/* RTENT8 Bit Fields */
+#define TRNG_RTENT8_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT8_ENT_SHIFT                    0
+#define TRNG_RTENT8_ENT_WIDTH                    32
+#define TRNG_RTENT8_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT8_ENT_SHIFT))&TRNG_RTENT8_ENT_MASK)
+/* RTENT9 Bit Fields */
+#define TRNG_RTENT9_ENT_MASK                     0xFFFFFFFFu
+#define TRNG_RTENT9_ENT_SHIFT                    0
+#define TRNG_RTENT9_ENT_WIDTH                    32
+#define TRNG_RTENT9_ENT(x)                       (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT9_ENT_SHIFT))&TRNG_RTENT9_ENT_MASK)
+/* RTENT10 Bit Fields */
+#define TRNG_RTENT10_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT10_ENT_SHIFT                   0
+#define TRNG_RTENT10_ENT_WIDTH                   32
+#define TRNG_RTENT10_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT10_ENT_SHIFT))&TRNG_RTENT10_ENT_MASK)
+/* RTENT11 Bit Fields */
+#define TRNG_RTENT11_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT11_ENT_SHIFT                   0
+#define TRNG_RTENT11_ENT_WIDTH                   32
+#define TRNG_RTENT11_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT11_ENT_SHIFT))&TRNG_RTENT11_ENT_MASK)
+/* RTENT12 Bit Fields */
+#define TRNG_RTENT12_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT12_ENT_SHIFT                   0
+#define TRNG_RTENT12_ENT_WIDTH                   32
+#define TRNG_RTENT12_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT12_ENT_SHIFT))&TRNG_RTENT12_ENT_MASK)
+/* RTENT13 Bit Fields */
+#define TRNG_RTENT13_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT13_ENT_SHIFT                   0
+#define TRNG_RTENT13_ENT_WIDTH                   32
+#define TRNG_RTENT13_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT13_ENT_SHIFT))&TRNG_RTENT13_ENT_MASK)
+/* RTENT14 Bit Fields */
+#define TRNG_RTENT14_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT14_ENT_SHIFT                   0
+#define TRNG_RTENT14_ENT_WIDTH                   32
+#define TRNG_RTENT14_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT14_ENT_SHIFT))&TRNG_RTENT14_ENT_MASK)
+/* RTENT15 Bit Fields */
+#define TRNG_RTENT15_ENT_MASK                    0xFFFFFFFFu
+#define TRNG_RTENT15_ENT_SHIFT                   0
+#define TRNG_RTENT15_ENT_WIDTH                   32
+#define TRNG_RTENT15_ENT(x)                      (((uint32_t)(((uint32_t)(x))<<TRNG_RTENT15_ENT_SHIFT))&TRNG_RTENT15_ENT_MASK)
+/* RTPKRCNT10 Bit Fields */
+#define TRNG_RTPKRCNT10_PKR_0_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNT10_PKR_0_CT_SHIFT           0
+#define TRNG_RTPKRCNT10_PKR_0_CT_WIDTH           16
+#define TRNG_RTPKRCNT10_PKR_0_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT10_PKR_0_CT_SHIFT))&TRNG_RTPKRCNT10_PKR_0_CT_MASK)
+#define TRNG_RTPKRCNT10_PKR_1_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNT10_PKR_1_CT_SHIFT           16
+#define TRNG_RTPKRCNT10_PKR_1_CT_WIDTH           16
+#define TRNG_RTPKRCNT10_PKR_1_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT10_PKR_1_CT_SHIFT))&TRNG_RTPKRCNT10_PKR_1_CT_MASK)
+/* RTPKRCNT32 Bit Fields */
+#define TRNG_RTPKRCNT32_PKR_2_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNT32_PKR_2_CT_SHIFT           0
+#define TRNG_RTPKRCNT32_PKR_2_CT_WIDTH           16
+#define TRNG_RTPKRCNT32_PKR_2_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT32_PKR_2_CT_SHIFT))&TRNG_RTPKRCNT32_PKR_2_CT_MASK)
+#define TRNG_RTPKRCNT32_PKR_3_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNT32_PKR_3_CT_SHIFT           16
+#define TRNG_RTPKRCNT32_PKR_3_CT_WIDTH           16
+#define TRNG_RTPKRCNT32_PKR_3_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT32_PKR_3_CT_SHIFT))&TRNG_RTPKRCNT32_PKR_3_CT_MASK)
+/* RTPKRCNT54 Bit Fields */
+#define TRNG_RTPKRCNT54_PKR_4_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNT54_PKR_4_CT_SHIFT           0
+#define TRNG_RTPKRCNT54_PKR_4_CT_WIDTH           16
+#define TRNG_RTPKRCNT54_PKR_4_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT54_PKR_4_CT_SHIFT))&TRNG_RTPKRCNT54_PKR_4_CT_MASK)
+#define TRNG_RTPKRCNT54_PKR_5_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNT54_PKR_5_CT_SHIFT           16
+#define TRNG_RTPKRCNT54_PKR_5_CT_WIDTH           16
+#define TRNG_RTPKRCNT54_PKR_5_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT54_PKR_5_CT_SHIFT))&TRNG_RTPKRCNT54_PKR_5_CT_MASK)
+/* RTPKRCNT76 Bit Fields */
+#define TRNG_RTPKRCNT76_PKR_6_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNT76_PKR_6_CT_SHIFT           0
+#define TRNG_RTPKRCNT76_PKR_6_CT_WIDTH           16
+#define TRNG_RTPKRCNT76_PKR_6_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT76_PKR_6_CT_SHIFT))&TRNG_RTPKRCNT76_PKR_6_CT_MASK)
+#define TRNG_RTPKRCNT76_PKR_7_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNT76_PKR_7_CT_SHIFT           16
+#define TRNG_RTPKRCNT76_PKR_7_CT_WIDTH           16
+#define TRNG_RTPKRCNT76_PKR_7_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT76_PKR_7_CT_SHIFT))&TRNG_RTPKRCNT76_PKR_7_CT_MASK)
+/* RTPKRCNT98 Bit Fields */
+#define TRNG_RTPKRCNT98_PKR_8_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNT98_PKR_8_CT_SHIFT           0
+#define TRNG_RTPKRCNT98_PKR_8_CT_WIDTH           16
+#define TRNG_RTPKRCNT98_PKR_8_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT98_PKR_8_CT_SHIFT))&TRNG_RTPKRCNT98_PKR_8_CT_MASK)
+#define TRNG_RTPKRCNT98_PKR_9_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNT98_PKR_9_CT_SHIFT           16
+#define TRNG_RTPKRCNT98_PKR_9_CT_WIDTH           16
+#define TRNG_RTPKRCNT98_PKR_9_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNT98_PKR_9_CT_SHIFT))&TRNG_RTPKRCNT98_PKR_9_CT_MASK)
+/* RTPKRCNTBA Bit Fields */
+#define TRNG_RTPKRCNTBA_PKR_A_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNTBA_PKR_A_CT_SHIFT           0
+#define TRNG_RTPKRCNTBA_PKR_A_CT_WIDTH           16
+#define TRNG_RTPKRCNTBA_PKR_A_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTBA_PKR_A_CT_SHIFT))&TRNG_RTPKRCNTBA_PKR_A_CT_MASK)
+#define TRNG_RTPKRCNTBA_PKR_B_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNTBA_PKR_B_CT_SHIFT           16
+#define TRNG_RTPKRCNTBA_PKR_B_CT_WIDTH           16
+#define TRNG_RTPKRCNTBA_PKR_B_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTBA_PKR_B_CT_SHIFT))&TRNG_RTPKRCNTBA_PKR_B_CT_MASK)
+/* RTPKRCNTDC Bit Fields */
+#define TRNG_RTPKRCNTDC_PKR_C_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNTDC_PKR_C_CT_SHIFT           0
+#define TRNG_RTPKRCNTDC_PKR_C_CT_WIDTH           16
+#define TRNG_RTPKRCNTDC_PKR_C_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTDC_PKR_C_CT_SHIFT))&TRNG_RTPKRCNTDC_PKR_C_CT_MASK)
+#define TRNG_RTPKRCNTDC_PKR_D_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNTDC_PKR_D_CT_SHIFT           16
+#define TRNG_RTPKRCNTDC_PKR_D_CT_WIDTH           16
+#define TRNG_RTPKRCNTDC_PKR_D_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTDC_PKR_D_CT_SHIFT))&TRNG_RTPKRCNTDC_PKR_D_CT_MASK)
+/* RTPKRCNTFE Bit Fields */
+#define TRNG_RTPKRCNTFE_PKR_E_CT_MASK            0xFFFFu
+#define TRNG_RTPKRCNTFE_PKR_E_CT_SHIFT           0
+#define TRNG_RTPKRCNTFE_PKR_E_CT_WIDTH           16
+#define TRNG_RTPKRCNTFE_PKR_E_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTFE_PKR_E_CT_SHIFT))&TRNG_RTPKRCNTFE_PKR_E_CT_MASK)
+#define TRNG_RTPKRCNTFE_PKR_F_CT_MASK            0xFFFF0000u
+#define TRNG_RTPKRCNTFE_PKR_F_CT_SHIFT           16
+#define TRNG_RTPKRCNTFE_PKR_F_CT_WIDTH           16
+#define TRNG_RTPKRCNTFE_PKR_F_CT(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_RTPKRCNTFE_PKR_F_CT_SHIFT))&TRNG_RTPKRCNTFE_PKR_F_CT_MASK)
+/* SA_TRNG_SEC_CFG Bit Fields */
+#define TRNG_SA_TRNG_SEC_CFG_SH0_MASK            0x1u
+#define TRNG_SA_TRNG_SEC_CFG_SH0_SHIFT           0
+#define TRNG_SA_TRNG_SEC_CFG_SH0_WIDTH           1
+#define TRNG_SA_TRNG_SEC_CFG_SH0(x)              (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_SEC_CFG_SH0_SHIFT))&TRNG_SA_TRNG_SEC_CFG_SH0_MASK)
+#define TRNG_SA_TRNG_SEC_CFG_NO_PRGM_MASK        0x2u
+#define TRNG_SA_TRNG_SEC_CFG_NO_PRGM_SHIFT       1
+#define TRNG_SA_TRNG_SEC_CFG_NO_PRGM_WIDTH       1
+#define TRNG_SA_TRNG_SEC_CFG_NO_PRGM(x)          (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_SEC_CFG_NO_PRGM_SHIFT))&TRNG_SA_TRNG_SEC_CFG_NO_PRGM_MASK)
+#define TRNG_SA_TRNG_SEC_CFG_SK_VAL_MASK         0x4u
+#define TRNG_SA_TRNG_SEC_CFG_SK_VAL_SHIFT        2
+#define TRNG_SA_TRNG_SEC_CFG_SK_VAL_WIDTH        1
+#define TRNG_SA_TRNG_SEC_CFG_SK_VAL(x)           (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_SEC_CFG_SK_VAL_SHIFT))&TRNG_SA_TRNG_SEC_CFG_SK_VAL_MASK)
+/* SA_TRNG_INT_CTRL Bit Fields */
+#define TRNG_SA_TRNG_INT_CTRL_HW_ERR_MASK        0x1u
+#define TRNG_SA_TRNG_INT_CTRL_HW_ERR_SHIFT       0
+#define TRNG_SA_TRNG_INT_CTRL_HW_ERR_WIDTH       1
+#define TRNG_SA_TRNG_INT_CTRL_HW_ERR(x)          (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_CTRL_HW_ERR_SHIFT))&TRNG_SA_TRNG_INT_CTRL_HW_ERR_MASK)
+#define TRNG_SA_TRNG_INT_CTRL_ENT_VAL_MASK       0x2u
+#define TRNG_SA_TRNG_INT_CTRL_ENT_VAL_SHIFT      1
+#define TRNG_SA_TRNG_INT_CTRL_ENT_VAL_WIDTH      1
+#define TRNG_SA_TRNG_INT_CTRL_ENT_VAL(x)         (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_CTRL_ENT_VAL_SHIFT))&TRNG_SA_TRNG_INT_CTRL_ENT_VAL_MASK)
+#define TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL_MASK   0x4u
+#define TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL_SHIFT  2
+#define TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL_WIDTH  1
+#define TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL(x)     (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL_SHIFT))&TRNG_SA_TRNG_INT_CTRL_FRQ_CT_FAIL_MASK)
+#define TRNG_SA_TRNG_INT_CTRL_UNUSED_MASK        0xFFFFFFF8u
+#define TRNG_SA_TRNG_INT_CTRL_UNUSED_SHIFT       3
+#define TRNG_SA_TRNG_INT_CTRL_UNUSED_WIDTH       29
+#define TRNG_SA_TRNG_INT_CTRL_UNUSED(x)          (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_CTRL_UNUSED_SHIFT))&TRNG_SA_TRNG_INT_CTRL_UNUSED_MASK)
+/* SA_TRNG_INT_MASK Bit Fields */
+#define TRNG_SA_TRNG_INT_MASK_HW_ERR_MASK        0x1u
+#define TRNG_SA_TRNG_INT_MASK_HW_ERR_SHIFT       0
+#define TRNG_SA_TRNG_INT_MASK_HW_ERR_WIDTH       1
+#define TRNG_SA_TRNG_INT_MASK_HW_ERR(x)          (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_MASK_HW_ERR_SHIFT))&TRNG_SA_TRNG_INT_MASK_HW_ERR_MASK)
+#define TRNG_SA_TRNG_INT_MASK_ENT_VAL_MASK       0x2u
+#define TRNG_SA_TRNG_INT_MASK_ENT_VAL_SHIFT      1
+#define TRNG_SA_TRNG_INT_MASK_ENT_VAL_WIDTH      1
+#define TRNG_SA_TRNG_INT_MASK_ENT_VAL(x)         (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_MASK_ENT_VAL_SHIFT))&TRNG_SA_TRNG_INT_MASK_ENT_VAL_MASK)
+#define TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL_MASK   0x4u
+#define TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL_SHIFT  2
+#define TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL_WIDTH  1
+#define TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL(x)     (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL_SHIFT))&TRNG_SA_TRNG_INT_MASK_FRQ_CT_FAIL_MASK)
+/* SA_TRNG_INT_STATUS Bit Fields */
+#define TRNG_SA_TRNG_INT_STATUS_HW_ERR_MASK      0x1u
+#define TRNG_SA_TRNG_INT_STATUS_HW_ERR_SHIFT     0
+#define TRNG_SA_TRNG_INT_STATUS_HW_ERR_WIDTH     1
+#define TRNG_SA_TRNG_INT_STATUS_HW_ERR(x)        (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_STATUS_HW_ERR_SHIFT))&TRNG_SA_TRNG_INT_STATUS_HW_ERR_MASK)
+#define TRNG_SA_TRNG_INT_STATUS_ENT_VAL_MASK     0x2u
+#define TRNG_SA_TRNG_INT_STATUS_ENT_VAL_SHIFT    1
+#define TRNG_SA_TRNG_INT_STATUS_ENT_VAL_WIDTH    1
+#define TRNG_SA_TRNG_INT_STATUS_ENT_VAL(x)       (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_STATUS_ENT_VAL_SHIFT))&TRNG_SA_TRNG_INT_STATUS_ENT_VAL_MASK)
+#define TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL_MASK 0x4u
+#define TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL_SHIFT 2
+#define TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL_WIDTH 1
+#define TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL(x)   (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL_SHIFT))&TRNG_SA_TRNG_INT_STATUS_FRQ_CT_FAIL_MASK)
+/* SA_TRNG_VID1 Bit Fields */
+#define TRNG_SA_TRNG_VID1_RNG_MIN_REV_MASK       0xFFu
+#define TRNG_SA_TRNG_VID1_RNG_MIN_REV_SHIFT      0
+#define TRNG_SA_TRNG_VID1_RNG_MIN_REV_WIDTH      8
+#define TRNG_SA_TRNG_VID1_RNG_MIN_REV(x)         (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID1_RNG_MIN_REV_SHIFT))&TRNG_SA_TRNG_VID1_RNG_MIN_REV_MASK)
+#define TRNG_SA_TRNG_VID1_RNG_MAJ_REV_MASK       0xFF00u
+#define TRNG_SA_TRNG_VID1_RNG_MAJ_REV_SHIFT      8
+#define TRNG_SA_TRNG_VID1_RNG_MAJ_REV_WIDTH      8
+#define TRNG_SA_TRNG_VID1_RNG_MAJ_REV(x)         (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID1_RNG_MAJ_REV_SHIFT))&TRNG_SA_TRNG_VID1_RNG_MAJ_REV_MASK)
+#define TRNG_SA_TRNG_VID1_RNG_IP_ID_MASK         0xFFFF0000u
+#define TRNG_SA_TRNG_VID1_RNG_IP_ID_SHIFT        16
+#define TRNG_SA_TRNG_VID1_RNG_IP_ID_WIDTH        16
+#define TRNG_SA_TRNG_VID1_RNG_IP_ID(x)           (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID1_RNG_IP_ID_SHIFT))&TRNG_SA_TRNG_VID1_RNG_IP_ID_MASK)
+/* SA_TRNG_VID2 Bit Fields */
+#define TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT_MASK    0xFFu
+#define TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT_SHIFT   0
+#define TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT_WIDTH   8
+#define TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT(x)      (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT_SHIFT))&TRNG_SA_TRNG_VID2_RNG_CONFIG_OPT_MASK)
+#define TRNG_SA_TRNG_VID2_RNG_ECO_REV_MASK       0xFF00u
+#define TRNG_SA_TRNG_VID2_RNG_ECO_REV_SHIFT      8
+#define TRNG_SA_TRNG_VID2_RNG_ECO_REV_WIDTH      8
+#define TRNG_SA_TRNG_VID2_RNG_ECO_REV(x)         (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID2_RNG_ECO_REV_SHIFT))&TRNG_SA_TRNG_VID2_RNG_ECO_REV_MASK)
+#define TRNG_SA_TRNG_VID2_RNG_INTG_OPT_MASK      0xFF0000u
+#define TRNG_SA_TRNG_VID2_RNG_INTG_OPT_SHIFT     16
+#define TRNG_SA_TRNG_VID2_RNG_INTG_OPT_WIDTH     8
+#define TRNG_SA_TRNG_VID2_RNG_INTG_OPT(x)        (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID2_RNG_INTG_OPT_SHIFT))&TRNG_SA_TRNG_VID2_RNG_INTG_OPT_MASK)
+#define TRNG_SA_TRNG_VID2_RNG_ERA_MASK           0xFF000000u
+#define TRNG_SA_TRNG_VID2_RNG_ERA_SHIFT          24
+#define TRNG_SA_TRNG_VID2_RNG_ERA_WIDTH          8
+#define TRNG_SA_TRNG_VID2_RNG_ERA(x)             (((uint32_t)(((uint32_t)(x))<<TRNG_SA_TRNG_VID2_RNG_ERA_SHIFT))&TRNG_SA_TRNG_VID2_RNG_ERA_MASK)
 
 /*!
  * @}
@@ -19765,65 +19846,62 @@ typedef struct {
 
 /* TRNG - Register instance definitions */
 /* TRNG */
-#define TRNG_MCTL                                TRNG_MCTL_REG(TRNG)
-#define TRNG_SCMISC                              TRNG_SCMISC_REG(TRNG)
-#define TRNG_PKRRNG                              TRNG_PKRRNG_REG(TRNG)
-#define TRNG_PKRMAX                              TRNG_PKRMAX_REG(TRNG)
-#define TRNG_PKRSQ                               TRNG_PKRSQ_REG(TRNG)
-#define TRNG_SDCTL                               TRNG_SDCTL_REG(TRNG)
-#define TRNG_SBLIM                               TRNG_SBLIM_REG(TRNG)
-#define TRNG_TOTSAM                              TRNG_TOTSAM_REG(TRNG)
-#define TRNG_FRQMIN                              TRNG_FRQMIN_REG(TRNG)
-#define TRNG_FRQCNT                              TRNG_FRQCNT_REG(TRNG)
-#define TRNG_FRQMAX                              TRNG_FRQMAX_REG(TRNG)
-#define TRNG_SCMC                                TRNG_SCMC_REG(TRNG)
-#define TRNG_SCML                                TRNG_SCML_REG(TRNG)
-#define TRNG_SCR1C                               TRNG_SCR1C_REG(TRNG)
-#define TRNG_SCR1L                               TRNG_SCR1L_REG(TRNG)
-#define TRNG_SCR2C                               TRNG_SCR2C_REG(TRNG)
-#define TRNG_SCR2L                               TRNG_SCR2L_REG(TRNG)
-#define TRNG_SCR3C                               TRNG_SCR3C_REG(TRNG)
-#define TRNG_SCR3L                               TRNG_SCR3L_REG(TRNG)
-#define TRNG_SCR4C                               TRNG_SCR4C_REG(TRNG)
-#define TRNG_SCR4L                               TRNG_SCR4L_REG(TRNG)
-#define TRNG_SCR5C                               TRNG_SCR5C_REG(TRNG)
-#define TRNG_SCR5L                               TRNG_SCR5L_REG(TRNG)
-#define TRNG_SCR6PC                              TRNG_SCR6PC_REG(TRNG)
-#define TRNG_SCR6PL                              TRNG_SCR6PL_REG(TRNG)
-#define TRNG_STATUS                              TRNG_STATUS_REG(TRNG)
-#define TRNG_ENT0                                TRNG_ENT_REG(TRNG,0)
-#define TRNG_ENT1                                TRNG_ENT_REG(TRNG,1)
-#define TRNG_ENT2                                TRNG_ENT_REG(TRNG,2)
-#define TRNG_ENT3                                TRNG_ENT_REG(TRNG,3)
-#define TRNG_ENT4                                TRNG_ENT_REG(TRNG,4)
-#define TRNG_ENT5                                TRNG_ENT_REG(TRNG,5)
-#define TRNG_ENT6                                TRNG_ENT_REG(TRNG,6)
-#define TRNG_ENT7                                TRNG_ENT_REG(TRNG,7)
-#define TRNG_ENT8                                TRNG_ENT_REG(TRNG,8)
-#define TRNG_ENT9                                TRNG_ENT_REG(TRNG,9)
-#define TRNG_ENT10                               TRNG_ENT_REG(TRNG,10)
-#define TRNG_ENT11                               TRNG_ENT_REG(TRNG,11)
-#define TRNG_ENT12                               TRNG_ENT_REG(TRNG,12)
-#define TRNG_ENT13                               TRNG_ENT_REG(TRNG,13)
-#define TRNG_ENT14                               TRNG_ENT_REG(TRNG,14)
-#define TRNG_ENT15                               TRNG_ENT_REG(TRNG,15)
-#define TRNG_PKRCNT10                            TRNG_PKRCNT10_REG(TRNG)
-#define TRNG_PKRCNT32                            TRNG_PKRCNT32_REG(TRNG)
-#define TRNG_PKRCNT54                            TRNG_PKRCNT54_REG(TRNG)
-#define TRNG_PKRCNT76                            TRNG_PKRCNT76_REG(TRNG)
-#define TRNG_PKRCNT98                            TRNG_PKRCNT98_REG(TRNG)
-#define TRNG_PKRCNTBA                            TRNG_PKRCNTBA_REG(TRNG)
-#define TRNG_PKRCNTDC                            TRNG_PKRCNTDC_REG(TRNG)
-#define TRNG_PKRCNTFE                            TRNG_PKRCNTFE_REG(TRNG)
-#define TRNG_SEC_CFG                             TRNG_SEC_CFG_REG(TRNG)
-#define TRNG_INT_CTRL                            TRNG_INT_CTRL_REG(TRNG)
-#define TRNG_INT_MASK                            TRNG_INT_MASK_REG(TRNG)
-#define TRNG_INT_STATUS                          TRNG_INT_STATUS_REG(TRNG)
-#define TRNG_VID1                                TRNG_VID1_REG(TRNG)
-#define TRNG_VID2                                TRNG_VID2_REG(TRNG)
-
-/* TRNG - Register array accessors */
-#define TRNG_ENT(index)                          TRNG_ENT_REG(TRNG,index)
+#define TRNG_RTMCTL                              TRNG_RTMCTL_REG(TRNG)
+#define TRNG_RTSCMISC                            TRNG_RTSCMISC_REG(TRNG)
+#define TRNG_RTPKRRNG                            TRNG_RTPKRRNG_REG(TRNG)
+#define TRNG_RTPKRMAX                            TRNG_RTPKRMAX_REG(TRNG)
+#define TRNG_RTPKRSQ                             TRNG_RTPKRSQ_REG(TRNG)
+#define TRNG_RTSDCTL                             TRNG_RTSDCTL_REG(TRNG)
+#define TRNG_RTSBLIM                             TRNG_RTSBLIM_REG(TRNG)
+#define TRNG_RTTOTSAM                            TRNG_RTTOTSAM_REG(TRNG)
+#define TRNG_RTFRQMIN                            TRNG_RTFRQMIN_REG(TRNG)
+#define TRNG_RTFRQCNT                            TRNG_RTFRQCNT_REG(TRNG)
+#define TRNG_RTFRQMAX                            TRNG_RTFRQMAX_REG(TRNG)
+#define TRNG_RTSCMC                              TRNG_RTSCMC_REG(TRNG)
+#define TRNG_RTSCML                              TRNG_RTSCML_REG(TRNG)
+#define TRNG_RTSCR1C                             TRNG_RTSCR1C_REG(TRNG)
+#define TRNG_RTSCR1L                             TRNG_RTSCR1L_REG(TRNG)
+#define TRNG_RTSCR2C                             TRNG_RTSCR2C_REG(TRNG)
+#define TRNG_RTSCR2L                             TRNG_RTSCR2L_REG(TRNG)
+#define TRNG_RTSCR3C                             TRNG_RTSCR3C_REG(TRNG)
+#define TRNG_RTSCR3L                             TRNG_RTSCR3L_REG(TRNG)
+#define TRNG_RTSCR4C                             TRNG_RTSCR4C_REG(TRNG)
+#define TRNG_RTSCR4L                             TRNG_RTSCR4L_REG(TRNG)
+#define TRNG_RTSCR5C                             TRNG_RTSCR5C_REG(TRNG)
+#define TRNG_RTSCR5L                             TRNG_RTSCR5L_REG(TRNG)
+#define TRNG_RTSCR6PC                            TRNG_RTSCR6PC_REG(TRNG)
+#define TRNG_RTSCR6PL                            TRNG_RTSCR6PL_REG(TRNG)
+#define TRNG_RTSTATUS                            TRNG_RTSTATUS_REG(TRNG)
+#define TRNG_RTENT0                              TRNG_RTENT0_REG(TRNG)
+#define TRNG_RTENT1                              TRNG_RTENT1_REG(TRNG)
+#define TRNG_RTENT2                              TRNG_RTENT2_REG(TRNG)
+#define TRNG_RTENT3                              TRNG_RTENT3_REG(TRNG)
+#define TRNG_RTENT4                              TRNG_RTENT4_REG(TRNG)
+#define TRNG_RTENT5                              TRNG_RTENT5_REG(TRNG)
+#define TRNG_RTENT6                              TRNG_RTENT6_REG(TRNG)
+#define TRNG_RTENT7                              TRNG_RTENT7_REG(TRNG)
+#define TRNG_RTENT8                              TRNG_RTENT8_REG(TRNG)
+#define TRNG_RTENT9                              TRNG_RTENT9_REG(TRNG)
+#define TRNG_RTENT10                             TRNG_RTENT10_REG(TRNG)
+#define TRNG_RTENT11                             TRNG_RTENT11_REG(TRNG)
+#define TRNG_RTENT12                             TRNG_RTENT12_REG(TRNG)
+#define TRNG_RTENT13                             TRNG_RTENT13_REG(TRNG)
+#define TRNG_RTENT14                             TRNG_RTENT14_REG(TRNG)
+#define TRNG_RTENT15                             TRNG_RTENT15_REG(TRNG)
+#define TRNG_RTPKRCNT10                          TRNG_RTPKRCNT10_REG(TRNG)
+#define TRNG_RTPKRCNT32                          TRNG_RTPKRCNT32_REG(TRNG)
+#define TRNG_RTPKRCNT54                          TRNG_RTPKRCNT54_REG(TRNG)
+#define TRNG_RTPKRCNT76                          TRNG_RTPKRCNT76_REG(TRNG)
+#define TRNG_RTPKRCNT98                          TRNG_RTPKRCNT98_REG(TRNG)
+#define TRNG_RTPKRCNTBA                          TRNG_RTPKRCNTBA_REG(TRNG)
+#define TRNG_RTPKRCNTDC                          TRNG_RTPKRCNTDC_REG(TRNG)
+#define TRNG_RTPKRCNTFE                          TRNG_RTPKRCNTFE_REG(TRNG)
+#define TRNG_SA_TRNG_SEC_CFG                     TRNG_SA_TRNG_SEC_CFG_REG(TRNG)
+#define TRNG_SA_TRNG_INT_CTRL                    TRNG_SA_TRNG_INT_CTRL_REG(TRNG)
+#define TRNG_SA_TRNG_INT_MASK                    TRNG_SA_TRNG_INT_MASK_REG(TRNG)
+#define TRNG_SA_TRNG_INT_STATUS                  TRNG_SA_TRNG_INT_STATUS_REG(TRNG)
+#define TRNG_SA_TRNG_VID1                        TRNG_SA_TRNG_VID1_REG(TRNG)
+#define TRNG_SA_TRNG_VID2                        TRNG_SA_TRNG_VID2_REG(TRNG)
 
 /*!
  * @}
@@ -20709,10 +20787,6 @@ typedef struct {
 #define UART_BASE_ADDRS                          { UART0_BASE, UART1_BASE, UART2_BASE, UART3_BASE, UART4_BASE, UART5_BASE }
 /** Array initializer of UART peripheral base pointers */
 #define UART_BASE_PTRS                           { UART0, UART1, UART2, UART3, UART4, UART5 }
-/** Interrupt vectors for the UART peripheral type */
-#define UART_RX_TX_IRQS                          { UART0_RX_TX_IRQn, UART1_RX_TX_IRQn, UART2_RX_TX_IRQn, UART3_RX_TX_IRQn, UART4_RX_TX_IRQn, UART5_RX_TX_IRQn }
-#define UART_ERR_IRQS                            { UART0_ERR_IRQn, UART1_ERR_IRQn, UART2_ERR_IRQn, UART3_ERR_IRQn, UART4_ERR_IRQn, UART5_ERR_IRQn }
-#define UART_LON_IRQS                            { UART0_LON_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn, NotAvail_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- UART - Register accessor macros
@@ -21211,8 +21285,6 @@ typedef struct {
 #define WDOG_BASE_ADDRS                          { WDOG_BASE }
 /** Array initializer of WDOG peripheral base pointers */
 #define WDOG_BASE_PTRS                           { WDOG }
-/** Interrupt vectors for the WDOG peripheral type */
-#define WDOG_IRQS                                { WDOG_EWM_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- WDOG - Register accessor macros
@@ -21700,8 +21772,6 @@ typedef struct {
 #define XBARA_BASE_ADDRS                         { XBARA_BASE }
 /** Array initializer of XBARA peripheral base pointers */
 #define XBARA_BASE_PTRS                          { XBARA }
-/** Interrupt vectors for the XBARA peripheral type */
-#define XBARA_IRQS                               { XBARA_IRQn }
 
 /* ----------------------------------------------------------------------------
    -- XBARA - Register accessor macros
