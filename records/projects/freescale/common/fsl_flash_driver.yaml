@@ -1,12 +1,12 @@
 common:
     group_name:
         - flash_driver
-    include_paths:
+    includes:
         - source
         - source/freescale
         - source/freescale/driver
         - source/freescale/devices
-    source_files:
+    sources:
         - source/freescale/FlashDev.c
         - source/freescale/FlashPrg.c
         - source/freescale/driver/flash_init.c
@@ -18,4 +18,3 @@ common:
         - source/freescale/driver/flash_verify_program.c
         - source/freescale/driver/flash_verify_erase_all.c
         - source/freescale/driver/flash_command_sequence.c
-

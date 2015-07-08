@@ -1,5 +1,7 @@
 common:
-    source_files:
+    target:
+        - cortex-m0
+    sources:
         - source/freescale/devices/MKV11Z7
         - source/freescale/driver/flash_densities_kl_series.c
     macros:

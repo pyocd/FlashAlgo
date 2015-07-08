@@ -24,6 +24,10 @@ tmp/
 .project
 .pydevproject
 
+# uvision Project Files
+*.uvproj
+*.uvopt
+
 # generated project files
 projectfiles
 
