@@ -1,0 +1,9 @@
+common:
+    target:
+        - cortex-m0
+    sources:
+        - source/freescale/devices/MKW30Z4
+        - source/freescale/driver/flash_densities_kl_series.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKW30Z160VHM4

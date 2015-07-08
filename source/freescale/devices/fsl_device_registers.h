@@ -6,7 +6,7 @@
 **     Abstract:
 **         Common include file for CMSIS register access layer headers.
 **
-**     Copyright (c) 2014 Freescale Semiconductor, Inc.
+**     Copyright (c) 2015 Freescale Semiconductor, Inc.
 **     All rights reserved.
 **
 **     Redistribution and use in source and binary forms, with or without modification,
@@ -158,6 +158,20 @@
     #include "MK22F12810/MK22F12810_extension.h"
     /* CPU specific feature definitions */
     #include "MK22F12810/MK22F12810_features.h"
+
+#elif (defined(CPU_MK22FX512AVLH12) || defined(CPU_MK22FN1M0AVLH12) || defined(CPU_MK22FX512AVLK12) || \
+    defined(CPU_MK22FN1M0AVLK12) || defined(CPU_MK22FX512AVLL12) || defined(CPU_MK22FN1M0AVLL12) || \
+    defined(CPU_MK22FX512AVLQ12) || defined(CPU_MK22FN1M0AVLQ12) || defined(CPU_MK22FX512AVMC12) || \
+    defined(CPU_MK22FN1M0AVMC12) || defined(CPU_MK22FX512AVMD12) || defined(CPU_MK22FN1M0AVMD12))
+
+    #define K22FA12_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MK22FA12/MK22FA12.h"
+    /* Extension register definitions */
+    #include "MK22FA12/MK22FA12_extension.h"
+    /* CPU specific feature definitions */
+    #include "MK22FA12/MK22FA12_features.h"
 
 #elif (defined(CPU_MK22FN256CAH12) || defined(CPU_MK22FN128CAH12) || defined(CPU_MK22FN256VDC12) || \
     defined(CPU_MK22FN256VLH12) || defined(CPU_MK22FN256VLL12) || defined(CPU_MK22FN256VMP12))
@@ -376,8 +390,8 @@
     /* CPU specific feature definitions */
     #include "MK70F15/MK70F15_features.h"
 
-#elif (defined(CPU_MK80FN256VDC15) || defined(CPU_MK80FN256VLL15) || defined(CPU_MK80FN256VLQ15) || \
-    defined(CPU_MK80FN256VMD15))
+#elif (defined(CPU_MK80FN256CAx15) || defined(CPU_MK80FN256VDC15) || defined(CPU_MK80FN256VLL15) || \
+    defined(CPU_MK80FN256VLQ15))
 
     #define K80F25615_SERIES
 
@@ -388,7 +402,8 @@
     /* CPU specific feature definitions */
     #include "MK80F25615/MK80F25615_features.h"
 
-#elif (defined(CPU_MK81FN256VMD15))
+#elif (defined(CPU_MK81FN256CAx15) || defined(CPU_MK81FN256VDC15) || defined(CPU_MK81FN256VLL15) || \
+    defined(CPU_MK81FN256VLQ15))
 
     #define K81F25615_SERIES
 
@@ -398,6 +413,18 @@
     #include "MK81F25615/MK81F25615_extension.h"
     /* CPU specific feature definitions */
     #include "MK81F25615/MK81F25615_features.h"
+
+#elif (defined(CPU_MK82FN256CAx15) || defined(CPU_MK82FN256VDC15) || defined(CPU_MK82FN256VLL15) || \
+    defined(CPU_MK82FN256VLQ15))
+
+    #define K82F25615_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MK82F25615/MK82F25615.h"
+    /* Extension register definitions */
+    #include "MK82F25615/MK82F25615_extension.h"
+    /* CPU specific feature definitions */
+    #include "MK82F25615/MK82F25615_features.h"
 
 #elif (defined(CPU_MKE02Z64VLC2) || defined(CPU_MKE02Z32VLC2) || defined(CPU_MKE02Z16VLC2) || \
     defined(CPU_MKE02Z64VLD2) || defined(CPU_MKE02Z32VLD2) || defined(CPU_MKE02Z16VLD2) || \
@@ -542,7 +569,10 @@
     /* CPU specific feature definitions */
     #include "MKL05Z4/MKL05Z4_features.h"
 
-#elif (defined(CPU_MKL13Z32VLH4) || defined(CPU_MKL13Z64VLH4))
+#elif (defined(CPU_MKL13Z32VFM4) || defined(CPU_MKL13Z64VFM4) || defined(CPU_MKL13Z32VFT4) || \
+    defined(CPU_MKL13Z64VFT4) || defined(CPU_MKL13Z32VLH4) || defined(CPU_MKL13Z64VLH4) || \
+    defined(CPU_MKL13Z32VLK4) || defined(CPU_MKL13Z64VLK4) || defined(CPU_MKL13Z32VMP4) || \
+    defined(CPU_MKL13Z64VMP4))
 
     #define KL13Z644_SERIES
 
@@ -693,17 +723,6 @@
     /* CPU specific feature definitions */
     #include "MKL27Z644/MKL27Z644_features.h"
 
-#elif (defined(CPU_MKL28Z256VLH7) || defined(CPU_MKL28Z512VLH7))
-
-    #define KL28Z7_SERIES
-
-    /* CMSIS-style register definitions */
-    #include "MKL28Z7/MKL28Z7.h"
-    /* Extension register definitions */
-    #include "MKL28Z7/MKL28Z7_extension.h"
-    /* CPU specific feature definitions */
-    #include "MKL28Z7/MKL28Z7_features.h"
-
 #elif (defined(CPU_MKL33Z128VLH4) || defined(CPU_MKL33Z256VLH4) || defined(CPU_MKL33Z128VMP4) || \
     defined(CPU_MKL33Z256VMP4))
 
@@ -716,7 +735,9 @@
     /* CPU specific feature definitions */
     #include "MKL33Z4/MKL33Z4_features.h"
 
-#elif (defined(CPU_MKL33Z32VLH4) || defined(CPU_MKL33Z64VLH4))
+#elif (defined(CPU_MKL33Z32VFT4) || defined(CPU_MKL33Z64VFT4) || defined(CPU_MKL33Z32VLH4) || \
+    defined(CPU_MKL33Z64VLH4) || defined(CPU_MKL33Z32VLK4) || defined(CPU_MKL33Z64VLK4) || \
+    defined(CPU_MKL33Z32VMP4) || defined(CPU_MKL33Z64VMP4))
 
     #define KL33Z644_SERIES
 
@@ -810,6 +831,17 @@
     /* CPU specific feature definitions */
     #include "MKM34ZA5/MKM34ZA5_features.h"
 
+#elif (defined(CPU_MKM34Z256VLL7) || defined(CPU_MKM34Z256VLQ7))
+
+    #define KM34Z7_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKM34Z7/MKM34Z7.h"
+    /* Extension register definitions */
+    #include "MKM34Z7/MKM34Z7_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKM34Z7/MKM34Z7_features.h"
+
 #elif (defined(CPU_MKV10Z16VFM7) || defined(CPU_MKV10Z16VLC7) || defined(CPU_MKV10Z16VLF7) || \
     defined(CPU_MKV10Z32VFM7) || defined(CPU_MKV10Z32VLC7) || defined(CPU_MKV10Z32VLF7))
 
@@ -822,7 +854,22 @@
     /* CPU specific feature definitions */
     #include "MKV10Z7/MKV10Z7_features.h"
 
-#elif (defined(CPU_MKV11Z128VLH7))
+#elif (defined(CPU_MKV10Z128VFM7) || defined(CPU_MKV10Z128VLC7) || defined(CPU_MKV10Z128VLF7) || \
+    defined(CPU_MKV10Z128VLH7) || defined(CPU_MKV10Z64VFM7) || defined(CPU_MKV10Z64VLC7) || \
+    defined(CPU_MKV10Z64VLF7) || defined(CPU_MKV10Z64VLH7))
+
+    #define KV10Z1287_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKV10Z1287/MKV10Z1287.h"
+    /* Extension register definitions */
+    #include "MKV10Z1287/MKV10Z1287_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKV10Z1287/MKV10Z1287_features.h"
+
+#elif (defined(CPU_MKV11Z128VFM7) || defined(CPU_MKV11Z128VLC7) || defined(CPU_MKV11Z128VLF7) || \
+    defined(CPU_MKV11Z128VLH7) || defined(CPU_MKV11Z64VFM7) || defined(CPU_MKV11Z64VLC7) || \
+    defined(CPU_MKV11Z64VLF7) || defined(CPU_MKV11Z64VLH7))
 
     #define KV11Z7_SERIES
 
