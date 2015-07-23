@@ -723,6 +723,18 @@
     /* CPU specific feature definitions */
     #include "MKL27Z644/MKL27Z644_features.h"
 
+#elif (defined(CPU_MKL28Z512VDC7) || defined(CPU_MKL28Z512VLH7) || defined(CPU_MKL28Z512VLL7) || \
+    defined(CPU_MKL28Z512VMP7))
+
+    #define KL28Z7_SERIES
+
+    /* CMSIS-style register definitions */
+    #include "MKL28Z7/MKL28Z7.h"
+    /* Extension register definitions */
+    #include "MKL28Z7/MKL28Z7_extension.h"
+    /* CPU specific feature definitions */
+    #include "MKL28Z7/MKL28Z7_features.h"
+
 #elif (defined(CPU_MKL33Z128VLH4) || defined(CPU_MKL33Z256VLH4) || defined(CPU_MKL33Z128VMP4) || \
     defined(CPU_MKL33Z256VMP4))
 
@@ -986,7 +998,7 @@
 #elif (defined(CPU_MKV58F1M0VMD22) || defined(CPU_MKV58F1M0VLQ22) || defined(CPU_MKV58F1M0VLL22) || \
     defined(CPU_MKV56F1M0VMD22) || defined(CPU_MKV56F1M0VLQ22) || defined(CPU_MKV56F1M0VLL22) || \
     defined(CPU_MKV58F512VMD22) || defined(CPU_MKV58F512VLQ22) || defined(CPU_MKV58F512VLL22) || \
-    defined(CPU_MKV56F512VMD22) || defined(CPU_MKV56F512VLQ22) || defined(CPU_MKV56F512VLL22))    
+    defined(CPU_MKV56F512VMD22) || defined(CPU_MKV56F512VLQ22) || defined(CPU_MKV56F512VLL22))
 
     #define KV58F22_SERIES
 

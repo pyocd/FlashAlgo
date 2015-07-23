@@ -76,8 +76,13 @@
 #define FTFx_ERASE_ALL_BLOCK_UNSECURE      0x49 //!< ERSALLU
 //@}
 
+#if defined(KV58F22_SERIES)
+//! @brief Flash block base address
+#define FLASH_BLOCK_BASE                   0x10000000
+#else // KV58F22_SERIES
 //! @brief Flash block base address
 #define FLASH_BLOCK_BASE                   0x00
+#endif // KV58F22_SERIES
 
 #if defined(FTFA)
     #define FTFx                           FTFA

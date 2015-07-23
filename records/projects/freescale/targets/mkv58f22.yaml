@@ -1,7 +1,7 @@
 common:
     target:
-        - cortex-m7
-    source_files:
+        - cortex-m4
+    sources:
         - source/freescale/devices/MKV58F22
         - source/freescale/driver/flash_densities_k_series.c
     macros:

@@ -1,6 +1,6 @@
-common:
-    target:
-        - cortex-m0
+#common:
+#    target:
+#        - cortex-m0
 
 tool_specific:
     iar_arm:
