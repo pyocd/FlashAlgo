@@ -1,0 +1,10 @@
+common:
+    target:
+        - cortex-m3
+    group_name:
+        - flash_driver
+    sources:
+        - source
+        - source/siliconlabs/EFM32GG
+    macros:
+        - EFM32GG_1024

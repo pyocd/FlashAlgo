@@ -15,6 +15,9 @@ projects:
     template:
         - *module_tools
         - records/projects/template.yaml
+    efm32gg:
+        - *module_tools
+        - records/projects/siliconlabs/efm32gg.yaml
     nrf51xxx:
         - *module_tools
         - records/projects/nordic/nrf51xxx.yaml
