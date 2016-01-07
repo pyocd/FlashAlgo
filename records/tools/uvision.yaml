@@ -1,6 +1,4 @@
 tool_specific:
     uvision:
-        macros:
-            -
         linker_file:
             - source/FlashAlgo.lin
