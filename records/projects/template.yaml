@@ -8,5 +8,3 @@ common:
     sources:
         - source
         - source/template
-    macros:
-        -
