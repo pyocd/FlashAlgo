@@ -138,7 +138,7 @@ def decode_axf(string):
                     continue
                 
                 name, loc, sec = t[1], t[2], t[4]
-                if name in ['EraseChip', 'EraseSector', 'Init', 'ProgramPage', 'UnInit', 'Verify']:
+                if name in ['Init', 'UnInit', 'EraseChip', 'EraseSector', 'ProgramPage', 'Verify']:
                     addr = BLOB_START + ALGO_OFFSET + int(loc, 16)
                     dic['func'].update({'%s' % name : '0x%08X' % addr})
 
