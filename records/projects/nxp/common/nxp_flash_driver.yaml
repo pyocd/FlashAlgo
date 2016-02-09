@@ -1,0 +1,8 @@
+common:
+    group_name:
+        - flash_driver
+    includes:
+        - source
+        - source/nxp
+        - source/nxp/driver
+        - source/nxp/devices

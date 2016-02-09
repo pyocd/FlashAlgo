@@ -32,7 +32,6 @@ import sys, os, collections
 ALGO_OFFSET = 0x20
 BLOB_START = 0x20000000
 BLOB_HEADER = '0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,'
-SP = BLOB_START + 2048
 PROG_PAGE_SIZE = 512
 
 class FlashInfo(object):
@@ -99,6 +98,7 @@ def decode_axf(string):
     DEV_DSCR_PATH = join(ELF_PATH, 'DevDscr')
     PRG_CODE_PATH = join(ELF_PATH, 'PrgCode')
     ALGO_SYM_PATH = join(ELF_PATH, 'symbols')
+    SP = BLOB_START + 2048
     
     # print some info about the build
     flash_info = FlashInfo(DEV_DSCR_PATH)
@@ -154,9 +154,13 @@ def decode_axf(string):
 if __name__ == '__main__':
     
     if len(sys.argv) < 2:
-        print 'usage: >python gen_algo.py <abs_path_bin_algo_info>'
+        print 'usage: >python gen_algo.py <abs_path_bin_algo_info> <BLOB_START_ADDRESS>'
         sys.exit()
-    
+
+    if len(sys.argv) == 3:
+        BLOB_START = eval(sys.argv[2])
+    print "blob_start = ", BLOB_START
+
     data = decode_axf(sys.argv[1])
     generate_blob(os.path.dirname(os.path.realpath(__file__)) + '\\' + 'c_blob.tmpl', 'h', data)
     generate_blob(os.path.dirname(os.path.realpath(__file__)) + '\\' + 'py_blob.tmpl', 'py', data)
