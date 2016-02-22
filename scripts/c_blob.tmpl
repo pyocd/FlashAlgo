@@ -19,7 +19,7 @@ static const uint32_t {{name}}_flash_prog_blob[] = {
     {{mem}}
 };
 
-static const TARGET_FLASH flash_algorithm_struct = {
+static const program_target_t flash = {
     {{func['Init']}}, // Init
     {{func['UnInit']}}, // UnInit
     {{func['EraseChip']}}, // EraseChip
