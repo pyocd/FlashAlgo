@@ -4,5 +4,3 @@ common:
     includes:
         - source
         - source/nxp
-        - source/nxp/driver
-        - source/nxp/devices
