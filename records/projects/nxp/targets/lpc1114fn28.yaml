@@ -1,0 +1,8 @@
+common:
+    target:
+        - cortex-m0
+    sources:
+        - source/nxp/iap_32kb/FlashDev.c
+        - source/nxp/iap_32kb/FlashPrg.c
+    macros:
+        - __NO_EMBEDDED_ASM
