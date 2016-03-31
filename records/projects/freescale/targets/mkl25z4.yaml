@@ -1,9 +1,8 @@
 common:
     target:
         - cortex-m0
-    sources:
+    includes:
         - source/freescale/devices/MKL25Z4
-        - source/freescale/driver/flash_densities_kl_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MKL25Z128VLK4

@@ -1,12 +1,12 @@
 /*
 ** ###################################################################
-**     Version:             rev. 2.10, 2015-02-19
-**     Build:               b150310
+**     Version:             rev. 2.14, 2015-06-08
+**     Build:               b160222
 **
 **     Abstract:
 **         Chip specific module features.
 **
-**     Copyright (c) 2015 Freescale Semiconductor, Inc.
+**     Copyright (c) 2016 Freescale Semiconductor, Inc.
 **     All rights reserved.
 **
 **     Redistribution and use in source and binary forms, with or without modification,
@@ -73,12 +73,521 @@
 **         Added FSL_FEATURE_SOC_peripheral_COUNT with number of peripheral instances
 **     - rev. 2.10 (2015-02-19)
 **         Renamed interrupt vector LLW to LLWU.
+**     - rev. 2.11 (2015-05-19)
+**         FSL_FEATURE_SOC_CAU_COUNT remamed to FSL_FEATURE_SOC_MMCAU_COUNT.
+**         Added FSL_FEATURE_SOC_peripheral_COUNT for TRNG and HSADC.
+**         Added features for PDB and PORT.
+**     - rev. 2.12 (2015-05-25)
+**         Added FSL_FEATURE_FLASH_PFLASH_START_ADDRESS
+**     - rev. 2.13 (2015-05-27)
+**         Several USB features added.
+**     - rev. 2.14 (2015-06-08)
+**         FTM features BUS_CLOCK and FAST_CLOCK removed.
 **
 ** ###################################################################
 */
 
-#if !defined(__FSL_MK64F12_FEATURES_H__)
-#define __FSL_MK64F12_FEATURES_H__
+#ifndef _MK64F12_FEATURES_H_
+#define _MK64F12_FEATURES_H_
+
+/* SOC module features */
+
+#if defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FN1M0VMD12) || defined(CPU_MK64FX512VDC12) || \
+    defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FX512VMD12)
+    /* @brief ACMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_ACMP_COUNT (0)
+    /* @brief ADC16 availability on the SoC. */
+    #define FSL_FEATURE_SOC_ADC16_COUNT (2)
+    /* @brief ADC12 availability on the SoC. */
+    #define FSL_FEATURE_SOC_ADC12_COUNT (0)
+    /* @brief AFE availability on the SoC. */
+    #define FSL_FEATURE_SOC_AFE_COUNT (0)
+    /* @brief AIPS availability on the SoC. */
+    #define FSL_FEATURE_SOC_AIPS_COUNT (2)
+    /* @brief AOI availability on the SoC. */
+    #define FSL_FEATURE_SOC_AOI_COUNT (0)
+    /* @brief AXBS availability on the SoC. */
+    #define FSL_FEATURE_SOC_AXBS_COUNT (1)
+    /* @brief ASMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_ASMC_COUNT (0)
+    /* @brief CADC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CADC_COUNT (0)
+    /* @brief FLEXCAN availability on the SoC. */
+    #define FSL_FEATURE_SOC_FLEXCAN_COUNT (1)
+    /* @brief MMCAU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMCAU_COUNT (1)
+    /* @brief CMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_CMP_COUNT (3)
+    /* @brief CMT availability on the SoC. */
+    #define FSL_FEATURE_SOC_CMT_COUNT (1)
+    /* @brief CNC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CNC_COUNT (0)
+    /* @brief CRC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CRC_COUNT (1)
+    /* @brief DAC availability on the SoC. */
+    #define FSL_FEATURE_SOC_DAC_COUNT (2)
+    /* @brief DAC32 availability on the SoC. */
+    #define FSL_FEATURE_SOC_DAC32_COUNT (0)
+    /* @brief DCDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_DCDC_COUNT (0)
+    /* @brief DDR availability on the SoC. */
+    #define FSL_FEATURE_SOC_DDR_COUNT (0)
+    /* @brief DMA availability on the SoC. */
+    #define FSL_FEATURE_SOC_DMA_COUNT (0)
+    /* @brief EDMA availability on the SoC. */
+    #define FSL_FEATURE_SOC_EDMA_COUNT (1)
+    /* @brief DMAMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_DMAMUX_COUNT (1)
+    /* @brief DRY availability on the SoC. */
+    #define FSL_FEATURE_SOC_DRY_COUNT (0)
+    /* @brief DSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_DSPI_COUNT (3)
+    /* @brief EMVSIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_EMVSIM_COUNT (0)
+    /* @brief ENC availability on the SoC. */
+    #define FSL_FEATURE_SOC_ENC_COUNT (0)
+    /* @brief ENET availability on the SoC. */
+    #define FSL_FEATURE_SOC_ENET_COUNT (1)
+    /* @brief EWM availability on the SoC. */
+    #define FSL_FEATURE_SOC_EWM_COUNT (1)
+    /* @brief FB availability on the SoC. */
+    #define FSL_FEATURE_SOC_FB_COUNT (1)
+    /* @brief FGPIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_FGPIO_COUNT (0)
+    /* @brief FLEXIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_FLEXIO_COUNT (0)
+    /* @brief FMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_FMC_COUNT (1)
+    /* @brief FSKDT availability on the SoC. */
+    #define FSL_FEATURE_SOC_FSKDT_COUNT (0)
+    /* @brief FTFA availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFA_COUNT (0)
+    /* @brief FTFE availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFE_COUNT (1)
+    /* @brief FTFL availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFL_COUNT (0)
+    /* @brief FTM availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTM_COUNT (4)
+    /* @brief FTMRA availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRA_COUNT (0)
+    /* @brief FTMRE availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRE_COUNT (0)
+    /* @brief FTMRH availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRH_COUNT (0)
+    /* @brief GPIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_GPIO_COUNT (5)
+    /* @brief HSADC availability on the SoC. */
+    #define FSL_FEATURE_SOC_HSADC_COUNT (0)
+    /* @brief I2C availability on the SoC. */
+    #define FSL_FEATURE_SOC_I2C_COUNT (3)
+    /* @brief I2S availability on the SoC. */
+    #define FSL_FEATURE_SOC_I2S_COUNT (1)
+    /* @brief ICS availability on the SoC. */
+    #define FSL_FEATURE_SOC_ICS_COUNT (0)
+    /* @brief INTMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_INTMUX_COUNT (0)
+    /* @brief IRQ availability on the SoC. */
+    #define FSL_FEATURE_SOC_IRQ_COUNT (0)
+    /* @brief KBI availability on the SoC. */
+    #define FSL_FEATURE_SOC_KBI_COUNT (0)
+    /* @brief SLCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_SLCD_COUNT (0)
+    /* @brief LCDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_LCDC_COUNT (0)
+    /* @brief LDO availability on the SoC. */
+    #define FSL_FEATURE_SOC_LDO_COUNT (0)
+    /* @brief LLWU availability on the SoC. */
+    #define FSL_FEATURE_SOC_LLWU_COUNT (1)
+    /* @brief LMEM availability on the SoC. */
+    #define FSL_FEATURE_SOC_LMEM_COUNT (0)
+    /* @brief LPI2C availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPI2C_COUNT (0)
+    /* @brief LPIT availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPIT_COUNT (0)
+    /* @brief LPSCI availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPSCI_COUNT (0)
+    /* @brief LPSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPSPI_COUNT (0)
+    /* @brief LPTMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPTMR_COUNT (1)
+    /* @brief LPTPM availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPTPM_COUNT (0)
+    /* @brief LPUART availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPUART_COUNT (0)
+    /* @brief LTC availability on the SoC. */
+    #define FSL_FEATURE_SOC_LTC_COUNT (0)
+    /* @brief MC availability on the SoC. */
+    #define FSL_FEATURE_SOC_MC_COUNT (0)
+    /* @brief MCG availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCG_COUNT (1)
+    /* @brief MCGLITE availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCGLITE_COUNT (0)
+    /* @brief MCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCM_COUNT (1)
+    /* @brief MMAU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMAU_COUNT (0)
+    /* @brief MMDVSQ availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMDVSQ_COUNT (0)
+    /* @brief MPU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MPU_COUNT (1)
+    /* @brief MSCAN availability on the SoC. */
+    #define FSL_FEATURE_SOC_MSCAN_COUNT (0)
+    /* @brief MSCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_MSCM_COUNT (0)
+    /* @brief MTB availability on the SoC. */
+    #define FSL_FEATURE_SOC_MTB_COUNT (0)
+    /* @brief MTBDWT availability on the SoC. */
+    #define FSL_FEATURE_SOC_MTBDWT_COUNT (0)
+    /* @brief MU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MU_COUNT (0)
+    /* @brief NFC availability on the SoC. */
+    #define FSL_FEATURE_SOC_NFC_COUNT (0)
+    /* @brief OPAMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_OPAMP_COUNT (0)
+    /* @brief OSC availability on the SoC. */
+    #define FSL_FEATURE_SOC_OSC_COUNT (1)
+    /* @brief OSC32 availability on the SoC. */
+    #define FSL_FEATURE_SOC_OSC32_COUNT (0)
+    /* @brief OTFAD availability on the SoC. */
+    #define FSL_FEATURE_SOC_OTFAD_COUNT (0)
+    /* @brief PDB availability on the SoC. */
+    #define FSL_FEATURE_SOC_PDB_COUNT (1)
+    /* @brief PCC availability on the SoC. */
+    #define FSL_FEATURE_SOC_PCC_COUNT (0)
+    /* @brief PGA availability on the SoC. */
+    #define FSL_FEATURE_SOC_PGA_COUNT (0)
+    /* @brief PIT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PIT_COUNT (1)
+    /* @brief PMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_PMC_COUNT (1)
+    /* @brief PORT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PORT_COUNT (5)
+    /* @brief PWM availability on the SoC. */
+    #define FSL_FEATURE_SOC_PWM_COUNT (0)
+    /* @brief PWT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PWT_COUNT (0)
+    /* @brief QuadSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_QuadSPI_COUNT (0)
+    /* @brief RCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_RCM_COUNT (1)
+    /* @brief RFSYS availability on the SoC. */
+    #define FSL_FEATURE_SOC_RFSYS_COUNT (1)
+    /* @brief RFVBAT availability on the SoC. */
+    #define FSL_FEATURE_SOC_RFVBAT_COUNT (1)
+    /* @brief RNG availability on the SoC. */
+    #define FSL_FEATURE_SOC_RNG_COUNT (1)
+    /* @brief RNGB availability on the SoC. */
+    #define FSL_FEATURE_SOC_RNGB_COUNT (0)
+    /* @brief ROM availability on the SoC. */
+    #define FSL_FEATURE_SOC_ROM_COUNT (0)
+    /* @brief RSIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_RSIM_COUNT (0)
+    /* @brief RTC availability on the SoC. */
+    #define FSL_FEATURE_SOC_RTC_COUNT (1)
+    /* @brief SCG availability on the SoC. */
+    #define FSL_FEATURE_SOC_SCG_COUNT (0)
+    /* @brief SCI availability on the SoC. */
+    #define FSL_FEATURE_SOC_SCI_COUNT (0)
+    /* @brief SDHC availability on the SoC. */
+    #define FSL_FEATURE_SOC_SDHC_COUNT (1)
+    /* @brief SDRAM availability on the SoC. */
+    #define FSL_FEATURE_SOC_SDRAM_COUNT (0)
+    /* @brief SEMA42 availability on the SoC. */
+    #define FSL_FEATURE_SOC_SEMA42_COUNT (0)
+    /* @brief SIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_SIM_COUNT (1)
+    /* @brief SMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_SMC_COUNT (1)
+    /* @brief SPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_SPI_COUNT (0)
+    /* @brief TMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_TMR_COUNT (0)
+    /* @brief TPM availability on the SoC. */
+    #define FSL_FEATURE_SOC_TPM_COUNT (0)
+    /* @brief TRGMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRGMUX_COUNT (0)
+    /* @brief TRIAMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRIAMP_COUNT (0)
+    /* @brief TRNG availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRNG_COUNT (0)
+    /* @brief TSI availability on the SoC. */
+    #define FSL_FEATURE_SOC_TSI_COUNT (0)
+    /* @brief TSTMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_TSTMR_COUNT (0)
+    /* @brief UART availability on the SoC. */
+    #define FSL_FEATURE_SOC_UART_COUNT (6)
+    /* @brief USB availability on the SoC. */
+    #define FSL_FEATURE_SOC_USB_COUNT (1)
+    /* @brief USBDCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBDCD_COUNT (1)
+    /* @brief USBHSDCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBHSDCD_COUNT (0)
+    /* @brief USBPHY availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBPHY_COUNT (0)
+    /* @brief VREF availability on the SoC. */
+    #define FSL_FEATURE_SOC_VREF_COUNT (1)
+    /* @brief WDOG availability on the SoC. */
+    #define FSL_FEATURE_SOC_WDOG_COUNT (1)
+    /* @brief XBAR availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBAR_COUNT (0)
+    /* @brief XBARA availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBARA_COUNT (0)
+    /* @brief XBARB availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBARB_COUNT (0)
+    /* @brief XCVR availability on the SoC. */
+    #define FSL_FEATURE_SOC_XCVR_COUNT (0)
+    /* @brief XRDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_XRDC_COUNT (0)
+    /* @brief ZLL availability on the SoC. */
+    #define FSL_FEATURE_SOC_ZLL_COUNT (0)
+#elif defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FX512VLL12)
+    /* @brief ACMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_ACMP_COUNT (0)
+    /* @brief ADC16 availability on the SoC. */
+    #define FSL_FEATURE_SOC_ADC16_COUNT (2)
+    /* @brief ADC12 availability on the SoC. */
+    #define FSL_FEATURE_SOC_ADC12_COUNT (0)
+    /* @brief AFE availability on the SoC. */
+    #define FSL_FEATURE_SOC_AFE_COUNT (0)
+    /* @brief AIPS availability on the SoC. */
+    #define FSL_FEATURE_SOC_AIPS_COUNT (2)
+    /* @brief AOI availability on the SoC. */
+    #define FSL_FEATURE_SOC_AOI_COUNT (0)
+    /* @brief AXBS availability on the SoC. */
+    #define FSL_FEATURE_SOC_AXBS_COUNT (1)
+    /* @brief ASMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_ASMC_COUNT (0)
+    /* @brief CADC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CADC_COUNT (0)
+    /* @brief FLEXCAN availability on the SoC. */
+    #define FSL_FEATURE_SOC_FLEXCAN_COUNT (1)
+    /* @brief MMCAU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMCAU_COUNT (1)
+    /* @brief CMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_CMP_COUNT (3)
+    /* @brief CMT availability on the SoC. */
+    #define FSL_FEATURE_SOC_CMT_COUNT (1)
+    /* @brief CNC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CNC_COUNT (0)
+    /* @brief CRC availability on the SoC. */
+    #define FSL_FEATURE_SOC_CRC_COUNT (1)
+    /* @brief DAC availability on the SoC. */
+    #define FSL_FEATURE_SOC_DAC_COUNT (1)
+    /* @brief DAC32 availability on the SoC. */
+    #define FSL_FEATURE_SOC_DAC32_COUNT (0)
+    /* @brief DCDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_DCDC_COUNT (0)
+    /* @brief DDR availability on the SoC. */
+    #define FSL_FEATURE_SOC_DDR_COUNT (0)
+    /* @brief DMA availability on the SoC. */
+    #define FSL_FEATURE_SOC_DMA_COUNT (0)
+    /* @brief EDMA availability on the SoC. */
+    #define FSL_FEATURE_SOC_EDMA_COUNT (1)
+    /* @brief DMAMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_DMAMUX_COUNT (1)
+    /* @brief DRY availability on the SoC. */
+    #define FSL_FEATURE_SOC_DRY_COUNT (0)
+    /* @brief DSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_DSPI_COUNT (3)
+    /* @brief EMVSIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_EMVSIM_COUNT (0)
+    /* @brief ENC availability on the SoC. */
+    #define FSL_FEATURE_SOC_ENC_COUNT (0)
+    /* @brief ENET availability on the SoC. */
+    #define FSL_FEATURE_SOC_ENET_COUNT (1)
+    /* @brief EWM availability on the SoC. */
+    #define FSL_FEATURE_SOC_EWM_COUNT (1)
+    /* @brief FB availability on the SoC. */
+    #define FSL_FEATURE_SOC_FB_COUNT (1)
+    /* @brief FGPIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_FGPIO_COUNT (0)
+    /* @brief FLEXIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_FLEXIO_COUNT (0)
+    /* @brief FMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_FMC_COUNT (1)
+    /* @brief FSKDT availability on the SoC. */
+    #define FSL_FEATURE_SOC_FSKDT_COUNT (0)
+    /* @brief FTFA availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFA_COUNT (0)
+    /* @brief FTFE availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFE_COUNT (1)
+    /* @brief FTFL availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTFL_COUNT (0)
+    /* @brief FTM availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTM_COUNT (4)
+    /* @brief FTMRA availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRA_COUNT (0)
+    /* @brief FTMRE availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRE_COUNT (0)
+    /* @brief FTMRH availability on the SoC. */
+    #define FSL_FEATURE_SOC_FTMRH_COUNT (0)
+    /* @brief GPIO availability on the SoC. */
+    #define FSL_FEATURE_SOC_GPIO_COUNT (5)
+    /* @brief HSADC availability on the SoC. */
+    #define FSL_FEATURE_SOC_HSADC_COUNT (0)
+    /* @brief I2C availability on the SoC. */
+    #define FSL_FEATURE_SOC_I2C_COUNT (3)
+    /* @brief I2S availability on the SoC. */
+    #define FSL_FEATURE_SOC_I2S_COUNT (1)
+    /* @brief ICS availability on the SoC. */
+    #define FSL_FEATURE_SOC_ICS_COUNT (0)
+    /* @brief INTMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_INTMUX_COUNT (0)
+    /* @brief IRQ availability on the SoC. */
+    #define FSL_FEATURE_SOC_IRQ_COUNT (0)
+    /* @brief KBI availability on the SoC. */
+    #define FSL_FEATURE_SOC_KBI_COUNT (0)
+    /* @brief SLCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_SLCD_COUNT (0)
+    /* @brief LCDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_LCDC_COUNT (0)
+    /* @brief LDO availability on the SoC. */
+    #define FSL_FEATURE_SOC_LDO_COUNT (0)
+    /* @brief LLWU availability on the SoC. */
+    #define FSL_FEATURE_SOC_LLWU_COUNT (1)
+    /* @brief LMEM availability on the SoC. */
+    #define FSL_FEATURE_SOC_LMEM_COUNT (0)
+    /* @brief LPI2C availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPI2C_COUNT (0)
+    /* @brief LPIT availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPIT_COUNT (0)
+    /* @brief LPSCI availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPSCI_COUNT (0)
+    /* @brief LPSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPSPI_COUNT (0)
+    /* @brief LPTMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPTMR_COUNT (1)
+    /* @brief LPTPM availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPTPM_COUNT (0)
+    /* @brief LPUART availability on the SoC. */
+    #define FSL_FEATURE_SOC_LPUART_COUNT (0)
+    /* @brief LTC availability on the SoC. */
+    #define FSL_FEATURE_SOC_LTC_COUNT (0)
+    /* @brief MC availability on the SoC. */
+    #define FSL_FEATURE_SOC_MC_COUNT (0)
+    /* @brief MCG availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCG_COUNT (1)
+    /* @brief MCGLITE availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCGLITE_COUNT (0)
+    /* @brief MCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_MCM_COUNT (1)
+    /* @brief MMAU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMAU_COUNT (0)
+    /* @brief MMDVSQ availability on the SoC. */
+    #define FSL_FEATURE_SOC_MMDVSQ_COUNT (0)
+    /* @brief MPU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MPU_COUNT (1)
+    /* @brief MSCAN availability on the SoC. */
+    #define FSL_FEATURE_SOC_MSCAN_COUNT (0)
+    /* @brief MSCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_MSCM_COUNT (0)
+    /* @brief MTB availability on the SoC. */
+    #define FSL_FEATURE_SOC_MTB_COUNT (0)
+    /* @brief MTBDWT availability on the SoC. */
+    #define FSL_FEATURE_SOC_MTBDWT_COUNT (0)
+    /* @brief MU availability on the SoC. */
+    #define FSL_FEATURE_SOC_MU_COUNT (0)
+    /* @brief NFC availability on the SoC. */
+    #define FSL_FEATURE_SOC_NFC_COUNT (0)
+    /* @brief OPAMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_OPAMP_COUNT (0)
+    /* @brief OSC availability on the SoC. */
+    #define FSL_FEATURE_SOC_OSC_COUNT (1)
+    /* @brief OSC32 availability on the SoC. */
+    #define FSL_FEATURE_SOC_OSC32_COUNT (0)
+    /* @brief OTFAD availability on the SoC. */
+    #define FSL_FEATURE_SOC_OTFAD_COUNT (0)
+    /* @brief PDB availability on the SoC. */
+    #define FSL_FEATURE_SOC_PDB_COUNT (1)
+    /* @brief PCC availability on the SoC. */
+    #define FSL_FEATURE_SOC_PCC_COUNT (0)
+    /* @brief PGA availability on the SoC. */
+    #define FSL_FEATURE_SOC_PGA_COUNT (0)
+    /* @brief PIT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PIT_COUNT (1)
+    /* @brief PMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_PMC_COUNT (1)
+    /* @brief PORT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PORT_COUNT (5)
+    /* @brief PWM availability on the SoC. */
+    #define FSL_FEATURE_SOC_PWM_COUNT (0)
+    /* @brief PWT availability on the SoC. */
+    #define FSL_FEATURE_SOC_PWT_COUNT (0)
+    /* @brief QuadSPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_QuadSPI_COUNT (0)
+    /* @brief RCM availability on the SoC. */
+    #define FSL_FEATURE_SOC_RCM_COUNT (1)
+    /* @brief RFSYS availability on the SoC. */
+    #define FSL_FEATURE_SOC_RFSYS_COUNT (1)
+    /* @brief RFVBAT availability on the SoC. */
+    #define FSL_FEATURE_SOC_RFVBAT_COUNT (1)
+    /* @brief RNG availability on the SoC. */
+    #define FSL_FEATURE_SOC_RNG_COUNT (1)
+    /* @brief RNGB availability on the SoC. */
+    #define FSL_FEATURE_SOC_RNGB_COUNT (0)
+    /* @brief ROM availability on the SoC. */
+    #define FSL_FEATURE_SOC_ROM_COUNT (0)
+    /* @brief RSIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_RSIM_COUNT (0)
+    /* @brief RTC availability on the SoC. */
+    #define FSL_FEATURE_SOC_RTC_COUNT (1)
+    /* @brief SCG availability on the SoC. */
+    #define FSL_FEATURE_SOC_SCG_COUNT (0)
+    /* @brief SCI availability on the SoC. */
+    #define FSL_FEATURE_SOC_SCI_COUNT (0)
+    /* @brief SDHC availability on the SoC. */
+    #define FSL_FEATURE_SOC_SDHC_COUNT (1)
+    /* @brief SDRAM availability on the SoC. */
+    #define FSL_FEATURE_SOC_SDRAM_COUNT (0)
+    /* @brief SEMA42 availability on the SoC. */
+    #define FSL_FEATURE_SOC_SEMA42_COUNT (0)
+    /* @brief SIM availability on the SoC. */
+    #define FSL_FEATURE_SOC_SIM_COUNT (1)
+    /* @brief SMC availability on the SoC. */
+    #define FSL_FEATURE_SOC_SMC_COUNT (1)
+    /* @brief SPI availability on the SoC. */
+    #define FSL_FEATURE_SOC_SPI_COUNT (0)
+    /* @brief TMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_TMR_COUNT (0)
+    /* @brief TPM availability on the SoC. */
+    #define FSL_FEATURE_SOC_TPM_COUNT (0)
+    /* @brief TRGMUX availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRGMUX_COUNT (0)
+    /* @brief TRIAMP availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRIAMP_COUNT (0)
+    /* @brief TRNG availability on the SoC. */
+    #define FSL_FEATURE_SOC_TRNG_COUNT (0)
+    /* @brief TSI availability on the SoC. */
+    #define FSL_FEATURE_SOC_TSI_COUNT (0)
+    /* @brief TSTMR availability on the SoC. */
+    #define FSL_FEATURE_SOC_TSTMR_COUNT (0)
+    /* @brief UART availability on the SoC. */
+    #define FSL_FEATURE_SOC_UART_COUNT (6)
+    /* @brief USB availability on the SoC. */
+    #define FSL_FEATURE_SOC_USB_COUNT (1)
+    /* @brief USBDCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBDCD_COUNT (1)
+    /* @brief USBHSDCD availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBHSDCD_COUNT (0)
+    /* @brief USBPHY availability on the SoC. */
+    #define FSL_FEATURE_SOC_USBPHY_COUNT (0)
+    /* @brief VREF availability on the SoC. */
+    #define FSL_FEATURE_SOC_VREF_COUNT (1)
+    /* @brief WDOG availability on the SoC. */
+    #define FSL_FEATURE_SOC_WDOG_COUNT (1)
+    /* @brief XBAR availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBAR_COUNT (0)
+    /* @brief XBARA availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBARA_COUNT (0)
+    /* @brief XBARB availability on the SoC. */
+    #define FSL_FEATURE_SOC_XBARB_COUNT (0)
+    /* @brief XCVR availability on the SoC. */
+    #define FSL_FEATURE_SOC_XCVR_COUNT (0)
+    /* @brief XRDC availability on the SoC. */
+    #define FSL_FEATURE_SOC_XRDC_COUNT (0)
+    /* @brief ZLL availability on the SoC. */
+    #define FSL_FEATURE_SOC_ZLL_COUNT (0)
+#endif
 
 /* ADC16 module features */
 
@@ -114,7 +623,7 @@
 /* FLEXCAN module features */
 
 /* @brief Message buffer size */
-#define FSL_FEATURE_FLEXCAN_HAS_MESSAGE_BUFFER_MAX_NUMBER (16)
+#define FSL_FEATURE_FLEXCAN_HAS_MESSAGE_BUFFER_MAX_NUMBERn(x) (16)
 /* @brief Has doze mode support (register bit field MCR[DOZE]). */
 #define FSL_FEATURE_FLEXCAN_HAS_DOZE_MODE_SUPPORT (0)
 /* @brief Has a glitch filter on the receive pin (register bit field MCR[WAKSRC]). */
@@ -127,8 +636,12 @@
 #define FSL_FEATURE_FLEXCAN_HAS_RX_FIFO_DMA (0)
 /* @brief Has separate message buffer 0 interrupt flag (register bit field IFLAG1[BUF0I]). */
 #define FSL_FEATURE_FLEXCAN_HAS_SEPARATE_BUFFER_0_FLAG (1)
+/* @brief Has bitfield name BUF31TO0M. */
+#define FSL_FEATURE_FLEXCAN_HAS_BUF31TO0M (0)
 /* @brief Number of interrupt vectors. */
 #define FSL_FEATURE_FLEXCAN_INTERRUPT_COUNT (6)
+/* @brief Is affected by errata with ID 5641 (Module does not transmit a message that is enabled to be transmitted at a specific moment during the arbitration process). */
+#define FSL_FEATURE_FLEXCAN_HAS_ERRATA_5641 (0)
 
 /* CMP module features */
 
@@ -144,425 +657,6 @@
 #define FSL_FEATURE_CMP_HAS_PASS_THROUGH_MODE (1)
 /* @brief Has DAC Test function in CMP (register DACTEST). */
 #define FSL_FEATURE_CMP_HAS_DAC_TEST (0)
-
-/* SOC module features */
-
-#if defined(CPU_MK64FX512VDC12) || defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FN1M0VLQ12) || \
-    defined(CPU_MK64FX512VMD12) || defined(CPU_MK64FN1M0VMD12)
-    /* @brief ACMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_ACMP_COUNT (0)
-    /* @brief ADC16 availability on the SoC. */
-    #define FSL_FEATURE_SOC_ADC16_COUNT (2)
-    /* @brief AFE availability on the SoC. */
-    #define FSL_FEATURE_SOC_AFE_COUNT (0)
-    /* @brief AIPS availability on the SoC. */
-    #define FSL_FEATURE_SOC_AIPS_COUNT (2)
-    /* @brief AOI availability on the SoC. */
-    #define FSL_FEATURE_SOC_AOI_COUNT (0)
-    /* @brief AXBS availability on the SoC. */
-    #define FSL_FEATURE_SOC_AXBS_COUNT (1)
-    /* @brief CADC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CADC_COUNT (0)
-    /* @brief FLEXCAN availability on the SoC. */
-    #define FSL_FEATURE_SOC_FLEXCAN_COUNT (1)
-    /* @brief CAU availability on the SoC. */
-    #define FSL_FEATURE_SOC_CAU_COUNT (1)
-    /* @brief CMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_CMP_COUNT (3)
-    /* @brief CMT availability on the SoC. */
-    #define FSL_FEATURE_SOC_CMT_COUNT (1)
-    /* @brief CNC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CNC_COUNT (0)
-    /* @brief CRC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CRC_COUNT (1)
-    /* @brief DAC availability on the SoC. */
-    #define FSL_FEATURE_SOC_DAC_COUNT (2)
-    /* @brief DCDC availability on the SoC. */
-    #define FSL_FEATURE_SOC_DCDC_COUNT (0)
-    /* @brief DDR availability on the SoC. */
-    #define FSL_FEATURE_SOC_DDR_COUNT (0)
-    /* @brief DMA availability on the SoC. */
-    #define FSL_FEATURE_SOC_DMA_COUNT (0)
-    /* @brief DMAMUX availability on the SoC. */
-    #define FSL_FEATURE_SOC_DMAMUX_COUNT (1)
-    /* @brief DRY availability on the SoC. */
-    #define FSL_FEATURE_SOC_DRY_COUNT (0)
-    /* @brief DSPI availability on the SoC. */
-    #define FSL_FEATURE_SOC_DSPI_COUNT (3)
-    /* @brief EDMA availability on the SoC. */
-    #define FSL_FEATURE_SOC_EDMA_COUNT (1)
-    /* @brief EMVSIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_EMVSIM_COUNT (0)
-    /* @brief ENC availability on the SoC. */
-    #define FSL_FEATURE_SOC_ENC_COUNT (0)
-    /* @brief ENET availability on the SoC. */
-    #define FSL_FEATURE_SOC_ENET_COUNT (1)
-    /* @brief EWM availability on the SoC. */
-    #define FSL_FEATURE_SOC_EWM_COUNT (1)
-    /* @brief FB availability on the SoC. */
-    #define FSL_FEATURE_SOC_FB_COUNT (1)
-    /* @brief FGPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_FGPIO_COUNT (0)
-    /* @brief FLEXIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_FLEXIO_COUNT (0)
-    /* @brief FMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_FMC_COUNT (1)
-    /* @brief FSKDT availability on the SoC. */
-    #define FSL_FEATURE_SOC_FSKDT_COUNT (0)
-    /* @brief FTFA availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFA_COUNT (0)
-    /* @brief FTFE availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFE_COUNT (1)
-    /* @brief FTFL availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFL_COUNT (0)
-    /* @brief FTM availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTM_COUNT (4)
-    /* @brief FTMRA availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRA_COUNT (0)
-    /* @brief FTMRE availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRE_COUNT (0)
-    /* @brief FTMRH availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRH_COUNT (0)
-    /* @brief GPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_GPIO_COUNT (5)
-    /* @brief I2C availability on the SoC. */
-    #define FSL_FEATURE_SOC_I2C_COUNT (3)
-    /* @brief I2S availability on the SoC. */
-    #define FSL_FEATURE_SOC_I2S_COUNT (1)
-    /* @brief ICS availability on the SoC. */
-    #define FSL_FEATURE_SOC_ICS_COUNT (0)
-    /* @brief IRQ availability on the SoC. */
-    #define FSL_FEATURE_SOC_IRQ_COUNT (0)
-    /* @brief KBI availability on the SoC. */
-    #define FSL_FEATURE_SOC_KBI_COUNT (0)
-    /* @brief LCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_LCD_COUNT (0)
-    /* @brief LCDC availability on the SoC. */
-    #define FSL_FEATURE_SOC_LCDC_COUNT (0)
-    /* @brief LDO availability on the SoC. */
-    #define FSL_FEATURE_SOC_LDO_COUNT (0)
-    /* @brief LLWU availability on the SoC. */
-    #define FSL_FEATURE_SOC_LLWU_COUNT (1)
-    /* @brief LMEM availability on the SoC. */
-    #define FSL_FEATURE_SOC_LMEM_COUNT (0)
-    /* @brief LPSCI availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPSCI_COUNT (0)
-    /* @brief LPTMR availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPTMR_COUNT (1)
-    /* @brief LPTPM availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPTPM_COUNT (0)
-    /* @brief LPUART availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPUART_COUNT (0)
-    /* @brief LTC availability on the SoC. */
-    #define FSL_FEATURE_SOC_LTC_COUNT (0)
-    /* @brief MC availability on the SoC. */
-    #define FSL_FEATURE_SOC_MC_COUNT (0)
-    /* @brief MCG availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCG_COUNT (1)
-    /* @brief MCGLITE availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCGLITE_COUNT (0)
-    /* @brief MCM availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCM_COUNT (1)
-    /* @brief MMAU availability on the SoC. */
-    #define FSL_FEATURE_SOC_MMAU_COUNT (0)
-    /* @brief MMDVSQ availability on the SoC. */
-    #define FSL_FEATURE_SOC_MMDVSQ_COUNT (0)
-    /* @brief MPU availability on the SoC. */
-    #define FSL_FEATURE_SOC_MPU_COUNT (1)
-    /* @brief MSCAN availability on the SoC. */
-    #define FSL_FEATURE_SOC_MSCAN_COUNT (0)
-    /* @brief MTB availability on the SoC. */
-    #define FSL_FEATURE_SOC_MTB_COUNT (0)
-    /* @brief MTBDWT availability on the SoC. */
-    #define FSL_FEATURE_SOC_MTBDWT_COUNT (0)
-    /* @brief NFC availability on the SoC. */
-    #define FSL_FEATURE_SOC_NFC_COUNT (0)
-    /* @brief OPAMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_OPAMP_COUNT (0)
-    /* @brief OSC availability on the SoC. */
-    #define FSL_FEATURE_SOC_OSC_COUNT (1)
-    /* @brief OTFAD availability on the SoC. */
-    #define FSL_FEATURE_SOC_OTFAD_COUNT (0)
-    /* @brief PDB availability on the SoC. */
-    #define FSL_FEATURE_SOC_PDB_COUNT (1)
-    /* @brief PGA availability on the SoC. */
-    #define FSL_FEATURE_SOC_PGA_COUNT (0)
-    /* @brief PIT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PIT_COUNT (1)
-    /* @brief PMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_PMC_COUNT (1)
-    /* @brief PORT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PORT_COUNT (5)
-    /* @brief PWM availability on the SoC. */
-    #define FSL_FEATURE_SOC_PWM_COUNT (0)
-    /* @brief PWT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PWT_COUNT (0)
-    /* @brief QuadSPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_QuadSPIO_COUNT (0)
-    /* @brief RCM availability on the SoC. */
-    #define FSL_FEATURE_SOC_RCM_COUNT (1)
-    /* @brief RFSYS availability on the SoC. */
-    #define FSL_FEATURE_SOC_RFSYS_COUNT (1)
-    /* @brief RFVBAT availability on the SoC. */
-    #define FSL_FEATURE_SOC_RFVBAT_COUNT (1)
-    /* @brief RNG availability on the SoC. */
-    #define FSL_FEATURE_SOC_RNG_COUNT (1)
-    /* @brief RNGB availability on the SoC. */
-    #define FSL_FEATURE_SOC_RNGB_COUNT (0)
-    /* @brief ROM availability on the SoC. */
-    #define FSL_FEATURE_SOC_ROM_COUNT (0)
-    /* @brief RSIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_RSIM_COUNT (0)
-    /* @brief RTC availability on the SoC. */
-    #define FSL_FEATURE_SOC_RTC_COUNT (1)
-    /* @brief SCI availability on the SoC. */
-    #define FSL_FEATURE_SOC_SCI_COUNT (0)
-    /* @brief SDHC availability on the SoC. */
-    #define FSL_FEATURE_SOC_SDHC_COUNT (1)
-    /* @brief SDRAM availability on the SoC. */
-    #define FSL_FEATURE_SOC_SDRAM_COUNT (0)
-    /* @brief SIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_SIM_COUNT (1)
-    /* @brief SMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_SMC_COUNT (1)
-    /* @brief SPI availability on the SoC. */
-    #define FSL_FEATURE_SOC_SPI_COUNT (0)
-    /* @brief TMR availability on the SoC. */
-    #define FSL_FEATURE_SOC_TMR_COUNT (0)
-    /* @brief TPM availability on the SoC. */
-    #define FSL_FEATURE_SOC_TPM_COUNT (0)
-    /* @brief TRIAMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_TRIAMP_COUNT (0)
-    /* @brief TSI availability on the SoC. */
-    #define FSL_FEATURE_SOC_TSI_COUNT (0)
-    /* @brief UART availability on the SoC. */
-    #define FSL_FEATURE_SOC_UART_COUNT (6)
-    /* @brief USB availability on the SoC. */
-    #define FSL_FEATURE_SOC_USB_COUNT (1)
-    /* @brief USBDCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBDCD_COUNT (1)
-    /* @brief USBHSDCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBHSDCD_COUNT (0)
-    /* @brief USBPHY availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBPHY_COUNT (0)
-    /* @brief VREF availability on the SoC. */
-    #define FSL_FEATURE_SOC_VREF_COUNT (1)
-    /* @brief WDOG availability on the SoC. */
-    #define FSL_FEATURE_SOC_WDOG_COUNT (1)
-    /* @brief XBAR availability on the SoC. */
-    #define FSL_FEATURE_SOC_XBAR_COUNT (0)
-    /* @brief XCVR availability on the SoC. */
-    #define FSL_FEATURE_SOC_XCVR_COUNT (0)
-    /* @brief ZLL availability on the SoC. */
-    #define FSL_FEATURE_SOC_ZLL_COUNT (0)
-#elif defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FN1M0VLL12)
-    /* @brief ACMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_ACMP_COUNT (0)
-    /* @brief ADC16 availability on the SoC. */
-    #define FSL_FEATURE_SOC_ADC16_COUNT (2)
-    /* @brief AFE availability on the SoC. */
-    #define FSL_FEATURE_SOC_AFE_COUNT (0)
-    /* @brief AIPS availability on the SoC. */
-    #define FSL_FEATURE_SOC_AIPS_COUNT (2)
-    /* @brief AOI availability on the SoC. */
-    #define FSL_FEATURE_SOC_AOI_COUNT (0)
-    /* @brief AXBS availability on the SoC. */
-    #define FSL_FEATURE_SOC_AXBS_COUNT (1)
-    /* @brief CADC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CADC_COUNT (0)
-    /* @brief FLEXCAN availability on the SoC. */
-    #define FSL_FEATURE_SOC_FLEXCAN_COUNT (1)
-    /* @brief CAU availability on the SoC. */
-    #define FSL_FEATURE_SOC_CAU_COUNT (1)
-    /* @brief CMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_CMP_COUNT (3)
-    /* @brief CMT availability on the SoC. */
-    #define FSL_FEATURE_SOC_CMT_COUNT (1)
-    /* @brief CNC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CNC_COUNT (0)
-    /* @brief CRC availability on the SoC. */
-    #define FSL_FEATURE_SOC_CRC_COUNT (1)
-    /* @brief DAC availability on the SoC. */
-    #define FSL_FEATURE_SOC_DAC_COUNT (1)
-    /* @brief DCDC availability on the SoC. */
-    #define FSL_FEATURE_SOC_DCDC_COUNT (0)
-    /* @brief DDR availability on the SoC. */
-    #define FSL_FEATURE_SOC_DDR_COUNT (0)
-    /* @brief DMA availability on the SoC. */
-    #define FSL_FEATURE_SOC_DMA_COUNT (0)
-    /* @brief DMAMUX availability on the SoC. */
-    #define FSL_FEATURE_SOC_DMAMUX_COUNT (1)
-    /* @brief DRY availability on the SoC. */
-    #define FSL_FEATURE_SOC_DRY_COUNT (0)
-    /* @brief DSPI availability on the SoC. */
-    #define FSL_FEATURE_SOC_DSPI_COUNT (3)
-    /* @brief EDMA availability on the SoC. */
-    #define FSL_FEATURE_SOC_EDMA_COUNT (1)
-    /* @brief EMVSIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_EMVSIM_COUNT (0)
-    /* @brief ENC availability on the SoC. */
-    #define FSL_FEATURE_SOC_ENC_COUNT (0)
-    /* @brief ENET availability on the SoC. */
-    #define FSL_FEATURE_SOC_ENET_COUNT (1)
-    /* @brief EWM availability on the SoC. */
-    #define FSL_FEATURE_SOC_EWM_COUNT (1)
-    /* @brief FB availability on the SoC. */
-    #define FSL_FEATURE_SOC_FB_COUNT (1)
-    /* @brief FGPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_FGPIO_COUNT (0)
-    /* @brief FLEXIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_FLEXIO_COUNT (0)
-    /* @brief FMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_FMC_COUNT (1)
-    /* @brief FSKDT availability on the SoC. */
-    #define FSL_FEATURE_SOC_FSKDT_COUNT (0)
-    /* @brief FTFA availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFA_COUNT (0)
-    /* @brief FTFE availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFE_COUNT (1)
-    /* @brief FTFL availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTFL_COUNT (0)
-    /* @brief FTM availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTM_COUNT (4)
-    /* @brief FTMRA availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRA_COUNT (0)
-    /* @brief FTMRE availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRE_COUNT (0)
-    /* @brief FTMRH availability on the SoC. */
-    #define FSL_FEATURE_SOC_FTMRH_COUNT (0)
-    /* @brief GPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_GPIO_COUNT (5)
-    /* @brief I2C availability on the SoC. */
-    #define FSL_FEATURE_SOC_I2C_COUNT (3)
-    /* @brief I2S availability on the SoC. */
-    #define FSL_FEATURE_SOC_I2S_COUNT (1)
-    /* @brief ICS availability on the SoC. */
-    #define FSL_FEATURE_SOC_ICS_COUNT (0)
-    /* @brief IRQ availability on the SoC. */
-    #define FSL_FEATURE_SOC_IRQ_COUNT (0)
-    /* @brief KBI availability on the SoC. */
-    #define FSL_FEATURE_SOC_KBI_COUNT (0)
-    /* @brief LCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_LCD_COUNT (0)
-    /* @brief LCDC availability on the SoC. */
-    #define FSL_FEATURE_SOC_LCDC_COUNT (0)
-    /* @brief LDO availability on the SoC. */
-    #define FSL_FEATURE_SOC_LDO_COUNT (0)
-    /* @brief LLWU availability on the SoC. */
-    #define FSL_FEATURE_SOC_LLWU_COUNT (1)
-    /* @brief LMEM availability on the SoC. */
-    #define FSL_FEATURE_SOC_LMEM_COUNT (0)
-    /* @brief LPSCI availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPSCI_COUNT (0)
-    /* @brief LPTMR availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPTMR_COUNT (1)
-    /* @brief LPTPM availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPTPM_COUNT (0)
-    /* @brief LPUART availability on the SoC. */
-    #define FSL_FEATURE_SOC_LPUART_COUNT (0)
-    /* @brief LTC availability on the SoC. */
-    #define FSL_FEATURE_SOC_LTC_COUNT (0)
-    /* @brief MC availability on the SoC. */
-    #define FSL_FEATURE_SOC_MC_COUNT (0)
-    /* @brief MCG availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCG_COUNT (1)
-    /* @brief MCGLITE availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCGLITE_COUNT (0)
-    /* @brief MCM availability on the SoC. */
-    #define FSL_FEATURE_SOC_MCM_COUNT (1)
-    /* @brief MMAU availability on the SoC. */
-    #define FSL_FEATURE_SOC_MMAU_COUNT (0)
-    /* @brief MMDVSQ availability on the SoC. */
-    #define FSL_FEATURE_SOC_MMDVSQ_COUNT (0)
-    /* @brief MPU availability on the SoC. */
-    #define FSL_FEATURE_SOC_MPU_COUNT (1)
-    /* @brief MSCAN availability on the SoC. */
-    #define FSL_FEATURE_SOC_MSCAN_COUNT (0)
-    /* @brief MTB availability on the SoC. */
-    #define FSL_FEATURE_SOC_MTB_COUNT (0)
-    /* @brief MTBDWT availability on the SoC. */
-    #define FSL_FEATURE_SOC_MTBDWT_COUNT (0)
-    /* @brief NFC availability on the SoC. */
-    #define FSL_FEATURE_SOC_NFC_COUNT (0)
-    /* @brief OPAMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_OPAMP_COUNT (0)
-    /* @brief OSC availability on the SoC. */
-    #define FSL_FEATURE_SOC_OSC_COUNT (1)
-    /* @brief OTFAD availability on the SoC. */
-    #define FSL_FEATURE_SOC_OTFAD_COUNT (0)
-    /* @brief PDB availability on the SoC. */
-    #define FSL_FEATURE_SOC_PDB_COUNT (1)
-    /* @brief PGA availability on the SoC. */
-    #define FSL_FEATURE_SOC_PGA_COUNT (0)
-    /* @brief PIT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PIT_COUNT (1)
-    /* @brief PMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_PMC_COUNT (1)
-    /* @brief PORT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PORT_COUNT (5)
-    /* @brief PWM availability on the SoC. */
-    #define FSL_FEATURE_SOC_PWM_COUNT (0)
-    /* @brief PWT availability on the SoC. */
-    #define FSL_FEATURE_SOC_PWT_COUNT (0)
-    /* @brief QuadSPIO availability on the SoC. */
-    #define FSL_FEATURE_SOC_QuadSPIO_COUNT (0)
-    /* @brief RCM availability on the SoC. */
-    #define FSL_FEATURE_SOC_RCM_COUNT (1)
-    /* @brief RFSYS availability on the SoC. */
-    #define FSL_FEATURE_SOC_RFSYS_COUNT (1)
-    /* @brief RFVBAT availability on the SoC. */
-    #define FSL_FEATURE_SOC_RFVBAT_COUNT (1)
-    /* @brief RNG availability on the SoC. */
-    #define FSL_FEATURE_SOC_RNG_COUNT (1)
-    /* @brief RNGB availability on the SoC. */
-    #define FSL_FEATURE_SOC_RNGB_COUNT (0)
-    /* @brief ROM availability on the SoC. */
-    #define FSL_FEATURE_SOC_ROM_COUNT (0)
-    /* @brief RSIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_RSIM_COUNT (0)
-    /* @brief RTC availability on the SoC. */
-    #define FSL_FEATURE_SOC_RTC_COUNT (1)
-    /* @brief SCI availability on the SoC. */
-    #define FSL_FEATURE_SOC_SCI_COUNT (0)
-    /* @brief SDHC availability on the SoC. */
-    #define FSL_FEATURE_SOC_SDHC_COUNT (1)
-    /* @brief SDRAM availability on the SoC. */
-    #define FSL_FEATURE_SOC_SDRAM_COUNT (0)
-    /* @brief SIM availability on the SoC. */
-    #define FSL_FEATURE_SOC_SIM_COUNT (1)
-    /* @brief SMC availability on the SoC. */
-    #define FSL_FEATURE_SOC_SMC_COUNT (1)
-    /* @brief SPI availability on the SoC. */
-    #define FSL_FEATURE_SOC_SPI_COUNT (0)
-    /* @brief TMR availability on the SoC. */
-    #define FSL_FEATURE_SOC_TMR_COUNT (0)
-    /* @brief TPM availability on the SoC. */
-    #define FSL_FEATURE_SOC_TPM_COUNT (0)
-    /* @brief TRIAMP availability on the SoC. */
-    #define FSL_FEATURE_SOC_TRIAMP_COUNT (0)
-    /* @brief TSI availability on the SoC. */
-    #define FSL_FEATURE_SOC_TSI_COUNT (0)
-    /* @brief UART availability on the SoC. */
-    #define FSL_FEATURE_SOC_UART_COUNT (6)
-    /* @brief USB availability on the SoC. */
-    #define FSL_FEATURE_SOC_USB_COUNT (1)
-    /* @brief USBDCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBDCD_COUNT (1)
-    /* @brief USBHSDCD availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBHSDCD_COUNT (0)
-    /* @brief USBPHY availability on the SoC. */
-    #define FSL_FEATURE_SOC_USBPHY_COUNT (0)
-    /* @brief VREF availability on the SoC. */
-    #define FSL_FEATURE_SOC_VREF_COUNT (1)
-    /* @brief WDOG availability on the SoC. */
-    #define FSL_FEATURE_SOC_WDOG_COUNT (1)
-    /* @brief XBAR availability on the SoC. */
-    #define FSL_FEATURE_SOC_XBAR_COUNT (0)
-    /* @brief XCVR availability on the SoC. */
-    #define FSL_FEATURE_SOC_XCVR_COUNT (0)
-    /* @brief ZLL availability on the SoC. */
-    #define FSL_FEATURE_SOC_ZLL_COUNT (0)
-#endif
 
 /* CRC module features */
 
@@ -595,9 +689,11 @@
 /* @brief Number of DMA channels (related to number of registers TCD, DCHPRI, bit fields ERQ[ERQn], EEI[EEIn], INT[INTn], ERR[ERRn], HRS[HRSn] and bit field widths ES[ERRCHN], CEEI[CEEI], SEEI[SEEI], CERQ[CERQ], SERQ[SERQ], CDNE[CDNE], SSRT[SSRT], CERR[CERR], CINT[CINT], TCDn_CITER_ELINKYES[LINKCH], TCDn_CSR[MAJORLINKCH], TCDn_BITER_ELINKYES[LINKCH]). (Valid only for eDMA modules.) */
 #define FSL_FEATURE_EDMA_MODULE_CHANNEL (16)
 /* @brief Total number of DMA channels on all modules. */
-#define FSL_FEATURE_EDMA_DMAMUX_CHANNELS (DMA_INSTANCE_COUNT * 16)
+#define FSL_FEATURE_EDMA_DMAMUX_CHANNELS (FSL_FEATURE_SOC_EDMA_COUNT * 16)
 /* @brief Number of DMA channel groups (register bit fields CR[ERGA], CR[GRPnPRI], ES[GPE], DCHPRIn[GRPPRI]). (Valid only for eDMA modules.) */
 #define FSL_FEATURE_EDMA_CHANNEL_GROUP_COUNT (1)
+/* @brief Has DMA_Error interrupt vector. */
+#define FSL_FEATURE_EDMA_HAS_ERROR_IRQ (1)
 /* @brief Number of DMA channels with asynchronous request capability (register EARS). (Valid only for eDMA modules.) */
 #define FSL_FEATURE_EDMA_ASYNCHRO_REQUEST_CHANNEL_COUNT (0)
 
@@ -606,8 +702,8 @@
 /* @brief Number of DMA channels (related to number of register CHCFGn). */
 #define FSL_FEATURE_DMAMUX_MODULE_CHANNEL (16)
 /* @brief Total number of DMA channels on all modules. */
-#define FSL_FEATURE_DMAMUX_DMAMUX_CHANNELS (DMAMUX_INSTANCE_COUNT * 16)
-/* @brief Has the periodic trigger capability for the triggered DMA channel 0 (register bit CHCFG0[TRIG]). */
+#define FSL_FEATURE_DMAMUX_DMAMUX_CHANNELS (FSL_FEATURE_SOC_DMAMUX_COUNT * 16)
+/* @brief Has the periodic trigger capability for the triggered DMA channel (register bit CHCFG0[TRIG]). */
 #define FSL_FEATURE_DMAMUX_HAS_TRIG (1)
 
 /* ENET module features */
@@ -618,13 +714,13 @@
 #define FSL_FEATURE_ENET_SUPPORT_PTP (1)
 /* @brief Number of associated interrupt vectors. */
 #define FSL_FEATURE_ENET_INTERRUPT_COUNT (4)
-/* @brief Errata 2597: No support for IEEE 1588 timestamp timer overflow interrupt. */
-#define FSL_FEATURE_ENET_PTP_TIMER_CHANNEL_INTERRUPT_ERRATA_2579 (0)
 /* @brief Has threshold for the number of frames in the receive FIFO (register bit field RSEM[STAT_SECTION_EMPTY]). */
 #define FSL_FEATURE_ENET_HAS_RECEIVE_STATUS_THRESHOLD (1)
 
 /* EWM module features */
 
+/* @brief Has clock select (register CLKCTRL). */
+#define FSL_FEATURE_EWM_HAS_CLOCK_SELECT  (0)
 /* @brief Has clock prescaler (register CLKPRESCALER). */
 #define FSL_FEATURE_EWM_HAS_PRESCALER  (0)
 
@@ -634,7 +730,7 @@
 
 /* FLASH module features */
 
-#if defined(CPU_MK64FX512VDC12) || defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FX512VMD12)
+#if defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FN1M0VMD12)
     /* @brief Is of type FTFA. */
     #define FSL_FEATURE_FLASH_IS_FTFA (0)
     /* @brief Is of type FTFE. */
@@ -655,179 +751,10 @@
     #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (1)
     /* @brief Has flash cache control in MCM module. */
     #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (0)
-    /* @brief P-Flash block count. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
-    /* @brief P-Flash block size. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SIZE (524288)
-    /* @brief P-Flash sector size. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE (4096)
-    /* @brief P-Flash write unit size. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE (8)
-    /* @brief P-Flash data path width. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_DATA_PATH_WIDTH (16)
-    /* @brief P-Flash block swap feature. */
-    #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (0)
-    /* @brief Has FlexNVM memory. */
-    #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (1)
-    /* @brief FlexNVM block count. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (1)
-    /* @brief FlexNVM block size. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SIZE (131072)
-    /* @brief FlexNVM sector size. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SECTOR_SIZE (4096)
-    /* @brief FlexNVM write unit size. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (8)
-    /* @brief FlexNVM data path width. */
-    #define FSL_FEATURE_FLASH_FLEX_BLOCK_DATA_PATH_WIDTH (16)
-    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x10000000)
-    /* @brief Has FlexRAM memory. */
-    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (1)
-    /* @brief FlexRAM size. */
-    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (4096)
-    /* @brief FlexRAM start address. (Valid only if FlexRAM is available.) */
-    #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x14000000)
-    /* @brief Has 0x00 Read 1s Block command. */
-    #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (0)
-    /* @brief Has 0x01 Read 1s Section command. */
-    #define FSL_FEATURE_FLASH_HAS_READ_1S_SECTION_CMD (1)
-    /* @brief Has 0x02 Program Check command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_CHECK_CMD (1)
-    /* @brief Has 0x03 Read Resource command. */
-    #define FSL_FEATURE_FLASH_HAS_READ_RESOURCE_CMD (1)
-    /* @brief Has 0x06 Program Longword command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_LONGWORD_CMD (0)
-    /* @brief Has 0x07 Program Phrase command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PHRASE_CMD (1)
-    /* @brief Has 0x08 Erase Flash Block command. */
-    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_BLOCK_CMD (0)
-    /* @brief Has 0x09 Erase Flash Sector command. */
-    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_SECTOR_CMD (1)
-    /* @brief Has 0x0B Program Section command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD (1)
-    /* @brief Has 0x40 Read 1s All Blocks command. */
-    #define FSL_FEATURE_FLASH_HAS_READ_1S_ALL_BLOCKS_CMD (0)
-    /* @brief Has 0x41 Read Once command. */
-    #define FSL_FEATURE_FLASH_HAS_READ_ONCE_CMD (1)
-    /* @brief Has 0x43 Program Once command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_ONCE_CMD (1)
-    /* @brief Has 0x44 Erase All Blocks command. */
-    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_CMD (0)
-    /* @brief Has 0x45 Verify Backdoor Access Key command. */
-    #define FSL_FEATURE_FLASH_HAS_VERIFY_BACKDOOR_ACCESS_KEY_CMD (1)
-    /* @brief Has 0x46 Swap Control command. */
-    #define FSL_FEATURE_FLASH_HAS_SWAP_CONTROL_CMD (0)
-    /* @brief Has 0x80 Program Partition command. */
-    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PARTITION_CMD (1)
-    /* @brief Has 0x81 Set FlexRAM Function command. */
-    #define FSL_FEATURE_FLASH_HAS_SET_FLEXRAM_FUNCTION_CMD (1)
-    /* @brief P-Flash Erase/Read 1st all block command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief P-Flash Erase sector command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_SECTOR_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief P-Flash Rrogram/Verify section command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief P-Flash Read resource command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_RESOURCE_CMD_ADDRESS_ALIGMENT (8)
-    /* @brief P-Flash Program check command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT (4)
-    /* @brief P-Flash Program check command address alignment. */
-    #define FSL_FEATURE_FLASH_PFLASH_SWAP_CONTROL_CMD_ADDRESS_ALIGMENT (0)
-    /* @brief FlexNVM Erase/Read 1st all block command address alignment. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief FlexNVM Erase sector command address alignment. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_SECTOR_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief FlexNVM Rrogram/Verify section command address alignment. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_SECTION_CMD_ADDRESS_ALIGMENT (16)
-    /* @brief FlexNVM Read resource command address alignment. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_RESOURCE_CMD_ADDRESS_ALIGMENT (8)
-    /* @brief FlexNVM Program check command address alignment. */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_CHECK_CMD_ADDRESS_ALIGMENT (4)
-    /* @brief FlexNVM partition code 0000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0x00020000)
-    /* @brief FlexNVM partition code 0001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFF)
-    /* @brief FlexNVM partition code 0010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0x0001C000)
-    /* @brief FlexNVM partition code 0011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0x00018000)
-    /* @brief FlexNVM partition code 0100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0x00010000)
-    /* @brief FlexNVM partition code 0101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0x00000000)
-    /* @brief FlexNVM partition code 0110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFF)
-    /* @brief FlexNVM partition code 0111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFF)
-    /* @brief FlexNVM partition code 1000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0x00000000)
-    /* @brief FlexNVM partition code 1001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFF)
-    /* @brief FlexNVM partition code 1010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0x00004000)
-    /* @brief FlexNVM partition code 1011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0x00008000)
-    /* @brief FlexNVM partition code 1100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0x00010000)
-    /* @brief FlexNVM partition code 1101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0x00020000)
-    /* @brief FlexNVM partition code 1110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFF)
-    /* @brief FlexNVM partition code 1111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0x00020000)
-    /* @brief Emulated eeprom size code 0000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0000 (0xFFFF)
-    /* @brief Emulated eeprom size code 0001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0001 (0xFFFF)
-    /* @brief Emulated eeprom size code 0010 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0010 (0x1000)
-    /* @brief Emulated eeprom size code 0011 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0011 (0x0800)
-    /* @brief Emulated eeprom size code 0100 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0100 (0x0400)
-    /* @brief Emulated eeprom size code 0101 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0101 (0x0200)
-    /* @brief Emulated eeprom size code 0110 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0110 (0x0100)
-    /* @brief Emulated eeprom size code 0111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0111 (0x0080)
-    /* @brief Emulated eeprom size code 1000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1000 (0x0040)
-    /* @brief Emulated eeprom size code 1001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1001 (0x0020)
-    /* @brief Emulated eeprom size code 1010 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1010 (0xFFFF)
-    /* @brief Emulated eeprom size code 1011 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1011 (0xFFFF)
-    /* @brief Emulated eeprom size code 1100 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1100 (0xFFFF)
-    /* @brief Emulated eeprom size code 1101 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1101 (0xFFFF)
-    /* @brief Emulated eeprom size code 1110 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1110 (0xFFFF)
-    /* @brief Emulated eeprom size code 1111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1111 (0x0000)
-#elif defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FN1M0VMD12)
-    /* @brief Is of type FTFA. */
-    #define FSL_FEATURE_FLASH_IS_FTFA (0)
-    /* @brief Is of type FTFE. */
-    #define FSL_FEATURE_FLASH_IS_FTFE (1)
-    /* @brief Is of type FTFL. */
-    #define FSL_FEATURE_FLASH_IS_FTFL (0)
-    /* @brief Has flags indicating the status of the FlexRAM (register bits FCNFG[EEERDY], FCNFG[RAMRDY] and FCNFG[PFLSH]). */
-    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM_FLAGS (1)
-    /* @brief Has program flash swapping status flag (register bit FCNFG[SWAP]). */
-    #define FSL_FEATURE_FLASH_HAS_PFLASH_SWAPPING_STATUS_FLAG (1)
-    /* @brief Has EEPROM region protection (register FEPROT). */
-    #define FSL_FEATURE_FLASH_HAS_EEROM_REGION_PROTECTION (1)
-    /* @brief Has data flash region protection (register FDPROT). */
-    #define FSL_FEATURE_FLASH_HAS_DATA_FLASH_REGION_PROTECTION (1)
-    /* @brief Has flash access control (registers XACCHn, SACCHn, where n is a number, FACSS and FACSN). */
-    #define FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL (0)
-    /* @brief Has flash cache control in FMC module. */
-    #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (1)
-    /* @brief Has flash cache control in MCM module. */
-    #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (0)
+    /* @brief Has flash cache control in MSCM module. */
+    #define FSL_FEATURE_FLASH_HAS_MSCM_FLASH_CACHE_CONTROLS (0)
+    /* @brief P-Flash start address. */
+    #define FSL_FEATURE_FLASH_PFLASH_START_ADDRESS (0x00000000)
     /* @brief P-Flash block count. */
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (2)
     /* @brief P-Flash block size. */
@@ -842,6 +769,8 @@
     #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (1)
     /* @brief Has FlexNVM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief FlexNVM block count. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
     /* @brief FlexNVM block size. */
@@ -852,14 +781,12 @@
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (0)
     /* @brief FlexNVM data path width. */
     #define FSL_FEATURE_FLASH_FLEX_BLOCK_DATA_PATH_WIDTH (0)
-    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief Has FlexRAM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (1)
-    /* @brief FlexRAM size. */
-    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (4096)
     /* @brief FlexRAM start address. (Valid only if FlexRAM is available.) */
     #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x14000000)
+    /* @brief FlexRAM size. */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (4096)
     /* @brief Has 0x00 Read 1s Block command. */
     #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (1)
     /* @brief Has 0x01 Read 1s Section command. */
@@ -890,6 +817,12 @@
     #define FSL_FEATURE_FLASH_HAS_VERIFY_BACKDOOR_ACCESS_KEY_CMD (1)
     /* @brief Has 0x46 Swap Control command. */
     #define FSL_FEATURE_FLASH_HAS_SWAP_CONTROL_CMD (1)
+    /* @brief Has 0x49 Erase All Blocks Unsecure command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_UNSECURE_CMD (0)
+    /* @brief Has 0x4A Read 1s All Execute-only Segments command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_ALL_EXECUTE_ONLY_SEGMENTS_CMD (0)
+    /* @brief Has 0x4B Erase All Execute-only Segments command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_EXECUTE_ONLY_SEGMENTS_CMD (0)
     /* @brief Has 0x80 Program Partition command. */
     #define FSL_FEATURE_FLASH_HAS_PROGRAM_PARTITION_CMD (0)
     /* @brief Has 0x81 Set FlexRAM Function command. */
@@ -980,19 +913,209 @@
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1110 (0xFFFF)
     /* @brief Emulated eeprom size code 1111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
     #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1111 (0x0000)
-#endif
+#elif defined(CPU_MK64FX512VDC12) || defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FX512VMD12)
+    /* @brief Is of type FTFA. */
+    #define FSL_FEATURE_FLASH_IS_FTFA (0)
+    /* @brief Is of type FTFE. */
+    #define FSL_FEATURE_FLASH_IS_FTFE (1)
+    /* @brief Is of type FTFL. */
+    #define FSL_FEATURE_FLASH_IS_FTFL (0)
+    /* @brief Has flags indicating the status of the FlexRAM (register bits FCNFG[EEERDY], FCNFG[RAMRDY] and FCNFG[PFLSH]). */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM_FLAGS (1)
+    /* @brief Has program flash swapping status flag (register bit FCNFG[SWAP]). */
+    #define FSL_FEATURE_FLASH_HAS_PFLASH_SWAPPING_STATUS_FLAG (1)
+    /* @brief Has EEPROM region protection (register FEPROT). */
+    #define FSL_FEATURE_FLASH_HAS_EEROM_REGION_PROTECTION (1)
+    /* @brief Has data flash region protection (register FDPROT). */
+    #define FSL_FEATURE_FLASH_HAS_DATA_FLASH_REGION_PROTECTION (1)
+    /* @brief Has flash access control (registers XACCHn, SACCHn, where n is a number, FACSS and FACSN). */
+    #define FSL_FEATURE_FLASH_HAS_ACCESS_CONTROL (0)
+    /* @brief Has flash cache control in FMC module. */
+    #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (1)
+    /* @brief Has flash cache control in MCM module. */
+    #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (0)
+    /* @brief Has flash cache control in MSCM module. */
+    #define FSL_FEATURE_FLASH_HAS_MSCM_FLASH_CACHE_CONTROLS (0)
+    /* @brief P-Flash start address. */
+    #define FSL_FEATURE_FLASH_PFLASH_START_ADDRESS (0x00000000)
+    /* @brief P-Flash block count. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
+    /* @brief P-Flash block size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SIZE (524288)
+    /* @brief P-Flash sector size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_SECTOR_SIZE (4096)
+    /* @brief P-Flash write unit size. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_WRITE_UNIT_SIZE (8)
+    /* @brief P-Flash data path width. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_DATA_PATH_WIDTH (16)
+    /* @brief P-Flash block swap feature. */
+    #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (0)
+    /* @brief Has FlexNVM memory. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (1)
+    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x10000000)
+    /* @brief FlexNVM block count. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (1)
+    /* @brief FlexNVM block size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SIZE (131072)
+    /* @brief FlexNVM sector size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_SECTOR_SIZE (4096)
+    /* @brief FlexNVM write unit size. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (8)
+    /* @brief FlexNVM data path width. */
+    #define FSL_FEATURE_FLASH_FLEX_BLOCK_DATA_PATH_WIDTH (16)
+    /* @brief Has FlexRAM memory. */
+    #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (1)
+    /* @brief FlexRAM start address. (Valid only if FlexRAM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x14000000)
+    /* @brief FlexRAM size. */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (4096)
+    /* @brief Has 0x00 Read 1s Block command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (0)
+    /* @brief Has 0x01 Read 1s Section command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_SECTION_CMD (1)
+    /* @brief Has 0x02 Program Check command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_CHECK_CMD (1)
+    /* @brief Has 0x03 Read Resource command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_RESOURCE_CMD (1)
+    /* @brief Has 0x06 Program Longword command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_LONGWORD_CMD (0)
+    /* @brief Has 0x07 Program Phrase command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PHRASE_CMD (1)
+    /* @brief Has 0x08 Erase Flash Block command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_BLOCK_CMD (0)
+    /* @brief Has 0x09 Erase Flash Sector command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_FLASH_SECTOR_CMD (1)
+    /* @brief Has 0x0B Program Section command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_SECTION_CMD (1)
+    /* @brief Has 0x40 Read 1s All Blocks command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_ALL_BLOCKS_CMD (1)
+    /* @brief Has 0x41 Read Once command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_ONCE_CMD (1)
+    /* @brief Has 0x43 Program Once command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_ONCE_CMD (1)
+    /* @brief Has 0x44 Erase All Blocks command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_CMD (1)
+    /* @brief Has 0x45 Verify Backdoor Access Key command. */
+    #define FSL_FEATURE_FLASH_HAS_VERIFY_BACKDOOR_ACCESS_KEY_CMD (1)
+    /* @brief Has 0x46 Swap Control command. */
+    #define FSL_FEATURE_FLASH_HAS_SWAP_CONTROL_CMD (0)
+    /* @brief Has 0x49 Erase All Blocks Unsecure command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_BLOCKS_UNSECURE_CMD (0)
+    /* @brief Has 0x4A Read 1s All Execute-only Segments command. */
+    #define FSL_FEATURE_FLASH_HAS_READ_1S_ALL_EXECUTE_ONLY_SEGMENTS_CMD (0)
+    /* @brief Has 0x4B Erase All Execute-only Segments command. */
+    #define FSL_FEATURE_FLASH_HAS_ERASE_ALL_EXECUTE_ONLY_SEGMENTS_CMD (0)
+    /* @brief Has 0x80 Program Partition command. */
+    #define FSL_FEATURE_FLASH_HAS_PROGRAM_PARTITION_CMD (1)
+    /* @brief Has 0x81 Set FlexRAM Function command. */
+    #define FSL_FEATURE_FLASH_HAS_SET_FLEXRAM_FUNCTION_CMD (1)
+    /* @brief P-Flash Erase/Read 1st all block command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_BLOCK_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Erase sector command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTOR_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Rrogram/Verify section command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SECTION_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief P-Flash Read resource command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_RESOURCE_CMD_ADDRESS_ALIGMENT (8)
+    /* @brief P-Flash Program check command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_CHECK_CMD_ADDRESS_ALIGMENT (4)
+    /* @brief P-Flash Program check command address alignment. */
+    #define FSL_FEATURE_FLASH_PFLASH_SWAP_CONTROL_CMD_ADDRESS_ALIGMENT (0)
+    /* @brief FlexNVM Erase/Read 1st all block command address alignment. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief FlexNVM Erase sector command address alignment. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_SECTOR_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief FlexNVM Rrogram/Verify section command address alignment. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_SECTION_CMD_ADDRESS_ALIGMENT (16)
+    /* @brief FlexNVM Read resource command address alignment. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_RESOURCE_CMD_ADDRESS_ALIGMENT (8)
+    /* @brief FlexNVM Program check command address alignment. */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_CHECK_CMD_ADDRESS_ALIGMENT (4)
+    /* @brief FlexNVM partition code 0000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0000 (0x00020000)
+    /* @brief FlexNVM partition code 0001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0001 (0xFFFFFFFF)
+    /* @brief FlexNVM partition code 0010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0010 (0x0001C000)
+    /* @brief FlexNVM partition code 0011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0011 (0x00018000)
+    /* @brief FlexNVM partition code 0100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0100 (0x00010000)
+    /* @brief FlexNVM partition code 0101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0101 (0x00000000)
+    /* @brief FlexNVM partition code 0110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0110 (0xFFFFFFFF)
+    /* @brief FlexNVM partition code 0111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_0111 (0xFFFFFFFF)
+    /* @brief FlexNVM partition code 1000 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1000 (0x00000000)
+    /* @brief FlexNVM partition code 1001 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1001 (0xFFFFFFFF)
+    /* @brief FlexNVM partition code 1010 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1010 (0x00004000)
+    /* @brief FlexNVM partition code 1011 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1011 (0x00008000)
+    /* @brief FlexNVM partition code 1100 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1100 (0x00010000)
+    /* @brief FlexNVM partition code 1101 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1101 (0x00020000)
+    /* @brief FlexNVM partition code 1110 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1110 (0xFFFFFFFF)
+    /* @brief FlexNVM partition code 1111 mapping to data flash size in bytes (0xFFFFFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_DFLASH_SIZE_FOR_DEPART_1111 (0x00020000)
+    /* @brief Emulated eeprom size code 0000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0000 (0xFFFF)
+    /* @brief Emulated eeprom size code 0001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0001 (0xFFFF)
+    /* @brief Emulated eeprom size code 0010 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0010 (0x1000)
+    /* @brief Emulated eeprom size code 0011 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0011 (0x0800)
+    /* @brief Emulated eeprom size code 0100 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0100 (0x0400)
+    /* @brief Emulated eeprom size code 0101 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0101 (0x0200)
+    /* @brief Emulated eeprom size code 0110 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0110 (0x0100)
+    /* @brief Emulated eeprom size code 0111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_0111 (0x0080)
+    /* @brief Emulated eeprom size code 1000 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1000 (0x0040)
+    /* @brief Emulated eeprom size code 1001 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1001 (0x0020)
+    /* @brief Emulated eeprom size code 1010 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1010 (0xFFFF)
+    /* @brief Emulated eeprom size code 1011 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1011 (0xFFFF)
+    /* @brief Emulated eeprom size code 1100 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1100 (0xFFFF)
+    /* @brief Emulated eeprom size code 1101 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1101 (0xFFFF)
+    /* @brief Emulated eeprom size code 1110 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1110 (0xFFFF)
+    /* @brief Emulated eeprom size code 1111 mapping to emulated eeprom size in bytes (0xFFFF = reserved). */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_EEPROM_SIZE_FOR_EEESIZE_1111 (0x0000)
+#endif /* defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FN1M0VMD12) */
 
 /* FTM module features */
 
-/* @brief Bus clock is the source clock for the module. */
-#define FSL_FEATURE_FTM_BUS_CLOCK (1)
 /* @brief Number of channels. */
-#define FSL_FEATURE_FTM_CHANNEL_COUNT (8)
-#define FSL_FEATURE_FTM_CHANNEL_COUNTx { 8, 2, 2, 8 }
+#define FSL_FEATURE_FTM_CHANNEL_COUNTn(x) \
+    ((x) == FTM0 ? (8) : \
+    ((x) == FTM1 ? (2) : \
+    ((x) == FTM2 ? (2) : \
+    ((x) == FTM3 ? (8) : (-1)))))
 /* @brief Has counter reset by the selected input capture event (register bits C0SC[ICRST], C1SC[ICRST], ...). */
 #define FSL_FEATURE_FTM_HAS_COUNTER_RESET_BY_CAPTURE_EVENT (0)
-/* @brief Fast peripheral clock is the source clock for the module. */
-#define FSL_FEATURE_FTM_FAST_CLOCK (0)
+/* @brief Enable pwm output for the module. */
+#define FSL_FEATURE_FTM_HAS_ENABLE_PWM_OUTPUT (0)
+/* @brief Has half-cycle reload for the module. */
+#define FSL_FEATURE_FTM_HAS_HALFCYCLE_RELOAD (0)
+/* @brief Has reload interrupt. */
+#define FSL_FEATURE_FTM_HAS_RELOAD_INTERRUPT (0)
+/* @brief Has reload initialization trigger. */
+#define FSL_FEATURE_FTM_HAS_RELOAD_INITIALIZATION_TRIGGER (0)
 
 /* I2C module features */
 
@@ -1016,6 +1139,8 @@
 #define FSL_FEATURE_I2C_HAS_HIGH_DRIVE_SELECTION (1)
 /* @brief Has double buffering support (register S2). */
 #define FSL_FEATURE_I2C_HAS_DOUBLE_BUFFERING (0)
+/* @brief Has double buffer enable. */
+#define FSL_FEATURE_I2C_HAS_DOUBLE_BUFFER_ENABLE (0)
 
 /* SAI module features */
 
@@ -1039,6 +1164,10 @@
 #define FSL_FEATURE_SAI_HAS_MCLKDIV_REGISTER (1)
 /* @brief Ihe interrupt source number */
 #define FSL_FEATURE_SAI_INT_SOURCE_NUM (2)
+/* @brief Has register of MCR. */
+#define FSL_FEATURE_SAI_HAS_MCR (1)
+/* @brief Has register of MDR */
+#define FSL_FEATURE_SAI_HAS_MDR (1)
 
 /* LLWU module features */
 
@@ -1050,8 +1179,10 @@
 #define FSL_FEATURE_LLWU_HAS_INTERNAL_MODULE (8)
 /* @brief Number of digital filters. */
 #define FSL_FEATURE_LLWU_HAS_PIN_FILTER (2)
-/* @brief Has MF5 register. */
+/* @brief Has MF register. */
 #define FSL_FEATURE_LLWU_HAS_MF (0)
+/* @brief Has PF register. */
+#define FSL_FEATURE_LLWU_HAS_PF (0)
 /* @brief Has possibility to enable reset in low leakage power mode and enable digital filter for RESET pin (register LLWU_RST). */
 #define FSL_FEATURE_LLWU_HAS_RESET_ENABLE (1)
 /* @brief Has external pin 0 connected to LLWU device. */
@@ -1262,10 +1393,19 @@
 #define FSL_FEATURE_LLWU_HAS_INTERNAL_MODULE6 (0)
 /* @brief Has internal module 7 connected to LLWU device. */
 #define FSL_FEATURE_LLWU_HAS_INTERNAL_MODULE7 (1)
+/* @brief Has Version ID Register (LLWU_VERID). */
+#define FSL_FEATURE_LLWU_HAS_VERID (0)
+/* @brief Has Parameter Register (LLWU_PARAM). */
+#define FSL_FEATURE_LLWU_HAS_PARAM (0)
+/* @brief Width of registers of the LLWU. */
+#define FSL_FEATURE_LLWU_REG_BITWIDTH (8)
+/* @brief Has DMA Enable register (LLWU_DE). */
+#define FSL_FEATURE_LLWU_HAS_DMA_ENABLE_REG (0)
 
 /* LPTMR module features */
 
-/* No feature definitions */
+/* @brief Has shared interrupt handler with another LPTMR module. */
+#define FSL_FEATURE_LPTMR_HAS_SHARED_IRQ_HANDLER (0)
 
 /* MCG module features */
 
@@ -1285,6 +1425,8 @@
 #define FSL_FEATURE_MCG_FRDIV_SUPPORT_1280 (1)
 /* @brief FRDIV supports 1536. */
 #define FSL_FEATURE_MCG_FRDIV_SUPPORT_1536 (1)
+/* @brief MCGFFCLK divider. */
+#define FSL_FEATURE_MCG_FFCLK_DIV (1)
 /* @brief Is PLL clock divided by 2 before MCG PLL/FLL clock selection in the SIM module. */
 #define FSL_FEATURE_MCG_HAS_PLL_EXTRA_DIV (0)
 /* @brief Has 32kHz RTC external reference clock (register bits C8[LOCS1], C8[CME1], C8[LOCRE1] and RTC module are present). */
@@ -1331,6 +1473,10 @@
 #define FSL_FEATURE_MCG_HAS_LOW_FREQ_IRC (0)
 /* @brief Has high frequency internal reference clock (IRC) (registers HCTRIM, HTTRIM, HFTRIM and bit MC[HIRCEN]). */
 #define FSL_FEATURE_MCG_HAS_HIGH_FREQ_IRC (0)
+/* @brief Has PEI mode or PBI mode. */
+#define FSL_FEATURE_MCG_HAS_PLL_INTERNAL_MODE (0)
+/* @brief Reset clock mode is BLPI. */
+#define FSL_FEATURE_MCG_RESET_IS_BLPI (0)
 
 /* MPU module features */
 
@@ -1338,6 +1484,14 @@
 #define FSL_FEATURE_MPU_DESCRIPTOR_COUNT (12)
 /* @brief Has process identifier support. */
 #define FSL_FEATURE_MPU_HAS_PROCESS_IDENTIFIER (1)
+/* @brief Total number of MPU master. */
+#define FSL_FEATURE_MPU_MASTER_COUNT (8)
+/* @brief Total number of MPU master with privileged rights */
+#define FSL_FEATURE_MPU_PRIVILEGED_RIGHTS_MASTER_COUNT (4)
+/* @brief Max index of used MPU master. */
+#define FSL_FEATURE_MPU_MASTER_MAX_INDEX (5)
+/* @brief Max index of used MPU master with privileged rights */
+#define FSL_FEATURE_MPU_PRIVILEGED_RIGHTS_MASTER_MAX_INDEX (3)
 /* @brief Has master 0. */
 #define FSL_FEATURE_MPU_HAS_MASTER0 (1)
 /* @brief Has master 1. */
@@ -1381,6 +1535,8 @@
 #define FSL_FEATURE_PDB_ADC_PRE_CHANNEL_COUNT (2)
 /* @brief Has DAC support. */
 #define FSL_FEATURE_PDB_HAS_DAC (1)
+/* @brief Has shared interrupt handler (has not individual interrupt handler for each channel). */
+#define FSL_FEATURE_PDB_HAS_SHARED_IRQ_HANDLER (0)
 
 /* PIT module features */
 
@@ -1397,8 +1553,30 @@
 
 /* @brief Has Bandgap Enable In VLPx Operation support. */
 #define FSL_FEATURE_PMC_HAS_BGEN (1)
+/* @brief Has Bandgap Buffer Enable. */
+#define FSL_FEATURE_PMC_HAS_BGBE (1)
 /* @brief Has Bandgap Buffer Drive Select. */
 #define FSL_FEATURE_PMC_HAS_BGBDS (0)
+/* @brief Has Low-Voltage Detect Voltage Select support. */
+#define FSL_FEATURE_PMC_HAS_LVDV (1)
+/* @brief Has Low-Voltage Warning Voltage Select support. */
+#define FSL_FEATURE_PMC_HAS_LVWV (1)
+/* @brief Has LPO. */
+#define FSL_FEATURE_PMC_HAS_LPO (0)
+/* @brief Has VLPx option PMC_REGSC[VLPO]. */
+#define FSL_FEATURE_PMC_HAS_VLPO (0)
+/* @brief Has acknowledge isolation support. */
+#define FSL_FEATURE_PMC_HAS_ACKISO (1)
+/* @brief Has Regulator In Full Performance Mode Status Bit PMC_REGSC[REGFPM]. */
+#define FSL_FEATURE_PMC_HAS_REGFPM (0)
+/* @brief Has Regulator In Run Regulation Status Bit PMC_REGSC[REGONS]. */
+#define FSL_FEATURE_PMC_HAS_REGONS (1)
+/* @brief Has PMC_HVDSC1. */
+#define FSL_FEATURE_PMC_HAS_HVDSC1 (0)
+/* @brief Has PMC_PARAM. */
+#define FSL_FEATURE_PMC_HAS_PARAM (0)
+/* @brief Has PMC_VERID. */
+#define FSL_FEATURE_PMC_HAS_VERID (0)
 
 /* PORT module features */
 
@@ -1424,6 +1602,14 @@
 #define FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH_REGISTER (0)
 /* @brief Has glitch filter (register IOFLT). */
 #define FSL_FEATURE_PORT_HAS_GLITCH_FILTER (0)
+/* @brief Defines width of PCR[MUX] field. */
+#define FSL_FEATURE_PORT_PCR_MUX_WIDTH (3)
+/* @brief Has dedicated interrupt vector. */
+#define FSL_FEATURE_PORT_HAS_INTERRUPT_VECTOR (1)
+/* @brief Defines whether PCR[IRQC] bit-field has flag states. */
+#define FSL_FEATURE_PORT_HAS_IRQC_FLAG (0)
+/* @brief Defines whether PCR[IRQC] bit-field has trigger states. */
+#define FSL_FEATURE_PORT_HAS_IRQC_TRIGGER (0)
 
 /* GPIO module features */
 
@@ -1432,7 +1618,7 @@
 /* @brief Has port input disable register (PIDR). */
 #define FSL_FEATURE_GPIO_HAS_INPUT_DISABLE (0)
 /* @brief Has dedicated interrupt vector. */
-#define FSL_FEATURE_GPIO_HAS_INTERRUPT_VECTOR (1)
+#define FSL_FEATURE_GPIO_HAS_PORT_INTERRUPT_VECTOR (1)
 
 /* RCM module features */
 
@@ -1450,29 +1636,68 @@
 #define FSL_FEATURE_RCM_HAS_BOOTROM (0)
 /* @brief Has sticky system reset status register RCM_SSRS0 and RCM_SSRS1. */
 #define FSL_FEATURE_RCM_HAS_SSRS (0)
+/* @brief Has Version ID Register (RCM_VERID). */
+#define FSL_FEATURE_RCM_HAS_VERID (0)
+/* @brief Has Parameter Register (RCM_PARAM). */
+#define FSL_FEATURE_RCM_HAS_PARAM (0)
+/* @brief Has Reset Interrupt Enable Register RCM_SRIE. */
+#define FSL_FEATURE_RCM_HAS_SRIE (0)
+/* @brief Width of registers of the RCM. */
+#define FSL_FEATURE_RCM_REG_WIDTH (8)
+/* @brief Has Core 1 generated Reset support RCM_SRS[CORE1] */
+#define FSL_FEATURE_RCM_HAS_CORE1 (0)
+/* @brief Has MDM-AP system reset support RCM_SRS1[MDM_AP] */
+#define FSL_FEATURE_RCM_HAS_MDM_AP (1)
+/* @brief Has wakeup reset feature. Register bit SRS[WAKEUP]. */
+#define FSL_FEATURE_RCM_HAS_WAKEUP (1)
 
 /* RTC module features */
 
-#if defined(CPU_MK64FX512VDC12) || defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FN1M0VLL12) || \
-    defined(CPU_MK64FX512VLQ12) || defined(CPU_MK64FN1M0VLQ12)
-    /* @brief Has wakeup pin (bit field CR[WPS]). */
+#if defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FX512VDC12) || \
+    defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FX512VLQ12)
+    /* @brief Has wakeup pin. */
     #define FSL_FEATURE_RTC_HAS_WAKEUP_PIN (1)
+    /* @brief Has wakeup pin selection (bit field CR[WPS]). */
+    #define FSL_FEATURE_RTC_HAS_WAKEUP_PIN_SELECTION (1)
     /* @brief Has low power features (registers MER, MCLR and MCHR). */
     #define FSL_FEATURE_RTC_HAS_MONOTONIC (0)
     /* @brief Has read/write access control (registers WAR and RAR). */
     #define FSL_FEATURE_RTC_HAS_ACCESS_CONTROL (1)
     /* @brief Has security features (registers TTSR, MER, MCLR and MCHR). */
     #define FSL_FEATURE_RTC_HAS_SECURITY (1)
-#elif defined(CPU_MK64FX512VMD12) || defined(CPU_MK64FN1M0VMD12)
-    /* @brief Has wakeup pin (bit field CR[WPS]). */
+    /* @brief Has RTC_CLKIN available. */
+    #define FSL_FEATURE_RTC_HAS_RTC_CLKIN (0)
+    /* @brief Has prescaler adjust for LPO. */
+    #define FSL_FEATURE_RTC_HAS_LPO_ADJUST (0)
+    /* @brief Has Clock Pin Enable field. */
+    #define FSL_FEATURE_RTC_HAS_CPE (0)
+    /* @brief Has Timer Seconds Interrupt Configuration field. */
+    #define FSL_FEATURE_RTC_HAS_TSIC (0)
+    /* @brief Has OSC capacitor setting RTC_CR[SC2P ~ SC16P] */
+    #define FSL_FEATURE_RTC_HAS_OSC_SCXP (1)
+#elif defined(CPU_MK64FN1M0VMD12) || defined(CPU_MK64FX512VMD12)
+    /* @brief Has wakeup pin. */
     #define FSL_FEATURE_RTC_HAS_WAKEUP_PIN (1)
+    /* @brief Has wakeup pin selection (bit field CR[WPS]). */
+    #define FSL_FEATURE_RTC_HAS_WAKEUP_PIN_SELECTION (1)
     /* @brief Has low power features (registers MER, MCLR and MCHR). */
     #define FSL_FEATURE_RTC_HAS_MONOTONIC (0)
     /* @brief Has read/write access control (registers WAR and RAR). */
     #define FSL_FEATURE_RTC_HAS_ACCESS_CONTROL (1)
     /* @brief Has security features (registers TTSR, MER, MCLR and MCHR). */
     #define FSL_FEATURE_RTC_HAS_SECURITY (0)
-#endif
+    /* @brief Has RTC_CLKIN available. */
+    #define FSL_FEATURE_RTC_HAS_RTC_CLKIN (0)
+    /* @brief Has prescaler adjust for LPO. */
+    #define FSL_FEATURE_RTC_HAS_LPO_ADJUST (0)
+    /* @brief Has Clock Pin Enable field. */
+    #define FSL_FEATURE_RTC_HAS_CPE (0)
+    /* @brief Has Timer Seconds Interrupt Configuration field. */
+    #define FSL_FEATURE_RTC_HAS_TSIC (0)
+    /* @brief Has OSC capacitor setting RTC_CR[SC2P ~ SC16P] */
+    #define FSL_FEATURE_RTC_HAS_OSC_SCXP (1)
+#endif /* defined(CPU_MK64FN1M0VDC12) || defined(CPU_MK64FN1M0VLL12) || defined(CPU_MK64FN1M0VLQ12) || defined(CPU_MK64FX512VDC12) || \
+    defined(CPU_MK64FX512VLL12) || defined(CPU_MK64FX512VLQ12) */
 
 /* SDHC module features */
 
@@ -1639,6 +1864,26 @@
 #define FSL_FEATURE_SIM_OPT_HAS_TRACE_CLKSEL (1)
 /* @brief Number of ADC modules (register bits SOPT7[ADCnTRGSEL], SOPT7[ADCnPRETRGSEL], SOPT7[ADCnALTTRGSEL], where n is a module instance index). */
 #define FSL_FEATURE_SIM_OPT_ADC_COUNT (2)
+/* @brief ADC0 alternate trigger enable width (width of bit field ADC0ALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADC0ALTTRGEN_WIDTH (1)
+/* @brief ADC1 alternate trigger enable width (width of bit field ADC1ALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADC1ALTTRGEN_WIDTH (1)
+/* @brief ADC2 alternate trigger enable width (width of bit field ADC2ALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADC2ALTTRGEN_WIDTH (0)
+/* @brief ADC3 alternate trigger enable width (width of bit field ADC3ALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADC3ALTTRGEN_WIDTH (0)
+/* @brief HSADC0 converter A alternate trigger enable width (width of bit field HSADC0AALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_HSADC0AALTTRGEN_WIDTH (0)
+/* @brief HSADC1 converter A alternate trigger enable width (width of bit field HSADC1AALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_HSADC1AALTTRGEN_WIDTH (0)
+/* @brief ADC converter A alternate trigger enable width (width of bit field ADCAALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADCAALTTRGEN_WIDTH (0)
+/* @brief HSADC0 converter B alternate trigger enable width (width of bit field HSADC0BALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_HSADC0BALTTRGEN_WIDTH (0)
+/* @brief HSADC1 converter B alternate trigger enable width (width of bit field HSADC1BALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_HSADC1BALTTRGEN_WIDTH (0)
+/* @brief ADC converter B alternate trigger enable width (width of bit field ADCBALTTRGEN of register SOPT7). */
+#define FSL_FEATURE_SIM_OPT_ADCBALTTRGEN_WIDTH (0)
 /* @brief Has clock 2 output divider (register bit field CLKDIV1[OUTDIV2]). */
 #define FSL_FEATURE_SIM_DIVIDER_HAS_OUTDIV2 (1)
 /* @brief Has clock 3 output divider (register bit field CLKDIV1[OUTDIV3]). */
@@ -1730,16 +1975,26 @@
 #define FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE (0)
 /* @brief Has low leakage stop mode (register bit PMPROT[ALLS]). */
 #define FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE (1)
-/* @brief Has stop submode 0(state VLLS0 of register bit STOPCTRL[VLLSM]). */
+/* @brief Has very low leakage stop mode (register bit PMPROT[AVLLS]). */
+#define FSL_FEATURE_SMC_HAS_VERY_LOW_LEAKAGE_STOP_MODE (1)
+/* @brief Has stop submode. */
+#define FSL_FEATURE_SMC_HAS_SUB_STOP_MODE (1)
+/* @brief Has stop submode 0(VLLS0). */
 #define FSL_FEATURE_SMC_HAS_STOP_SUBMODE0 (1)
-/* @brief Has stop submode 2(state VLLS2 of register bit STOPCTRL[VLLSM]). */
+/* @brief Has stop submode 2(VLLS2). */
 #define FSL_FEATURE_SMC_HAS_STOP_SUBMODE2 (1)
+/* @brief Has SMC_PARAM. */
+#define FSL_FEATURE_SMC_HAS_PARAM (0)
+/* @brief Has SMC_VERID. */
+#define FSL_FEATURE_SMC_HAS_VERID (0)
 
 /* DSPI module features */
 
 /* @brief Receive/transmit FIFO size in number of items. */
-#define FSL_FEATURE_DSPI_FIFO_SIZE (4)
-#define FSL_FEATURE_DSPI_FIFO_SIZEx { 4, 1, 1 }
+#define FSL_FEATURE_DSPI_FIFO_SIZEn(x) \
+    ((x) == DSPI0 ? (4) : \
+    ((x) == DSPI1 ? (1) : \
+    ((x) == DSPI2 ? (1) : (-1))))
 /* @brief Maximum transfer data width in bits. */
 #define FSL_FEATURE_DSPI_MAX_DATA_WIDTH (16)
 /* @brief Maximum number of chip select pins. (Reflects the width of register bit field PUSHR[PCS].) */
@@ -1754,9 +2009,9 @@
 #define FSL_FEATURE_DSPI_16BIT_TRANSFERS (1)
 /* @brief Has separate DMA RX and TX requests. */
 #define FSL_FEATURE_DSPI_HAS_SEPARATE_DMA_RX_TX_REQn(x) \
-    ((x) == 0 ? (1) : \
-    ((x) == 1 ? (0) : \
-    ((x) == 2 ? (0) : (-1))))
+    ((x) == DSPI0 ? (1) : \
+    ((x) == DSPI1 ? (0) : \
+    ((x) == DSPI2 ? (0) : (-1))))
 
 /* SysTick module features */
 
@@ -1781,8 +2036,8 @@
 #define FSL_FEATURE_UART_HAS_IR_SUPPORT (1)
 /* @brief 2 bits long stop bit is available. */
 #define FSL_FEATURE_UART_HAS_STOP_BIT_CONFIG_SUPPORT (1)
-/* @brief Maximal data width without parity bit. */
-#define FSL_FEATURE_UART_HAS_10BIT_DATA_SUPPORT (0)
+/* @brief If 10-bit mode is supported. */
+#define FSL_FEATURE_UART_HAS_10BIT_DATA_SUPPORT (1)
 /* @brief Baud rate fine adjustment is available. */
 #define FSL_FEATURE_UART_HAS_BAUD_RATE_FINE_ADJUST_SUPPORT (1)
 /* @brief Baud rate oversampling is available (has bit fields C4[OSR], C5[BOTHEDGE], C5[RESYNCDIS] or BAUD[OSR], BAUD[BOTHEDGE], BAUD[RESYNCDIS] if the registers are 32-bit wide). */
@@ -1794,7 +2049,13 @@
 /* @brief Peripheral type. */
 #define FSL_FEATURE_UART_IS_SCI (0)
 /* @brief Capacity (number of entries) of the transmit/receive FIFO (or zero if no FIFO is available). */
-#define FSL_FEATURE_UART_FIFO_SIZE (8)
+#define FSL_FEATURE_UART_FIFO_SIZEn(x) \
+    ((x) == UART0 ? (8) : \
+    ((x) == UART1 ? (8) : \
+    ((x) == UART2 ? (1) : \
+    ((x) == UART3 ? (1) : \
+    ((x) == UART4 ? (1) : \
+    ((x) == UART5 ? (1) : (-1)))))))
 /* @brief Maximal data width without parity bit. */
 #define FSL_FEATURE_UART_MAX_DATA_WIDTH_WITH_NO_PARITY (9)
 /* @brief Maximal data width with parity bit. */
@@ -1821,12 +2082,12 @@
 #define FSL_FEATURE_UART_HAS_WAIT_MODE_OPERATION (1)
 /* @brief Has separate DMA RX and TX requests. */
 #define FSL_FEATURE_UART_HAS_SEPARATE_DMA_RX_TX_REQn(x) \
-    ((x) == 0 ? (1) : \
-    ((x) == 1 ? (1) : \
-    ((x) == 2 ? (1) : \
-    ((x) == 3 ? (1) : \
-    ((x) == 4 ? (0) : \
-    ((x) == 5 ? (0) : (-1)))))))
+    ((x) == UART0 ? (1) : \
+    ((x) == UART1 ? (1) : \
+    ((x) == UART2 ? (1) : \
+    ((x) == UART3 ? (1) : \
+    ((x) == UART4 ? (0) : \
+    ((x) == UART5 ? (0) : (-1)))))))
 
 /* USB module features */
 
@@ -1838,6 +2099,14 @@
 #define FSL_FEATURE_USB_KHCI_USB_RAM (0)
 /* @brief Has KEEP_ALIVE_CTRL register */
 #define FSL_FEATURE_USB_KHCI_KEEP_ALIVE_ENABLED (0)
+/* @brief Has the Dynamic SOF threshold compare support */
+#define FSL_FEATURE_USB_KHCI_DYNAMIC_SOF_THRESHOLD_COMPARE_ENABLED (0)
+/* @brief Has the VBUS detect support */
+#define FSL_FEATURE_USB_KHCI_VBUS_DETECT_ENABLED (0)
+/* @brief Has the IRC48M module clock support */
+#define FSL_FEATURE_USB_KHCI_IRC48M_MODULE_CLOCK_ENABLED (1)
+/* @brief Number of endpoints supported */
+#define FSL_FEATURE_USB_ENDPT_COUNT (16)
 
 /* VREF module features */
 
@@ -1845,10 +2114,12 @@
 #define FSL_FEATURE_VREF_HAS_CHOP_OSC (1)
 /* @brief Has second order curvature compensation (bit SC[ICOMPEN]) */
 #define FSL_FEATURE_VREF_HAS_COMPENSATION (1)
-/* @brief Describes the set of SC[MODE_LV] bitfield values */
+/* @brief If high/low buffer mode supported */
 #define FSL_FEATURE_VREF_MODE_LV_TYPE (1)
 /* @brief Module has also low reference (registers VREFL/VREFH) */
 #define FSL_FEATURE_VREF_HAS_LOW_REFERENCE (0)
+/* @brief Has VREF_TRM4. */
+#define FSL_FEATURE_VREF_HAS_TRM4 (0)
 
 /* WDOG module features */
 
@@ -1857,8 +2128,5 @@
 /* @brief Has Wait mode support. */
 #define FSL_FEATURE_WDOG_HAS_WAITEN (1)
 
-#endif /* __FSL_MK64F12_FEATURES_H__ */
+#endif /* _MK64F12_FEATURES_H_ */
 
-/*******************************************************************************
- * EOF
- ******************************************************************************/

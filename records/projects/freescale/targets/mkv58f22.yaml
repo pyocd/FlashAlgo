@@ -1,9 +1,8 @@
 common:
     target:
         - cortex-m4
-    sources:
+    includes:
         - source/freescale/devices/MKV58F22
-        - source/freescale/driver/flash_densities_k_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MKV58F1M0VLQ22

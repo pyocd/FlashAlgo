@@ -1,9 +1,8 @@
 common:
     target:
         - cortex-m4
-    sources:
+    includes:
         - source/freescale/devices/MK66F18
-        - source/freescale/driver/flash_densities_k_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MK66FN2M0VMD18
