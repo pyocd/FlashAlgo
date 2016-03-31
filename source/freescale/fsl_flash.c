@@ -2095,19 +2095,19 @@ static void copy_flash_cache_clear_command(uint8_t *flashCacheClearCommand)
  *
  * This function is used to perform the cache clear to the flash.
  */
-#if (defined(__GNUC__))
+#if (defined(__ICCARM__))
+#pragma optimize = none
+void flash_cache_clear(flash_config_t *config)
+#elif (defined(__CC_ARM))
+#pragma push
+#pragma O0
+void flash_cache_clear(flash_config_t *config)
+#elif (!defined(__GNUC__))
 /* #pragma GCC push_options */
 /* #pragma GCC optimize("O0") */
 void __attribute__((optimize("O0"))) flash_cache_clear(flash_config_t *config)
 #else
-#if (defined(__ICCARM__))
-#pragma optimize = none
-#endif
-#if (defined(__CC_ARM))
-#pragma push
-#pragma O0
-#endif
-void flash_cache_clear(flash_config_t *config)
+#error "Unknown compiler"
 #endif
 {
 #if FLASH_DRIVER_IS_FLASH_RESIDENT
