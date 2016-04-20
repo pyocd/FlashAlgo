@@ -9,3 +9,6 @@ common:
         - source/freescale/FlashDev.c
         - source/freescale/FlashPrg.c
         - source/freescale/fsl_flash.c
+    macros:
+        - FLASH_SSD_CONFIG_ENABLE_FLEXNVM_SUPPORT=0
+        - FLASH_DRIVER_IS_FLASH_RESIDENT=0
