@@ -23,6 +23,10 @@ projects:
     nrf51xxx:
         - *module_tools
         - records/projects/nordic/nrf51xxx.yaml
+    mke15z7:
+        - *module_tools
+        - records/projects/freescale/common/fsl_flash_driver.yaml
+        - records/projects/freescale/targets/mke15z7.yaml
     mkl02z4:
         - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml

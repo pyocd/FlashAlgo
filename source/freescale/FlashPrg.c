@@ -23,7 +23,10 @@ flash_config_t g_flash;
 
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
 {
-#if defined(KL28Z7_SERIES)
+#if defined(KL28Z7_SERIES) || defined(KE15Z7_SERIES)
+#if defined(KE15Z7_SERIES)
+#define WDOG0 WDOG
+#endif
     WDOG0->CNT = WDOG_UPDATE_KEY;
     WDOG0->TOVAL = 0xFFFF;
     WDOG0->CS = (uint32_t) ((WDOG0->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
