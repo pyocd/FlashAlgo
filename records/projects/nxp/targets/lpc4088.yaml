@@ -1,0 +1,10 @@
+common:
+    target:
+        - cortex-m4
+    sources:
+        - source/nxp/lpc4088_512kb_spifi/FlashDev.c
+        - source/nxp/lpc4088_512kb_spifi/FlashPrg.c
+    includes:
+        - source/nxp/lpc4088_512kb_spifi
+    macros:
+        - __NO_EMBEDDED_ASM
