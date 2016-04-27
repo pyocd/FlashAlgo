@@ -23,13 +23,13 @@ flash_config_t g_flash;
 
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
 {
-#if defined(KL28Z7_SERIES) || defined(KE15Z7_SERIES)
-#if defined(KE15Z7_SERIES)
-#define WDOG0 WDOG
+#if defined(KL28Z7_SERIES) || defined(KE15Z7_SERIES) || defined(KE18F16_SERIES)
+#if defined(KL28Z7_SERIES)
+#define WDOG WDOG0
 #endif
-    WDOG0->CNT = WDOG_UPDATE_KEY;
-    WDOG0->TOVAL = 0xFFFF;
-    WDOG0->CS = (uint32_t) ((WDOG0->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
+    WDOG->CNT = WDOG_UPDATE_KEY;
+    WDOG->TOVAL = 0xFFFF;
+    WDOG->CS = (uint32_t) ((WDOG->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
 #elif defined (WDOG)
     /* Write 0xC520 to the unlock register */
     WDOG->UNLOCK = 0xC520;

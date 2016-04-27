@@ -27,6 +27,10 @@ projects:
         - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mke15z7.yaml
+    mke18f16:
+        - *module_tools
+        - records/projects/freescale/common/fsl_flash_driver.yaml
+        - records/projects/freescale/targets/mke18f16.yaml
     mkl02z4:
         - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
