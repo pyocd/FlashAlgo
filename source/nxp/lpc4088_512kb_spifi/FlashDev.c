@@ -1,4 +1,4 @@
-/* Flash Algorithm for NXP IAP 32kB devices
+/* Flash Algorithm for Embedded Artists LPC4088 boards with 512kB + QSPI
  * Copyright (c) 2009-2016 ARM Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
