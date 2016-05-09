@@ -1,12 +1,18 @@
-/* definitions for ROM API for SPIFI in NXP MCUs
-   copyright (c) 2010 NXP Semiconductors
-   written by CAM  start                                     4/16/10
-                   first testing                             5/12/10
-                   OK with first SST & Winbond devices       6/8/10
-				   OK with Gigadevice, Numonyx, Atmel,
-				                              some Macronyx  7/13/10
-				   consensus with BK, performance optimized  8/24/10
-   this file is largely platform-independent */
+/* Definitions for ROM API for SPIFI in NXP MCUs
+ * Copyright (c) 2010 NXP Semiconductors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #ifndef SPIFI_ROM_API_H
 #define SPIFI_ROM_API_H
