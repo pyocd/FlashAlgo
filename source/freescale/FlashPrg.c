@@ -18,8 +18,11 @@
 #include "fsl_flash.h"
 #include "string.h"
 
-// Storage for flash driver.
-flash_config_t g_flash;
+//! Pre-shifted value of RUNM field when set to VLPR mode.
+#define SMC_PMCTRL_RUNM_VLPR (SMC_PMCTRL_RUNM(0x02))
+
+flash_config_t g_flash; //!< Storage for flash driver.
+bool g_wasInVlpr; //!< Saved VLPR mode flag.
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
@@ -47,6 +50,22 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
     SIM->COPC = 0x00u;
 #endif
 
+#if FSL_FEATURE_SOC_SMC_COUNT > 0
+    // Check for an exit VLPR mode. Devices can be configured to boot into VLPR via the FOPT field,
+    // but flash cannot be programmed in VLPR.
+    g_wasInVlpr = ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) == SMC_PMCTRL_RUNM_VLPR);
+    if (g_wasInVlpr)
+    {
+        // Clear RUNM field to change to normal run mode.
+        SMC->PMCTRL &= ~SMC_PMCTRL_RUNM_MASK;
+
+        // Wait for device to switch to normal run mode.
+        while ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) != 0)
+        {
+        }
+    }
+#endif // FSL_FEATURE_SOC_SMC_COUNT
+
     return (FLASH_Init(&g_flash) != kStatus_Success);
 }
 
@@ -59,6 +78,19 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 
 uint32_t UnInit(uint32_t fnc)
 {
+#if FSL_FEATURE_SOC_SMC_COUNT > 0
+    // Restore VLPR mode if it was enabled when we inited.
+    if (g_wasInVlpr)
+    {
+        // Set RUNM field to change to VLPR mode.
+        SMC->PMCTRL = (SMC->PMCTRL & ~SMC_PMCTRL_RUNM_MASK) | SMC_PMCTRL_RUNM_VLPR;
+
+        // Wait for device to switch to VLPR mode.
+        while ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) != SMC_PMCTRL_RUNM_VLPR)
+        {
+        }
+    }
+#endif // FSL_FEATURE_SOC_SMC_COUNT
 
     return (0);
 }
