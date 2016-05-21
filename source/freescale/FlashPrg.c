@@ -23,21 +23,27 @@ flash_config_t g_flash;
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
-#if defined(KL28Z7_SERIES) || defined(KE15Z7_SERIES) || defined(KE18F16_SERIES)
-#if defined(KL28Z7_SERIES)
-#define WDOG WDOG0
-#endif
+#if FSL_FEATURE_SOC_WDOG_COUNT > 0
+#if defined(FSL_FEATURE_WDOG_HAS_32BIT_ACCESS) && FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
+
+    // Map WDOG0 to WDOG
+    #if defined(WDOG0) && !defined(WDOG)
+        #define WDOG WDOG0
+    #endif
+
     WDOG->CNT = WDOG_UPDATE_KEY;
     WDOG->TOVAL = 0xFFFF;
     WDOG->CS = (uint32_t) ((WDOG->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
-#elif defined (WDOG)
+#else // FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
     /* Write 0xC520 to the unlock register */
     WDOG->UNLOCK = 0xC520;
     /* Followed by 0xD928 to complete the unlock */
     WDOG->UNLOCK = 0xD928;
     /* Clear the WDOGEN bit to disable the watchdog */
     WDOG->STCTRLH &= ~WDOG_STCTRLH_WDOGEN_MASK;
-#else
+#endif // FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
+
+#else // FSL_FEATURE_SOC_WDOG_COUNT
     SIM->COPC = 0x00u;
 #endif
 
