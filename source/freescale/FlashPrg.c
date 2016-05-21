@@ -21,7 +21,7 @@
 // Storage for flash driver.
 flash_config_t g_flash;
 
-int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
+uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
 #if defined(KL28Z7_SERIES) || defined(KE15Z7_SERIES) || defined(KE18F16_SERIES)
 #if defined(KL28Z7_SERIES)
@@ -51,8 +51,10 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
  *    Return Value:   0 - OK,  1 - Failed
  */
 
-int UnInit (unsigned long fnc) {
-  return (0);
+uint32_t UnInit(uint32_t fnc)
+{
+
+    return (0);
 }
 
 
@@ -97,8 +99,7 @@ int UnInit (unsigned long fnc) {
  *  Erase complete Flash Memory
  *    Return Value:   0 - OK,  1 - Failed
  */
-
-int EraseChip (void)
+uint32_t EraseChip(void)
 {
     int status = FLASH_EraseAll(&g_flash, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
@@ -114,7 +115,7 @@ int EraseChip (void)
  *    Parameter:      adr:  Sector Address
  *    Return Value:   0 - OK,  1 - Failed
  */
-int EraseSector (unsigned long adr)
+uint32_t EraseSector(uint32_t adr)
 {
     int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
@@ -131,14 +132,14 @@ int EraseSector (unsigned long adr)
  *                    buf:  Page Data
  *    Return Value:   0 - OK,  1 - Failed
  */
-int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
+uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
-    int status = FLASH_Program(&g_flash, adr, (uint32_t *)buf, sz);
+    int status = FLASH_Program(&g_flash, adr, buf, sz);
     if (status == kStatus_Success)
     {
         // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
         status = FLASH_VerifyProgram(&g_flash, adr, sz,
-                              (const uint32_t *)buf, kFLASH_marginValueUser,
+                              buf, kFLASH_marginValueUser,
                               NULL, NULL);
     }
     return status;
