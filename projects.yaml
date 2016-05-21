@@ -95,6 +95,10 @@ projects:
         - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml
         - records/projects/freescale/targets/mkw40z4.yaml
+    mkw41z4:
+        - *module_tools
+        - records/projects/freescale/common/fsl_flash_driver.yaml
+        - records/projects/freescale/targets/mkw41z4.yaml
     mk20d5:
         - *module_tools
         - records/projects/freescale/common/fsl_flash_driver.yaml

@@ -1,0 +1,8 @@
+common:
+    target:
+        - cortex-m0
+    includes:
+        - source/freescale/devices/MKW41Z4
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKW41Z512VHT4
