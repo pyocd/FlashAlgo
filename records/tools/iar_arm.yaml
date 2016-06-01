@@ -1,0 +1,25 @@
+#common:
+#    target:
+#        - cortex-m0
+
+tool_specific:
+    iar_arm:
+        macros:
+            - TOOLCHAIN_IAR
+        linker_file:
+            - source/FlashAlgo.lin
+        misc:
+            CCDebugInfo:
+                - enable
+            CCOptLevel:
+                - 1
+            IccLang:
+                - 1
+            IccCppDialect:
+                - 2
+            GRuntimeLibSelect:
+                - 2
+            ACaseSensitivity:
+                - enable
+            ADebug:
+                - enable

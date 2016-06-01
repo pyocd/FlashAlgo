@@ -15,30 +15,58 @@
  */
 
 #include "FlashOS.H"        // FlashOS Structures
-#include "flash.h"
+#include "fsl_flash.h"
 #include "string.h"
 
-// Storage for flash driver.
-flash_driver_t g_flash;
+//! Pre-shifted value of RUNM field when set to VLPR mode.
+#define SMC_PMCTRL_RUNM_VLPR (SMC_PMCTRL_RUNM(0x02))
 
-int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
+flash_config_t g_flash; //!< Storage for flash driver.
+bool g_wasInVlpr; //!< Saved VLPR mode flag.
+
+uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
-#if defined(KL28Z7_SERIES)
-    WDOG0->CNT = WDOG_UPDATE_KEY;
-    WDOG0->TOVAL = 0xFFFF;
-    WDOG0->CS = (uint32_t) ((WDOG0->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
-#elif defined (WDOG)
+#if FSL_FEATURE_SOC_WDOG_COUNT > 0
+#if defined(FSL_FEATURE_WDOG_HAS_32BIT_ACCESS) && FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
+
+    // Map WDOG0 to WDOG
+    #if defined(WDOG0) && !defined(WDOG)
+        #define WDOG WDOG0
+    #endif
+
+    WDOG->CNT = WDOG_UPDATE_KEY;
+    WDOG->TOVAL = 0xFFFF;
+    WDOG->CS = (uint32_t) ((WDOG->CS) & ~WDOG_CS_EN_MASK) | WDOG_CS_UPDATE_MASK;
+#else // FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
     /* Write 0xC520 to the unlock register */
     WDOG->UNLOCK = 0xC520;
     /* Followed by 0xD928 to complete the unlock */
     WDOG->UNLOCK = 0xD928;
     /* Clear the WDOGEN bit to disable the watchdog */
     WDOG->STCTRLH &= ~WDOG_STCTRLH_WDOGEN_MASK;
-#else
+#endif // FSL_FEATURE_WDOG_HAS_32BIT_ACCESS
+
+#else // FSL_FEATURE_SOC_WDOG_COUNT
     SIM->COPC = 0x00u;
 #endif
 
-    return (flash_init(&g_flash) != kStatus_Success);
+#if FSL_FEATURE_SOC_SMC_COUNT > 0
+    // Check for an exit VLPR mode. Devices can be configured to boot into VLPR via the FOPT field,
+    // but flash cannot be programmed in VLPR.
+    g_wasInVlpr = ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) == SMC_PMCTRL_RUNM_VLPR);
+    if (g_wasInVlpr)
+    {
+        // Clear RUNM field to change to normal run mode.
+        SMC->PMCTRL &= ~SMC_PMCTRL_RUNM_MASK;
+
+        // Wait for device to switch to normal run mode.
+        while ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) != 0)
+        {
+        }
+    }
+#endif // FSL_FEATURE_SOC_SMC_COUNT
+
+    return (FLASH_Init(&g_flash) != kStatus_Success);
 }
 
 
@@ -48,8 +76,23 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc)
  *    Return Value:   0 - OK,  1 - Failed
  */
 
-int UnInit (unsigned long fnc) {
-  return (0);
+uint32_t UnInit(uint32_t fnc)
+{
+#if FSL_FEATURE_SOC_SMC_COUNT > 0
+    // Restore VLPR mode if it was enabled when we inited.
+    if (g_wasInVlpr)
+    {
+        // Set RUNM field to change to VLPR mode.
+        SMC->PMCTRL = (SMC->PMCTRL & ~SMC_PMCTRL_RUNM_MASK) | SMC_PMCTRL_RUNM_VLPR;
+
+        // Wait for device to switch to VLPR mode.
+        while ((SMC->PMCTRL & SMC_PMCTRL_RUNM_MASK) != SMC_PMCTRL_RUNM_VLPR)
+        {
+        }
+    }
+#endif // FSL_FEATURE_SOC_SMC_COUNT
+
+    return (0);
 }
 
 
@@ -94,15 +137,13 @@ int UnInit (unsigned long fnc) {
  *  Erase complete Flash Memory
  *    Return Value:   0 - OK,  1 - Failed
  */
-
-int EraseChip (void)
+uint32_t EraseChip(void)
 {
-    int status = flash_erase_all(&g_flash, kFlashEraseKey);
+    int status = FLASH_EraseAll(&g_flash, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
     {
-        status = flash_verify_erase_all(&g_flash, kFlashMargin_Normal);
+        status = FLASH_VerifyEraseAll(&g_flash, kFLASH_marginValueNormal);
     }
-    flash_cache_clear();
     return status;
 }
 
@@ -112,14 +153,13 @@ int EraseChip (void)
  *    Parameter:      adr:  Sector Address
  *    Return Value:   0 - OK,  1 - Failed
  */
-int EraseSector (unsigned long adr)
+uint32_t EraseSector(uint32_t adr)
 {
-    int status = flash_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashEraseKey);
+    int status = FLASH_Erase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_apiEraseKey);
     if (status == kStatus_Success)
     {
-        status = flash_verify_erase(&g_flash, adr, g_flash.PFlashSectorSize, kFlashMargin_Normal);
+        status = FLASH_VerifyErase(&g_flash, adr, g_flash.PFlashSectorSize, kFLASH_marginValueNormal);
     }
-    flash_cache_clear();
     return status;
 }
 
@@ -130,17 +170,16 @@ int EraseSector (unsigned long adr)
  *                    buf:  Page Data
  *    Return Value:   0 - OK,  1 - Failed
  */
-int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
+uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
-    int status = flash_program(&g_flash, adr, (uint32_t *)buf, sz);
+    int status = FLASH_Program(&g_flash, adr, buf, sz);
     if (status == kStatus_Success)
     {
         // Must use kFlashMargin_User, or kFlashMargin_Factory for verify program
-        status = flash_verify_program(&g_flash, adr, sz,
-                              (const uint8_t *)buf, kFlashMargin_User,
+        status = FLASH_VerifyProgram(&g_flash, adr, sz,
+                              buf, kFLASH_marginValueUser,
                               NULL, NULL);
     }
-    flash_cache_clear();
     return status;
 }
 

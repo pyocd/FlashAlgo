@@ -1,9 +1,8 @@
 common:
     target:
         - cortex-m0
-    sources:
+    includes:
         - source/freescale/devices/MKV10Z7
-        - source/freescale/driver/flash_densities_kl_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MKV10Z32VLF7

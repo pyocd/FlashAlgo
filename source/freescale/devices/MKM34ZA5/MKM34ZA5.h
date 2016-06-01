@@ -159,7 +159,7 @@ typedef enum IRQn {
 
 #define __CM0PLUS_REV                  0x0000    /**< Core revision r0p0 */
 #define __MPU_PRESENT                  0         /**< Defines if an MPU is present or not */
-#define __VTOR_PRESENT                 1         /**< Defines if an MPU is present or not */
+#define __VTOR_PRESENT                 1         /**< Defines if VTOR is present or not */
 #define __NVIC_PRIO_BITS               2         /**< Number of priority bits implemented in the NVIC */
 #define __Vendor_SysTickConfig         0         /**< Vendor specific implementation of SysTickConfig is defined */
 

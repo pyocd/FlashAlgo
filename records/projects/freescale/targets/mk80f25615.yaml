@@ -1,9 +1,8 @@
 common:
     target:
         - cortex-m4
-    sources:
+    includes:
         - source/freescale/devices/MK80F25615
-        - source/freescale/driver/flash_densities_k_series.c
     macros:
         - __NO_EMBEDDED_ASM
         - CPU_MK80FN256VDC15

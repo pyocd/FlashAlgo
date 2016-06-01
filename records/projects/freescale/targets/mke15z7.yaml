@@ -1,0 +1,11 @@
+common:
+    target:
+        - cortex-m0
+    includes:
+        - source/freescale/devices/MKE15Z7
+#    sources:
+#        - source/freescale/devices/MKLE15Z7
+#        - source/freescale/driver/flash_densities_kl_series.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKE15Z256VLL7

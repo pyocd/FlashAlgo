@@ -1,0 +1,8 @@
+common:
+    target:
+        - cortex-m4
+    includes:
+        - source/freescale/devices/MKV31F51212
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_MKV31F512VLL12

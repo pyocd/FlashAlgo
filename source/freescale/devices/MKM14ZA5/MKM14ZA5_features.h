@@ -1,7 +1,7 @@
 /*
 ** ###################################################################
-**     Version:             rev. 1.1, 2015-01-21
-**     Build:               b150310
+**     Version:             rev. 1.3, 2015-05-25
+**     Build:               b150715
 **
 **     Abstract:
 **         Chip specific module features.
@@ -42,6 +42,12 @@
 **         Initial version.
 **     - rev. 1.1 (2015-01-21)
 **         Added FSL_FEATURE_SOC_peripheral_COUNT with number of peripheral instances
+**     - rev. 1.2 (2015-05-19)
+**         FSL_FEATURE_SOC_CAU_COUNT remamed to FSL_FEATURE_SOC_MMCAU_COUNT.
+**         Added FSL_FEATURE_SOC_peripheral_COUNT for TRNG and HSADC.
+**         Added features for PORT.
+**     - rev. 1.3 (2015-05-25)
+**         Added FSL_FEATURE_FLASH_PFLASH_START_ADDRESS
 **
 ** ###################################################################
 */
@@ -113,8 +119,8 @@
 #define FSL_FEATURE_SOC_CADC_COUNT (0)
 /* @brief FLEXCAN availability on the SoC. */
 #define FSL_FEATURE_SOC_FLEXCAN_COUNT (0)
-/* @brief CAU availability on the SoC. */
-#define FSL_FEATURE_SOC_CAU_COUNT (0)
+/* @brief MMCAU availability on the SoC. */
+#define FSL_FEATURE_SOC_MMCAU_COUNT (0)
 /* @brief CMP availability on the SoC. */
 #define FSL_FEATURE_SOC_CMP_COUNT (2)
 /* @brief CMT availability on the SoC. */
@@ -173,6 +179,8 @@
 #define FSL_FEATURE_SOC_FTMRH_COUNT (0)
 /* @brief GPIO availability on the SoC. */
 #define FSL_FEATURE_SOC_GPIO_COUNT (9)
+/* @brief HSADC availability on the SoC. */
+#define FSL_FEATURE_SOC_HSADC_COUNT (0)
 /* @brief I2C availability on the SoC. */
 #define FSL_FEATURE_SOC_I2C_COUNT (2)
 /* @brief I2S availability on the SoC. */
@@ -183,8 +191,8 @@
 #define FSL_FEATURE_SOC_IRQ_COUNT (0)
 /* @brief KBI availability on the SoC. */
 #define FSL_FEATURE_SOC_KBI_COUNT (0)
-/* @brief LCD availability on the SoC. */
-#define FSL_FEATURE_SOC_LCD_COUNT (0)
+/* @brief SLCD availability on the SoC. */
+#define FSL_FEATURE_SOC_SLCD_COUNT (0)
 /* @brief LCDC availability on the SoC. */
 #define FSL_FEATURE_SOC_LCDC_COUNT (0)
 /* @brief LDO availability on the SoC. */
@@ -281,6 +289,8 @@
 #define FSL_FEATURE_SOC_TPM_COUNT (0)
 /* @brief TRIAMP availability on the SoC. */
 #define FSL_FEATURE_SOC_TRIAMP_COUNT (0)
+/* @brief TRNG availability on the SoC. */
+#define FSL_FEATURE_SOC_TRNG_COUNT (0)
 /* @brief TSI availability on the SoC. */
 #define FSL_FEATURE_SOC_TSI_COUNT (0)
 /* @brief UART availability on the SoC. */
@@ -337,6 +347,8 @@
     #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (0)
     /* @brief Has flash cache control in MCM module. */
     #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (1)
+    /* @brief P-Flash start address. */
+    #define FSL_FEATURE_FLASH_PFLASH_START_ADDRESS (0x00000000)
     /* @brief P-Flash block count. */
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
     /* @brief P-Flash block size. */
@@ -351,6 +363,8 @@
     #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (0)
     /* @brief Has FlexNVM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief FlexNVM block count. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
     /* @brief FlexNVM block size. */
@@ -361,14 +375,12 @@
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (0)
     /* @brief FlexNVM data path width. */
     #define FSL_FEATURE_FLASH_FLEX_BLOCK_DATA_PATH_WIDTH (0)
-    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief Has FlexRAM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (0)
-    /* @brief FlexRAM size. */
-    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (0)
     /* @brief FlexRAM start address. (Valid only if FlexRAM is available.) */
     #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x00000000)
+    /* @brief FlexRAM size. */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (0)
     /* @brief Has 0x00 Read 1s Block command. */
     #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (0)
     /* @brief Has 0x01 Read 1s Section command. */
@@ -510,6 +522,8 @@
     #define FSL_FEATURE_FLASH_HAS_FMC_FLASH_CACHE_CONTROLS (0)
     /* @brief Has flash cache control in MCM module. */
     #define FSL_FEATURE_FLASH_HAS_MCM_FLASH_CACHE_CONTROLS (1)
+    /* @brief P-Flash start address. */
+    #define FSL_FEATURE_FLASH_PFLASH_START_ADDRESS (0x00000000)
     /* @brief P-Flash block count. */
     #define FSL_FEATURE_FLASH_PFLASH_BLOCK_COUNT (1)
     /* @brief P-Flash block size. */
@@ -524,6 +538,8 @@
     #define FSL_FEATURE_FLASH_HAS_PFLASH_BLOCK_SWAP (0)
     /* @brief Has FlexNVM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_NVM (0)
+    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
+    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief FlexNVM block count. */
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_COUNT (0)
     /* @brief FlexNVM block size. */
@@ -534,14 +550,12 @@
     #define FSL_FEATURE_FLASH_FLEX_NVM_BLOCK_WRITE_UNIT_SIZE (0)
     /* @brief FlexNVM data path width. */
     #define FSL_FEATURE_FLASH_FLEX_BLOCK_DATA_PATH_WIDTH (0)
-    /* @brief FlexNVM start address. (Valid only if FlexNVM is available.) */
-    #define FSL_FEATURE_FLASH_FLEX_NVM_START_ADDRESS (0x00000000)
     /* @brief Has FlexRAM memory. */
     #define FSL_FEATURE_FLASH_HAS_FLEX_RAM (0)
-    /* @brief FlexRAM size. */
-    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (0)
     /* @brief FlexRAM start address. (Valid only if FlexRAM is available.) */
     #define FSL_FEATURE_FLASH_FLEX_RAM_START_ADDRESS (0x00000000)
+    /* @brief FlexRAM size. */
+    #define FSL_FEATURE_FLASH_FLEX_RAM_SIZE (0)
     /* @brief Has 0x00 Read 1s Block command. */
     #define FSL_FEATURE_FLASH_HAS_READ_1S_BLOCK_CMD (0)
     /* @brief Has 0x01 Read 1s Section command. */
@@ -921,7 +935,8 @@
 
 /* LPTMR module features */
 
-/* No feature definitions */
+/* @brief Has shared interrupt handler with another LPTMR module. */
+#define FSL_FEATURE_LPTMR_HAS_SHARED_IRQ_HANDLER (0)
 
 /* MCG module features */
 
@@ -987,6 +1002,10 @@
 #define FSL_FEATURE_MCG_HAS_LOW_FREQ_IRC (0)
 /* @brief Has high frequency internal reference clock (IRC) (registers HCTRIM, HTTRIM, HFTRIM and bit MC[HIRCEN]). */
 #define FSL_FEATURE_MCG_HAS_HIGH_FREQ_IRC (0)
+/* @brief Has PEI mode or PBI mode. */
+#define FSL_FEATURE_MCG_HAS_PLL_INTERNAL_MODE (1)
+/* @brief Reset clock mode is BLPI. */
+#define FSL_FEATURE_MCG_RESET_IS_BLPI (1)
 
 /* MPU module features */
 
@@ -1073,6 +1092,12 @@
 #define FSL_FEATURE_PORT_HAS_DRIVE_STRENGTH_REGISTER (0)
 /* @brief Has glitch filter (register IOFLT). */
 #define FSL_FEATURE_PORT_HAS_GLITCH_FILTER (0)
+/* @brief Defines width of PCR[MUX] field. */
+#define FSL_FEATURE_PORT_PCR_MUX_WIDTH (3)
+/* @brief Defines whether PCR[IRQC] bit-field has flag states. */
+#define FSL_FEATURE_PORT_HAS_IRQC_FLAG (0)
+/* @brief Defines whether PCR[IRQC] bit-field has trigger states. */
+#define FSL_FEATURE_PORT_HAS_IRQC_TRIGGER (0)
 
 /* RCM module features */
 
@@ -1113,9 +1138,9 @@
 #define FSL_FEATURE_SMC_HAS_HIGH_SPEED_RUN_MODE (0)
 /* @brief Has low leakage stop mode (register bit PMPROT[ALLS]). */
 #define FSL_FEATURE_SMC_HAS_LOW_LEAKAGE_STOP_MODE (0)
-/* @brief Has stop submode 0(state VLLS0 of register bit STOPCTRL[VLLSM]). */
+/* @brief Has stop submode 0(VLLS0). */
 #define FSL_FEATURE_SMC_HAS_STOP_SUBMODE0 (1)
-/* @brief Has stop submode 2(state VLLS2 of register bit STOPCTRL[VLLSM]). */
+/* @brief Has stop submode 2(VLLS2). */
 #define FSL_FEATURE_SMC_HAS_STOP_SUBMODE2 (1)
 
 /* SPI module features */
@@ -1201,7 +1226,7 @@
 #define FSL_FEATURE_VREF_HAS_CHOP_OSC (1)
 /* @brief Has second order curvature compensation (bit SC[ICOMPEN]) */
 #define FSL_FEATURE_VREF_HAS_COMPENSATION (1)
-/* @brief Describes the set of SC[MODE_LV] bitfield values */
+/* @brief If high/low buffer mode supported */
 #define FSL_FEATURE_VREF_MODE_LV_TYPE (1)
 /* @brief Module has also low reference (registers VREFL/VREFH) */
 #define FSL_FEATURE_VREF_HAS_LOW_REFERENCE (1)
