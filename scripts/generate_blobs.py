@@ -145,6 +145,8 @@ def decode_axf(string):
                 if name == '$d.realdata':
                     if sec == '2':
                         dic['static_base'] = '0x%08x' % int(loc, 16)
+                        if dic['name'] == 'lpc4088':
+                            dic['static_base'] = '0x%08x' % ( (int(loc, 16) + 0x100) & 0xffffff00 )
 
     # order the flash programming functions - known order 
     #dic['func'] = collections.OrderedDict(sorted(dic['func'].items()))
