@@ -1,2 +1,2 @@
-project_generator==0.8.5
+project_generator==0.9.2
 Jinja2
