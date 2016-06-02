@@ -3,6 +3,8 @@ common:
         - cortex-m3
     group_name:
         - flash_driver
+    includes:
+        - source
     sources:
         - source
         - source/siliconlabs/EFM32GG

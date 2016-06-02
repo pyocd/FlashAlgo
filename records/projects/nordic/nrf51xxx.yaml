@@ -3,6 +3,8 @@ common:
         - cortex-m0
     group_name:
         - flash_driver
+    includes:
+        - source
     sources:
         - source
         - source/nordic
