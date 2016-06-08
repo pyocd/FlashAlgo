@@ -4,7 +4,7 @@ common:
     target:
         - cortex-m0
     includes:
-        -
+        - source
     sources:
         - source
         - source/template

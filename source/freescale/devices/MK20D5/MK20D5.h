@@ -7711,16 +7711,16 @@ typedef struct {
 #define PDB0_CHC1(index)                         PDB0_C1(index)
 #define PDB0_CHDLY0(index)                       PDB0_DLY(index,0)
 #define PDB0_CHDLY1(index)                       PDB0_DLY(index,1)
-#define PTA_BASE                                 GPIOA_BASE
-#define PTB_BASE                                 GPIOB_BASE
-#define PTC_BASE                                 GPIOC_BASE
-#define PTD_BASE                                 GPIOD_BASE
-#define PTE_BASE                                 GPIOE_BASE
-#define PTA                                      GPIOA
-#define PTB                                      GPIOB
-#define PTC                                      GPIOC
-#define PTD                                      GPIOD
-#define PTE                                      GPIOE
+#define GPIOA_BASE                               PTA_BASE
+#define GPIOA                                    PTA
+#define GPIOB_BASE                               PTB_BASE
+#define GPIOB                                    PTB
+#define GPIOC_BASE                               PTC_BASE
+#define GPIOC                                    PTC
+#define GPIOD_BASE                               PTD_BASE
+#define GPIOD                                    PTD
+#define GPIOE_BASE                               PTE_BASE
+#define GPIOE                                    PTE
 #define DMAMUX0                                  DMAMUX
 
 /*!
