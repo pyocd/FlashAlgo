@@ -42,7 +42,7 @@ static void wait(uint32_t usec)
     } while (--cnt);
 }
 
-static int readStatus1(uint32_t *status)
+static int readCommand(uint32_t command, uint32_t *reg_val)
 {
     uint32_t intr_stat;
     uint32_t cnt;
@@ -50,7 +50,7 @@ static int readStatus1(uint32_t *status)
     REG_SPIC(0x028) = 0x00000100;
     REG_SPIC(0x02C) = 0x00000400;
     REG_SPIC(0x030) = 0x00000230;
-    REG_SPIC(0x100) = 0x00000005;
+    REG_SPIC(0x100) = command;
     REG_SPIC(0x034) = 0x00000001;
     // Wait for done.
     for (cnt = TIME_LIMIT; cnt > 0; --cnt) {
@@ -65,8 +65,19 @@ static int readStatus1(uint32_t *status)
         return 1;
     }
     REG_SPIC(0x0A0) = 0x0000000F;   // Clear flags.
-    *status = REG_SPIC(0x200);      // Read buffer.
+    *reg_val = REG_SPIC(0x200);     // Read buffer.
     return 0;
+
+}
+
+static inline int readStatus1(uint32_t *status)
+{
+    return readCommand(0x00000005, status);
+}
+
+static inline int readStatus2(uint32_t *status)
+{
+    return readCommand(0x00000035, status);
 }
 
 static int writeCommand(uint32_t reg_ioctrl, uint32_t reg_acctrl, uint32_t command)
@@ -199,6 +210,7 @@ uint32_t EraseSector(uint32_t adr)
 
 uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
 {
+    uint32_t stat;
     uint32_t offset;
     uint32_t cnt;
 
@@ -206,14 +218,31 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     if (prepareWrite() != 0) {
         return 1;
     }
-    // Configuration of `PrgBufIOCtrl'
-    REG_SPIC(0x028) = 0x00000100;
-    // Configuration of `PrgOECtrl'
-    REG_SPIC(0x02C) = 0x00000400;
-    // Configuration of `PrgAccCtrl'
-    REG_SPIC(0x030) = (0x00030330 | ((sz - 1) << 24));
-    // Write `Write page program' command to SPIC PrimaryBuffer.
-    REG_SPIC(0x100) = (__rev(adr) | 0x02);
+    
+    if (readStatus2(&stat) != 0) {
+        return 1;
+    }
+    if (stat & 0x00000002) {
+        /* SPI quad access mode. */
+        // Configuration of `PrgBufIOCtrl'
+        REG_SPIC(0x028) = 0x00000102;
+        // Configuration of `PrgOECtrl'
+        REG_SPIC(0x02C) = 0x00000400;
+        // Configuration of `PrgAccCtrl'
+        REG_SPIC(0x030) = (0x00030330 | ((sz - 1) << 24));
+        // Write `Write page program' command to SPIC PrimaryBuffer.
+        REG_SPIC(0x100) = (__rev(adr) | 0x32);
+    } else {
+        /* SPI single access mode. */
+        // Configuration of `PrgBufIOCtrl'
+        REG_SPIC(0x028) = 0x00000100;
+        // Configuration of `PrgOECtrl'
+        REG_SPIC(0x02C) = 0x00000400;
+        // Configuration of `PrgAccCtrl'
+        REG_SPIC(0x030) = (0x00030330 | ((sz - 1) << 24));
+        // Write `Write page program' command to SPIC PrimaryBuffer.
+        REG_SPIC(0x100) = (__rev(adr) | 0x02);
+    }
     // Copy from SRAM to SPIC SecondaryBuffer.
     offset = sz & 0xfffffffc;
     for (int i = 0; i < sz; i += 4) {
