@@ -1,0 +1,10 @@
+common:
+    group_name:
+        - flash_driver
+    target:
+        - cortex-m3
+    includes:
+        - source
+    sources:
+        - source
+        - source/st

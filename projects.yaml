@@ -131,3 +131,6 @@ projects:
         - *module_tools
         - records/projects/nxp/common/nxp_flash_driver.yaml
         - records/projects/nxp/targets/lpc4088.yaml
+    stm32l151:
+        - *module_tools
+        - records/projects/st/stm32l151.yaml
