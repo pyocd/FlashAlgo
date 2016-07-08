@@ -42,7 +42,7 @@ struct FlashDevice const FlashDevice = {
     0x00040000,                 // Device Size (256kB)
     0x00000100,                 // Programming Page Size (256 bytes)
     0x00000000,                 // Reserved, must be 0
-    0xFF,                       // Initial Content of Erased Memory
+    0x00,                       // Initial Content of Erased Memory
     0x00000064,                 // Program Page Timeout 100 mSec
     0x00000BB8,                 // Erase Sector Timeout 3000 mSec
     {{0x00000100, 0x00000000},  // Sector Size {256 bytes, starting at address 0}

@@ -64,7 +64,9 @@ typedef struct {
   vu32 OPTKEYR;                                 // offset  0x014 Flash option key register (FLASH_OPTKEYR)
   vu32 SR;                                      // offset  0x018 Flash status register (FLASH_SR)
   vu32 OBR;                                     // offset  0x01C Option byte register (FLASH_OBR)
-  vu32 WRPR;                                    // offset  0x020 Flash write protection register (FLASH_WRPR)
+  vu32 WRPR1;                                   // offset  0x020 Flash write protection register 1 (FLASH_WRPR1)
+  vu32 RFU[23];                                 // 0x24 - 0x80
+  vu32 WRPR2;                                   // offset  0x080 Flash write protection register 2 (FLASH_WRPR2)
 } FLASH_TypeDef;
 
 
@@ -117,14 +119,6 @@ uint32_t Init (uint32_t adr, uint32_t clk, uint32_t fnc) {
     case 2:
       FLASH->SR |= FLASH_ERRs;                  // clear error flags
 
-      // Unlock PECR Register    
-      FLASH->PEKEYR = FLASH_PEKEY1;
-      FLASH->PEKEYR = FLASH_PEKEY2;
-
-      // Unlock Program Matrix    
-      FLASH->PRGKEYR = FLASH_PRGKEY1;
-      FLASH->PRGKEYR = FLASH_PRGKEY2;  
-
       // Test if IWDG is running (IWDG in HW mode)
       if ((FLASH->OBR & FLASH_IWDG_SW) == 0x00) {
         // Set IWDG time out to ~32.768 second
@@ -154,8 +148,8 @@ uint32_t UnInit (uint32_t fnc) {
       FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
     break;
   }
-
-      return (0);
+  
+  return (0);
 }
 
 /*
@@ -165,11 +159,22 @@ uint32_t UnInit (uint32_t fnc) {
  */
 
 uint32_t EraseSector (uint32_t adr) {
+  // Unlock PECR Register    
+  if (FLASH->PECR & FLASH_PELOCK) {
+    FLASH->PEKEYR = FLASH_PEKEY1;
+    FLASH->PEKEYR = FLASH_PEKEY2;
+  }
+
+  // Unlock Program Matrix    
+  if (FLASH->PECR & FLASH_PRGLOCK) {
+    FLASH->PRGKEYR = FLASH_PRGKEY1;
+    FLASH->PRGKEYR = FLASH_PRGKEY2;  
+  }
 
   FLASH->PECR |= FLASH_ERASE;                   // Page or Double Word Erase enabled
   FLASH->PECR |= FLASH_PROG;                    // Program memory selected
      
-  M32(adr) = 0x00000000;			// write '0' to the first address to erase page
+  M32(adr) = 0x00000000;			            // write '0' to the first address to erase page
 
   while (FLASH->SR & FLASH_BSY) {
     IWDG->KR = 0xAAAA;                          // Reload IWDG
@@ -219,6 +224,22 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
 
   sz = (sz + 255) & ~255;			// adjust programming size
 
+  // Unlock PECR Register    
+  if (FLASH->PECR & FLASH_PELOCK) {
+    FLASH->PEKEYR = FLASH_PEKEY1;
+    FLASH->PEKEYR = FLASH_PEKEY2;
+  }
+
+  // Unlock Program Matrix    
+  if (FLASH->PECR & FLASH_PRGLOCK) {
+    FLASH->PRGKEYR = FLASH_PRGKEY1;
+    FLASH->PRGKEYR = FLASH_PRGKEY2;  
+  }
+
+  if ((FLASH->PECR & FLASH_PELOCK) || (FLASH->PECR & FLASH_PRGLOCK)) {
+    return (1);
+  }
+
   FLASH->PECR |= FLASH_FPRG;			// Half Page programming mode enabled
   FLASH->PECR |= FLASH_PROG;                    // Program memory selected
 
@@ -242,8 +263,9 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
 
   // Check for Errors
   if (FLASH->SR & (FLASH_ERRs)) {
+    uint32_t ret = FLASH->SR;
     FLASH->SR |= FLASH_ERRs;                    // clear error flags
-    return (1);                                 // Failed
+    return (ret);                               // Failed
   }
 
   FLASH->PECR &= ~FLASH_FPRG;			// Half Page programming mode disabled
@@ -272,8 +294,9 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
 
   // Check for Errors
   if (FLASH->SR & (FLASH_ERRs)) {
+    uint32_t ret = FLASH->SR;
     FLASH->SR |= FLASH_ERRs;                    // clear error flags
-    return (1);                                 // Failed
+    return (ret);                               // Failed
   }
 
   FLASH->PECR &= ~FLASH_FPRG;			// Half Page programming mode disabled
