@@ -180,6 +180,13 @@ uint32_t EraseSector (uint32_t adr) {
     IWDG->KR = 0xAAAA;                          // Reload IWDG
   }
 
+  // Check for Errors
+  if (FLASH->SR & (FLASH_ERRs)) {
+    uint32_t ret = FLASH->SR;
+    FLASH->SR |= FLASH_ERRs;                    // clear error flags
+    return (ret);                               // Failed
+  }
+
   FLASH->PECR &= ~FLASH_ERASE;                  // Page or Double Word Erase disabled
   FLASH->PECR &= ~FLASH_PROG;                   // Program memory deselected   
 
@@ -192,8 +199,12 @@ uint32_t EraseSector (uint32_t adr) {
  */
 
 uint32_t EraseChip (void) {
-  for (uint32_t i = 0x08000000; i < 0x08040000; i += 0x100)
-    EraseSector(i);
+  uint32_t ret;
+  for (uint32_t i = 0x08000000; i < 0x08040000; i += 0x100) {
+    ret = EraseSector(i);
+    if (ret)
+      return (ret);
+  }
 
   return (0);
 }
