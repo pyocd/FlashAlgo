@@ -231,9 +231,10 @@ uint32_t BlankCheck (uint32_t adr, uint32_t sz, uint32_t pat) {
  */
 
 uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
-  uint32_t  cnt = 128;
+  uint32_t addr = adr;
+  int i, j;
 
-  sz = (sz + 255) & ~255;			// adjust programming size
+  // First half page programming cycle
 
   // Unlock PECR Register    
   if (FLASH->PECR & FLASH_PELOCK) {
@@ -258,18 +259,9 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
     IWDG->KR = 0xAAAA;				// Reload IWDG
   }
 
-  // program first half page
-  cnt = 128;
-  while (sz && cnt) {
-     M32(adr) = *((uint32_t *)buf);		// Program Word
-     adr += 4;
-     buf += 4;
-     sz  -= 4;
-     cnt -= 4;
-  }
-
-  while (FLASH->SR & FLASH_BSY) {
-    IWDG->KR = 0xAAAA;				// Reload IWDG
+  // write first half page
+  for (i = 0, j = 0; i < 128; i += 4, j++) {
+    *(uint32_t *)(addr + i) = *(buf + j);
   }
 
   // Check for Errors
@@ -279,28 +271,34 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
     return (ret);                               // Failed
   }
 
-  FLASH->PECR &= ~FLASH_FPRG;			// Half Page programming mode disabled
-  FLASH->PECR &= ~FLASH_PROG;                   // Program memory deselected   
-  
+  // Second half page programming cycle
+
+  // Unlock PECR Register    
+  if (FLASH->PECR & FLASH_PELOCK) {
+    FLASH->PEKEYR = FLASH_PEKEY1;
+    FLASH->PEKEYR = FLASH_PEKEY2;
+  }
+
+  // Unlock Program Matrix    
+  if (FLASH->PECR & FLASH_PRGLOCK) {
+    FLASH->PRGKEYR = FLASH_PRGKEY1;
+    FLASH->PRGKEYR = FLASH_PRGKEY2;  
+  }
+
+  if ((FLASH->PECR & FLASH_PELOCK) || (FLASH->PECR & FLASH_PRGLOCK)) {
+    return (1);
+  }
+
   FLASH->PECR |= FLASH_FPRG;			// Half Page programming mode enabled
   FLASH->PECR |= FLASH_PROG;                    // Program memory selected
-  
+
   while (FLASH->SR & FLASH_BSY) {
     IWDG->KR = 0xAAAA;				// Reload IWDG
   }
 
-  // program second half page
-  cnt = 128;
-  while (sz && cnt) {
-    M32(adr) = *((uint32_t *)buf);		// Program Word
-    adr += 4;
-    buf += 4;
-    sz  -= 4;
-    cnt -= 4;
-  }
-
-  while (FLASH->SR & FLASH_BSY) {
-    IWDG->KR = 0xAAAA;                          // Reload IWDG
+  // write second half page
+  for (i = 128, j = 32; i < 256; i += 4, j++) {
+    *(uint32_t *)(addr + i) = *(buf + j);
   }
 
   // Check for Errors
@@ -310,9 +308,6 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
     return (ret);                               // Failed
   }
 
-  FLASH->PECR &= ~FLASH_FPRG;			// Half Page programming mode disabled
-  FLASH->PECR &= ~FLASH_PROG;                   // Program memory deselected   
-
-  return (0);                                   // Done
+  return (0);
 }
 
