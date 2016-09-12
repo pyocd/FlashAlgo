@@ -40,19 +40,9 @@ typedef volatile unsigned short vu16;
 #define M32(adr) (*((vu32 *) (adr)))
 
 // Peripheral Memory Map
-#define IWDG_BASE       0x40003000
 #define FLASH_BASE      0x40023C00
 
-#define IWDG            ((IWDG_TypeDef *) IWDG_BASE)
 #define FLASH           ((FLASH_TypeDef*) FLASH_BASE)
-
-// Independent WATCHDOG
-typedef struct {
-  vu32 KR;                                      // offset  0x000 Key register (IWDG_KR)
-  vu32 PR;                                      // offset  0x004 Prescaler register (IWDG_PR)
-  vu32 RLR;                                     // offset  0x008 Reload register (IWDG_RLR)
-  vu32 SR;                                      // offset  0x00C Status register (IWDG_SR)
-} IWDG_TypeDef;
 
 // Flash Registers
 typedef struct {
@@ -101,9 +91,6 @@ typedef struct {
 
 #define FLASH_ERRs         (FLASH_PGAERR | FLASH_WRPERR | FLASH_SIZERR | FLASH_OPTVERR)
 
-// Option byte register (FLASH_OBR) definitions
-#define FLASH_IWDG_SW       0x00100000			// Software IWDG or Hardware IWDG selected
-
 /*
  *  Initialize Flash Programming Functions
  *    Parameter:      adr:  Device Base Address
@@ -118,14 +105,6 @@ uint32_t Init (uint32_t adr, uint32_t clk, uint32_t fnc) {
     case 1:
     case 2:
       FLASH->SR |= FLASH_ERRs;                  // clear error flags
-
-      // Test if IWDG is running (IWDG in HW mode)
-      if ((FLASH->OBR & FLASH_IWDG_SW) == 0x00) {
-        // Set IWDG time out to ~32.768 second
-        IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
-        IWDG->PR  = 0x06;                       // Set prescaler to 256  
-        IWDG->RLR = 0xFFF;                      // Set reload value to 4095
-      }
     break;
   }
 
@@ -176,9 +155,7 @@ uint32_t EraseSector (uint32_t adr) {
      
   M32(adr) = 0x00000000;			            // write '0' to the first address to erase page
 
-  while (FLASH->SR & FLASH_BSY) {
-    IWDG->KR = 0xAAAA;                          // Reload IWDG
-  }
+  while (FLASH->SR & FLASH_BSY);
 
   // Check for Errors
   if (FLASH->SR & (FLASH_ERRs)) {
@@ -255,9 +232,7 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
   FLASH->PECR |= FLASH_FPRG;			// Half Page programming mode enabled
   FLASH->PECR |= FLASH_PROG;                    // Program memory selected
 
-  while (FLASH->SR & FLASH_BSY) {
-    IWDG->KR = 0xAAAA;				// Reload IWDG
-  }
+  while (FLASH->SR & FLASH_BSY);
 
   // write first half page
   for (i = 0, j = 0; i < 128; i += 4, j++) {
@@ -292,9 +267,7 @@ uint32_t ProgramPage (uint32_t adr, uint32_t sz, uint32_t *buf) {
   FLASH->PECR |= FLASH_FPRG;			// Half Page programming mode enabled
   FLASH->PECR |= FLASH_PROG;                    // Program memory selected
 
-  while (FLASH->SR & FLASH_BSY) {
-    IWDG->KR = 0xAAAA;				// Reload IWDG
-  }
+  while (FLASH->SR & FLASH_BSY);
 
   // write second half page
   for (i = 128, j = 32; i < 256; i += 4, j++) {
