@@ -134,3 +134,6 @@ projects:
     tz10xx:
         - *module_tools
         - records/projects/toshiba/tz10xx.yaml
+    w7500:
+        - *module_tools
+        - records/projects/wiznet/W7500.yaml
