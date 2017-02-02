@@ -57,7 +57,8 @@ def main():
 
     tmpl_name_list = [
         ("c_blob.tmpl", "c_blob.c"),
-        ("py_blob.tmpl", "py_blob.py")
+        ("py_blob.tmpl", "py_blob.py"),
+        ("c_blob_mbed.tmpl", "c_blob_mbed.c")
     ]
 
     for tmpl, name in tmpl_name_list:
