@@ -111,7 +111,14 @@ typedef struct {
 #define FLASH_PGERR             (FLASH_PGSERR | FLASH_PGPERR | FLASH_PGAERR | FLASH_WRPERR)
 
 
+// Flash Access Control Register definitions
+#define FLASH_DCRST             ((unsigned int)0x00001000)
+#define FLASH_ICRST             ((unsigned int)0x00000800)
+#define FLASH_DCEN              ((unsigned int)0x00000400)
+#define FLASH_ICEN              ((unsigned int)0x00000200)
+#define FLASH_PRFTEN            ((unsigned int)0x00000100)
 
+#define FLASH_CACHE_MASK        (FLASH_DCRST | FLASH_ICRST | FLASH_DCEN | FLASH_ICEN | FLASH_PRFTEN)
 
 /*
  * Get Sector Number
@@ -155,7 +162,6 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
   FLASH->KEYR = FLASH_KEY1;                             // Unlock Flash
   FLASH->KEYR = FLASH_KEY2;
 
-  FLASH->ACR  = 0x00000000;                             // Zero Wait State, no Cache, no Prefetch
   FLASH->SR  |= FLASH_PGERR;                            // Reset Error Flags
 
   if ((FLASH->OPTCR & 0x20) == 0x00) {                  // Test if IWDG is running (IWDG in HW mode)
@@ -197,6 +203,11 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 
 #if defined FLASH_MEM || defined FLASH_OTP
 int UnInit (unsigned long fnc) {
+  u32 acr;
+
+  acr = FLASH->ACR;                                     // Clear flash caches
+  FLASH->ACR = acr & ~FLASH_CACHE_MASK;
+  FLASH->ACR = acr;
 
   FLASH->CR |=  FLASH_LOCK;                             // Lock Flash
 
@@ -206,6 +217,11 @@ int UnInit (unsigned long fnc) {
 
 #ifdef FLASH_OPT
 int UnInit (unsigned long fnc) {
+  u32 acr;
+
+  acr = FLASH->ACR;                                     // Clear flash caches
+  FLASH->ACR = acr & ~FLASH_CACHE_MASK;
+  FLASH->ACR = acr;
 
   FLASH->OPTCR |= FLASH_OPTLOCK;                        // Lock Option Bytes
 
