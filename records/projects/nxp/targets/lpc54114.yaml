@@ -1,0 +1,12 @@
+common:
+    target:
+        - cortex-m4
+    includes:
+        - source/nxp/lpc54114
+    sources:
+        - source/nxp/lpc54114/FlashDev.c
+        - source/nxp/lpc54114/FlashPrg.c
+        - source/nxp/lpc54114/fsl_flashiap.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_LPC54114J256BD64_cm4
