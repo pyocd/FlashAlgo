@@ -294,7 +294,8 @@ class PackFlashInfo(object):
         """Iterator which returns starting address and sector size"""
         for entry_start in count(data_start, self.FLASH_SECTORS_STRUCT_SIZE):
             data = elf_simple.read(entry_start, self.FLASH_SECTORS_STRUCT_SIZE)
-            start_and_size = struct.unpack(self.FLASH_SECTORS_STRUCT, data)
+            size, start = struct.unpack(self.FLASH_SECTORS_STRUCT, data)
+            start_and_size = start, size
             if start_and_size == (self.SECTOR_END, self.SECTOR_END):
                 return
             yield start_and_size
