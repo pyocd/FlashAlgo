@@ -31,12 +31,12 @@ static const flash_algo_t flash_algo_config = {
     .erase_sector = {{'0x%x' % algo.symbols['EraseSector']}},
     .program_page = {{'0x%x' % algo.symbols['ProgramPage']}},
     .static_base = {{'0x%x' % algo.rw_start}},
-    .algo_blob = FLASH_ALGO,
+    .algo_blob = FLASH_ALGO
 };
 
 static const sector_info_t sectors_info[] = {
 {%- for start, size  in algo.sector_sizes %}
-    {{ "{0x%x, 0x%x}" % (start, size) }}, 
+    {{ "{0x%x, 0x%x}" % (start + algo.flash_start, size) }}, 
 {%- endfor %}
 };
 
@@ -45,6 +45,7 @@ static const flash_target_config_t flash_target_config = {
     .flash_start = {{'0x%x' % algo.flash_start}},
     .flash_size = {{'0x%x' % algo.flash_size}},
     .sectors = sectors_info,
+    .sector_info_count = sizeof(sectors_info) / sizeof(sector_info_t)
 };
 
 void flash_set_target_config(flash_t *obj)
@@ -52,3 +53,4 @@ void flash_set_target_config(flash_t *obj)
     obj->flash_algo = &flash_algo_config;
     obj->target_config = &flash_target_config;
 }
+
