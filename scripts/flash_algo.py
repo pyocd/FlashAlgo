@@ -238,8 +238,10 @@ def _create_algo_bin(ro_rw_zi):
     algo_data = bytearray(algo_size)
     for section in (sect_ro, sect_rw):
         start = section["sh_addr"]
-        size = sect_ro["sh_size"]
-        algo_data[start:start + size] = section.data()
+        size = section["sh_size"]
+        data = section.data()
+        assert len(data) == size
+        algo_data[start:start + size] = data
     return algo_data
 
 
