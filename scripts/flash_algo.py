@@ -238,8 +238,10 @@ def _create_algo_bin(ro_rw_zi):
     algo_data = bytearray(algo_size)
     for section in (sect_ro, sect_rw):
         start = section["sh_addr"]
-        size = sect_ro["sh_size"]
-        algo_data[start:start + size] = section.data()
+        size = section["sh_size"]
+        data = section.data()
+        assert len(data) == size
+        algo_data[start:start + size] = data
     return algo_data
 
 
@@ -294,7 +296,8 @@ class PackFlashInfo(object):
         """Iterator which returns starting address and sector size"""
         for entry_start in count(data_start, self.FLASH_SECTORS_STRUCT_SIZE):
             data = elf_simple.read(entry_start, self.FLASH_SECTORS_STRUCT_SIZE)
-            start_and_size = struct.unpack(self.FLASH_SECTORS_STRUCT, data)
+            size, start = struct.unpack(self.FLASH_SECTORS_STRUCT, data)
+            start_and_size = start, size
             if start_and_size == (self.SECTOR_END, self.SECTOR_END):
                 return
             yield start_and_size
