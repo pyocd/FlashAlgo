@@ -16,29 +16,29 @@
 
 static const uint32_t {{name}}_flash_prog_blob[] = {
     {{prog_header}}
-    {{mem}}
+    {{algo.format_algo_data(4, 8, "c")}}
 };
 
 static const program_target_t flash = {
-    {{func['Init']}}, // Init
-    {{func['UnInit']}}, // UnInit
-    {{func['EraseChip']}}, // EraseChip
-    {{func['EraseSector']}}, // EraseSector
-    {{func['ProgramPage']}}, // ProgramPage
+    {{'0x%08x' % (algo.symbols['Init'] + header_size + entry)}}, // Init
+    {{'0x%08x' % (algo.symbols['UnInit'] + header_size + entry)}}, // UnInit
+    {{'0x%08x' % (algo.symbols['EraseChip'] + header_size + entry)}}, // EraseChip
+    {{'0x%08x' % (algo.symbols['EraseSector'] + header_size + entry)}}, // EraseSector
+    {{'0x%08x' % (algo.symbols['ProgramPage'] + header_size + entry)}}, // ProgramPage
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
     // RSP  : stack pointer
     {
-        {{entry}} + 0x00000001,
-        {{entry}} + {{header_size}} + {{static_base}},
-        {{stack_pointer}}
+        {{'0x%08x' % (entry + 1)}},
+        {{'0x%08x' % (entry + header_size + algo.rw_start)}},
+        {{'0x%08x' % stack_pointer}}
     },
 
-    {{entry}} + 0x00000A00,   // mem buffer location
-    {{entry}},                // location to write prog_blob in target RAM
-    sizeof({{name}}_flash_prog_blob), // prog_blob size
-    {{name}}_flash_prog_blob,         // address of prog_blob
-    {{prog_page_size}}                 // ram_to_flash_bytes_to_be_written
+    {{'0x%08x' % entry}} + 0x00000A00,  // mem buffer location
+    {{'0x%08x' % entry}},               // location to write prog_blob in target RAM
+    sizeof({{name}}_flash_prog_blob),   // prog_blob size
+    {{name}}_flash_prog_blob,           // address of prog_blob
+    {{'0x%08x' % algo.page_size}}       // ram_to_flash_bytes_to_be_written
 };
 

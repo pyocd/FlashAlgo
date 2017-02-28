@@ -137,3 +137,6 @@ projects:
     w7500:
         - *module_tools
         - records/projects/wiznet/W7500.yaml
+    stm32f4xx_2048:
+        - *module_tools
+        - records/projects/st/STM32F4xx_2048.yaml

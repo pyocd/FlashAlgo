@@ -1,0 +1,11 @@
+common:
+    target:
+        - cortex-m4
+    includes:
+        - source/FlashOS.h
+    sources:
+        - source/st/STM32F4xx
+    macros:
+        - FLASH_MEM
+        - STM32F4xx_2048
+        - FLASH_DRV_VERS=0
