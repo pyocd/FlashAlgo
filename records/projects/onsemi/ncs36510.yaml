@@ -1,0 +1,16 @@
+common:
+    group_name:
+        - flash_driver
+    target:
+        - cortex-m3
+    includes:
+        -
+    sources:
+        source:
+          - source
+          - source/onsemi
+        driver:
+          - source/onsemi/inc1
+          - source/onsemi/src1
+    macros:
+        -
