@@ -12,7 +12,7 @@ Skip any step where a compatible tool already exists
 > git clone https://github.com/mbedmicro/DAPLink
 > pip install virtualenv
 > virtualenv venv
-> 
+>
 ```
 
 ## Develop
@@ -25,6 +25,9 @@ Skip any step where a compatible tool already exists
 > "venv/Scripts/deactivate"
 ```
 
+To change the RAM base address to something other than the default value of 0x20000000, add the argument  --blob_start 0x[RAM ADDRESS] in Projects...Options...User...After Build/Rebuild section of the uVision project.
+
+
 ## Adding a new project
 For adding new targets start from template and use these docs...
 
@@ -35,4 +38,3 @@ Check out the issue tracker.
 - Create a test
 - Document how to use
 - Document how to contribute
-  
