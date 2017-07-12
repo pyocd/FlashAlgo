@@ -59,8 +59,14 @@ extern uint8_t numDev;
 
 #define MAX_FLASH_DEV                     2  /* 2 flash devices supported */
 
+
+#ifdef GLOBALCACHE
 /**< Global storage to store flash page for read-modify-write operation */
 /* Needs 32bit alignement to make sure DMA can handle the data */
+/* Note - this feature is not used for Daplink.  Daplink uses its own mem buffer.
+   If this Global Cache is enabled, it requires manual adjustment of the mem
+   buffer location in flash_blob.c.  To avoid potential issues, it is turned off.
+*/
 
 #ifdef IAR
 #pragma data_alignment = 4
@@ -70,6 +76,7 @@ uint8_t GlobFlashPageCache[FLASH_PAGE_SIZE]
 __attribute__((aligned(4)))
 #endif     /* GNU */
 ;   
+#endif /* GLOBALCACHE */
 
 /* Two flash memory devices are present */
 flash_options_pt flashDev[MAX_FLASH_DEV];
