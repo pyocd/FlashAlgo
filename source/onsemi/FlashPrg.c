@@ -106,7 +106,6 @@ uint32_t EraseChip(void)
     /* Erases the entire of flash memory region both flash A & B */
 
     fFlashMassErase((flash_options_pt)&GlobFlashOptionsA);
-    /*Shall we leave flash b alone and let in-application-programming handle its contents?*/
     fFlashMassErase((flash_options_pt)&GlobFlashOptionsB);
 
     return RESULT_OK;
