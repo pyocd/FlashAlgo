@@ -1,0 +1,13 @@
+common:
+    target:
+        - cortex-m3
+    includes:
+        - source
+        - source/onsemi
+        - source/onsemi/inc1
+    sources:
+        - source
+        - source/onsemi
+        - source/onsemi/src1
+    macros:
+        -
