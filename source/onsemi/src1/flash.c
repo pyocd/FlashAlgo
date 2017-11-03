@@ -167,6 +167,8 @@ void fFlashPageErase(flash_options_pt device, uint32_t address)
      /* Kick off erase cycle. */
      device->membase->ADDR = address;
      device->membase->COMMAND.WORD = CMD_PAGE_ERASE;
+
+    fFlashStallUntilNotBusy(device);
 }
 
 /** Erases a flash page
@@ -192,6 +194,8 @@ void fFlashMassErase(flash_options_pt device)
 
      /* Kick off erase cycle. */
      device->membase->COMMAND.WORD = CMD_MASS_ERASE;
+
+     fFlashStallUntilNotBusy(device);
 }
 
 /**
