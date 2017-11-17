@@ -21,6 +21,8 @@
 
 #define CORE_CLK   12000000
 
+#define MEMMAP   (*((volatile unsigned long *) 0x40000000))
+
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
     /*!< Set up the clock sources */
@@ -38,6 +40,9 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 
     /*!< Set up dividers */
     SYSCON->AHBCLKDIV = 0;
+
+    /* User Flash mode */
+    MEMMAP = 0x02;
 
     return (0);
 }
