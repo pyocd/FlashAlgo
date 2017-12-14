@@ -80,6 +80,7 @@ class PackFlashAlgo(object):
         self.flash_size = self.flash_info.size
         self.page_size = self.flash_info.page_size
         self.sector_sizes = self.flash_info.sector_info_list
+        self.all_sectors = self.flash_info.all_sectors
 
         symbols = {}
         symbols.update(_extract_symbols(self.elf, self.REQUIRED_SYMBOLS))
@@ -112,9 +113,7 @@ class PackFlashAlgo(object):
     def format_algo_data(self, spaces, group_size, fmt):
         """"
         Return a string representing algo_data suitable for use in a template
-
         The string is intended for use in a template.
-
         :param spaces: The number of leading spaces for each line
         :param group_size: number of elements per line (element type
             depends of format)
@@ -270,6 +269,7 @@ class PackFlashInfo(object):
         self.prog_timeout_ms = values[8]
         self.erase_timeout_ms = values[9]
 
+        self.all_sectors = []
         sector_gen = self._sector_and_sz_itr(elf_simple,
                                              info_start + info_size)
         self.sector_info_list = list(sector_gen)
@@ -293,13 +293,25 @@ class PackFlashInfo(object):
         return desc
 
     def _sector_and_sz_itr(self, elf_simple, data_start):
-        """Iterator which returns starting address and sector size"""
+        """Iterator which returns starting address and sector size
+           Also generates a list of all sector starting addresses followed by size
+        """
         for entry_start in count(data_start, self.FLASH_SECTORS_STRUCT_SIZE):
             data = elf_simple.read(entry_start, self.FLASH_SECTORS_STRUCT_SIZE)
             size, start = struct.unpack(self.FLASH_SECTORS_STRUCT, data)
             start_and_size = start, size
+            if len(self.all_sectors) > 0:
+                # Find the previous sector start and size
+                prev_start, prev_size = self.all_sectors[-1]
+                # Fill in all sectors between the previously listed sector up to the current sector
+                for new_start in range(prev_start+prev_size, start, prev_size):
+                    if not((new_start+prev_size) > self.size):
+                        self.all_sectors.append((new_start, prev_size))
+                    else:
+                        break
             if start_and_size == (self.SECTOR_END, self.SECTOR_END):
                 return
+            self.all_sectors.append(start_and_size)
             yield start_and_size
 
 

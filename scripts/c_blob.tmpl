@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+// This is a list of all flash sectors 
+static const uint16_t flash_sectors[] = {
+{%- for start, size  in algo.all_sectors %}
+    {{ "0x%x, 0x%x" % (start + algo.flash_start, size) }}, 
+{%- endfor %}
+};
+
 static const uint32_t {{name}}_flash_prog_blob[] = {
     {{prog_header}}
     {{algo.format_algo_data(4, 8, "c")}}
