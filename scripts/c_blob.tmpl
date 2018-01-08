@@ -19,6 +19,24 @@ static const uint32_t {{name}}_flash_prog_blob[] = {
     {{algo.format_algo_data(4, 8, "c")}}
 };
 
+// Start address of flash
+static const uint32_t flash_start = {{"0x%08x" % algo.flash_start}};
+// Size of flash
+static const uint32_t flash_size = {{"0x%08x" % algo.flash_size}};
+
+/**
+* List of start and size for each size of flash sector - even indexes are start, odd are size
+* The size will apply to all sectors between the listed address and the next address
+* in the list.
+* The last pair in the list will have sectors starting at that address and ending
+* at address flash_start + flash_size.
+*/
+static const uint32_t sectors_info[] = {
+{%- for start, size  in algo.sector_sizes %}
+    {{ "0x%08x, 0x%08x" % (start + algo.flash_start, size) }},
+{%- endfor %}
+};
+
 static const program_target_t flash = {
     {{'0x%08x' % (algo.symbols['Init'] + header_size + entry)}}, // Init
     {{'0x%08x' % (algo.symbols['UnInit'] + header_size + entry)}}, // UnInit
@@ -41,4 +59,3 @@ static const program_target_t flash = {
     {{name}}_flash_prog_blob,           // address of prog_blob
     {{'0x%08x' % algo.page_size}}       // ram_to_flash_bytes_to_be_written
 };
-
