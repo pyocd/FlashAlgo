@@ -38,7 +38,7 @@ static const flash_algo_t flash_algo_config = {
 
 static const sector_info_t sectors_info[] = {
 {%- for start, size  in algo.sector_sizes %}
-    {{ "{0x%x, 0x%x}" % (start + algo.flash_start, size) }}, 
+    {{ "{0x%x, 0x%x}" % (start + algo.flash_start, size) }},
 {%- endfor %}
 };
 

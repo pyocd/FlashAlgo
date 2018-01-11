@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+ #include "flash_blob.h"
 
-static const uint32_t {{name}}_flash_prog_blob[] = {
+static const uint32_t _flash_prog_blob[] = {
     {{prog_header}}
     {{algo.format_algo_data(4, 8, "c")}}
 };
@@ -55,7 +56,8 @@ static const program_target_t flash = {
 
     {{'0x%08x' % entry}} + 0x00000A00,  // mem buffer location
     {{'0x%08x' % entry}},               // location to write prog_blob in target RAM
-    sizeof({{name}}_flash_prog_blob),   // prog_blob size
-    {{name}}_flash_prog_blob,           // address of prog_blob
+    sizeof(_flash_prog_blob),   // prog_blob size
+    _flash_prog_blob,           // address of prog_blob
     {{'0x%08x' % algo.page_size}}       // ram_to_flash_bytes_to_be_written
 };
+
