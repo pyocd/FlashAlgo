@@ -34,6 +34,6 @@ target_cfg_t target_device = {
     .ram_end            = {{'0x%08x' % (ram_start + ram_size)}},
     .flash_algo         = (program_target_t *) &flash,
     .sectors_info       = sectors_info,
-    .sector_info_length = (sizeof(sectors_info))/(sizeof(sectors_info_t))
+    .sector_info_length = (sizeof(sectors_info))/(sizeof(sector_info_t))
 };
 
