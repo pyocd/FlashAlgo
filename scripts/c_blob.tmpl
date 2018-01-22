@@ -32,9 +32,9 @@ static const uint32_t flash_size = {{"0x%08x" % algo.flash_size}};
 * The last pair in the list will have sectors starting at that address and ending
 * at address flash_start + flash_size.
 */
-static const uint32_t sectors_info[] = {
+static const sector_info_t sectors_info[] = {
 {%- for start, size  in algo.sector_sizes %}
-    {{ "0x%08x, 0x%08x" % (start + algo.flash_start, size) }},
+    {{ "{0x%08x, 0x%08x}" % (start + algo.flash_start, size) }},
 {%- endfor %}
 };
 

@@ -28,6 +28,7 @@ from flash_algo import PackFlashAlgo
 from cmsis_pack_manager import Cache
 from jinja2 import Template
 from fuzzywuzzy import process
+import json
 
 # TODO
 # FIXED LENGTH - remove and these (shrink offset to 4 for bkpt only)
@@ -41,6 +42,8 @@ tmpl_name_list = [
     ("py_blob.tmpl", "py_blob", "py"),
     ("c_blob_mbed.tmpl", "c_blob_mbed", "c")
 ]
+
+name_map = {}
 
 def main():
     parser = argparse.ArgumentParser(description="Blob generator")
@@ -76,6 +79,9 @@ def main():
             print ("%d/%d"%(count,total_targets))
             count += 1
             output_files(cache, target, output_path, args.blob_start, args.all)
+        name_map_path = join(args.daplink, "daplink_to_cmsis.json")
+        with open(name_map_path, 'w') as f:
+            json.dump(name_map, f, indent=4)
 
 def find_possible(match, choices):
     return process.extractOne(match, choices)
@@ -116,6 +122,7 @@ def write_target_c_file(dev, algo, output_path, target):
 
 def output_files(cache, target, output_dir, blob_start, all_algo):
     dev, device = find_match(cache, target)
+    name_map[target] = device if dev else "No Match"
     if (dev is None):
         print "No match for %s"%(target)
         return
