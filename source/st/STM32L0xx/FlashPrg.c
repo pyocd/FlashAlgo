@@ -115,27 +115,22 @@ typedef struct {
 #ifdef FLASH_MEMORY
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      FLASH->SR |= FLASH_ERRs;                  // clear error flags
+  FLASH->SR |= FLASH_ERRs;                  // clear error flags
 
-      // Unlock PECR Register    
-      FLASH->PEKEYR = FLASH_PEKEY1;
-      FLASH->PEKEYR = FLASH_PEKEY2;
+  // Unlock PECR Register    
+  FLASH->PEKEYR = FLASH_PEKEY1;
+  FLASH->PEKEYR = FLASH_PEKEY2;
 
-      // Unlock Program Matrix    
-      FLASH->PRGKEYR = FLASH_PRGKEY1;
-      FLASH->PRGKEYR = FLASH_PRGKEY2;  
+  // Unlock Program Matrix    
+  FLASH->PRGKEYR = FLASH_PRGKEY1;
+  FLASH->PRGKEYR = FLASH_PRGKEY2;  
 
-      // Test if IWDG is running (IWDG in HW mode)
-      if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
-        // Set IWDG time out to ~32.768 second
-        IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
-        IWDG->PR  = 0x06;                       // Set prescaler to 256  
-        IWDG->RLR = 0xFFF;                      // Set reload value to 4095
-      }
-    break;
+  // Test if IWDG is running (IWDG in HW mode)
+  if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
+    // Set IWDG time out to ~32.768 second
+    IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
+    IWDG->PR  = 0x06;                       // Set prescaler to 256  
+    IWDG->RLR = 0xFFF;                      // Set reload value to 4095
   }
 
   return (0);
@@ -145,27 +140,22 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 #ifdef FLASH_OPTION
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      FLASH->SR |= FLASH_ERRs;                  // clear error flags
+  FLASH->SR |= FLASH_ERRs;                  // clear error flags
 
-      // Unlock PECR Register    
-      FLASH->PEKEYR = FLASH_PEKEY1;
-      FLASH->PEKEYR = FLASH_PEKEY2;
+  // Unlock PECR Register    
+  FLASH->PEKEYR = FLASH_PEKEY1;
+  FLASH->PEKEYR = FLASH_PEKEY2;
 
-      // Unlock Option Byte Block    
-      FLASH->OPTKEYR = FLASH_OPTKEY1;
-      FLASH->OPTKEYR = FLASH_OPTKEY2;  
+  // Unlock Option Byte Block    
+  FLASH->OPTKEYR = FLASH_OPTKEY1;
+  FLASH->OPTKEYR = FLASH_OPTKEY2;  
 
-      // Test if IWDG is running (IWDG in HW mode)
-      if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
-        // Set IWDG time out to ~32.768 second
-        IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
-        IWDG->PR  = 0x06;                       // Set prescaler to 256  
-        IWDG->RLR = 0xFFF;                      // Set reload value to 4095
-      }
-    break;
+  // Test if IWDG is running (IWDG in HW mode)
+  if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
+    // Set IWDG time out to ~32.768 second
+    IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
+    IWDG->PR  = 0x06;                       // Set prescaler to 256  
+    IWDG->RLR = 0xFFF;                      // Set reload value to 4095
   }
 
   return (0);
@@ -175,23 +165,18 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 #ifdef FLASH_EEPROM
 int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      FLASH->SR |= FLASH_ERRs;                  // clear error flags
+  FLASH->SR |= FLASH_ERRs;                  // clear error flags
 
-      // Unlock PECR Register    
-      FLASH->PEKEYR = FLASH_PEKEY1;
-      FLASH->PEKEYR = FLASH_PEKEY2;
+  // Unlock PECR Register    
+  FLASH->PEKEYR = FLASH_PEKEY1;
+  FLASH->PEKEYR = FLASH_PEKEY2;
 
-      // Test if IWDG is running (IWDG in HW mode)
-      if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
-        // Set IWDG time out to ~32.768 second
-        IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
-        IWDG->PR  = 0x06;                       // Set prescaler to 256  
-        IWDG->RLR = 0xFFF;                      // Set reload value to 4095
-      }
-    break;
+  // Test if IWDG is running (IWDG in HW mode)
+  if ((FLASH->OPTR & FLASH_IWDG_SW) == 0x00) {
+    // Set IWDG time out to ~32.768 second
+    IWDG->KR  = 0x5555;                     // Enable write access to IWDG_PR and IWDG_RLR     
+    IWDG->PR  = 0x06;                       // Set prescaler to 256  
+    IWDG->RLR = 0xFFF;                      // Set reload value to 4095
   }
 
   return (0);
@@ -208,14 +193,9 @@ int Init (unsigned long adr, unsigned long clk, unsigned long fnc) {
 #ifdef FLASH_MEMORY
 int UnInit (unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      // Lock PECR register and program matrix
-      FLASH->PECR |= FLASH_PRGLOCK;             // Program memory lock
-      FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
-    break;
-  }
+    // Lock PECR register and program matrix
+    FLASH->PECR |= FLASH_PRGLOCK;             // Program memory lock
+    FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
 
       return (0);
 }
@@ -224,14 +204,9 @@ int UnInit (unsigned long fnc) {
 #ifdef FLASH_OPTION
 int UnInit (unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      // Lock PECR register and Option bytes
-      FLASH->PECR |= FLASH_OPTLOCK;             // Option bytes block lock
-      FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
-    break;
-  }
+  // Lock PECR register and Option bytes
+  FLASH->PECR |= FLASH_OPTLOCK;             // Option bytes block lock
+  FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
 
   return (0);
 }
@@ -240,13 +215,8 @@ int UnInit (unsigned long fnc) {
 #ifdef FLASH_EEPROM
 int UnInit (unsigned long fnc) {
 
-  switch (fnc) {
-    case 1:
-    case 2:
-      // Lock PECR register
-      FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
-    break;
-  }
+  // Lock PECR register
+  FLASH->PECR |= FLASH_PELOCK;              // FLASH_PECR and data memory lock
 
   return (0);
 }
