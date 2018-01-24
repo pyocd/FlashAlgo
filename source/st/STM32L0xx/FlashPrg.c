@@ -31,7 +31,7 @@
  *    Initial release
  */ 
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "FlashOS.H"        // FlashOS Structures
 
 typedef volatile unsigned char  vu8;
 typedef volatile unsigned long  vu32;

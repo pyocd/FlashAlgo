@@ -31,7 +31,7 @@
  *    Initial release
  */ 
 
-#include "..\FlashOS.H"        // FlashOS Structures
+#include "FlashOS.H"        // FlashOS Structures
 
 #ifdef FLASH_MEMORY
 
