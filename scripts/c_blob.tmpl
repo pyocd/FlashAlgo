@@ -22,11 +22,6 @@ static const uint32_t _flash_prog_blob[] = {
     {{algo.format_algo_data(4, 8, "c")}}
 };
 
-// Start address of flash
-static const uint32_t flash_start = {{"0x%08x" % algo.flash_start}};
-// Size of flash
-static const uint32_t flash_size = {{"0x%08x" % algo.flash_size}};
-
 /**
 * List of start and size for each size of flash sector - even indexes are start, odd are size
 * The size will apply to all sectors between the listed address and the next address
