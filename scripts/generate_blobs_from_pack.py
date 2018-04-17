@@ -44,6 +44,7 @@ tmpl_name_list = [
 ]
 
 name_map = {}
+no_match = []
 
 def main():
     parser = argparse.ArgumentParser(description="Blob generator")
@@ -75,10 +76,15 @@ def main():
         target_to_dir = get_daplink_files(args.daplink)
         total_targets = len(target_to_dir.keys())
         count = 1
+        try:
+            board_to_pack = json.load(open('board_to_pack.json'))
+        except:
+            print "*"*10
+            board_to_pack = {}
         for target, output_path in target_to_dir.items():
             print ("%d/%d"%(count,total_targets))
             count += 1
-            output_files(cache, target, output_path, args.blob_start, args.all)
+            output_files(cache, target, output_path, args.blob_start, args.all, board_to_pack)
         name_map_path = join(args.daplink, "daplink_to_cmsis.json")
         with open(name_map_path, 'w') as f:
             json.dump(name_map, f, indent=4)
@@ -86,17 +92,22 @@ def main():
 def find_possible(match, choices):
     return process.extractOne(match, choices)
 
-def find_match(cache, daplink_target_name):
-    fuzz1 = find_possible(daplink_target_name, cache.aliases.keys())
-    fuzz2 = find_possible(daplink_target_name, cache.index.keys())
-    if fuzz1[1] >= 90:
-        device = cache.aliases[fuzz1[0]]
-        if device not in cache.index and fuzz2[1] >= 90:
+def find_match(cache, daplink_target_name, board_to_pack):
+    try:
+        device = board_to_pack[daplink_target_name]
+        if device not in cache.index:
+                return None, None
+    except:
+        fuzz1 = find_possible(daplink_target_name, cache.aliases.keys())
+        fuzz2 = find_possible(daplink_target_name, cache.index.keys())
+        if fuzz1[1] >= 90:
+            device = cache.aliases[fuzz1[0]]
+            if device not in cache.index and fuzz2[1] >= 90:
+                device = fuzz2[0]
+        elif fuzz2[1] >= 90:
             device = fuzz2[0]
-    elif fuzz2[1] >= 90:
-        device = fuzz2[0]
-    else:
-        return None, None
+        else:
+            return None, None
     return cache.index[device], device
 
 def write_target_c_file(dev, algo, output_path, target):
@@ -120,11 +131,12 @@ def write_target_c_file(dev, algo, output_path, target):
         file_handle.write(target_text)
 
 
-def output_files(cache, target, output_dir, blob_start, all_algo):
-    dev, device = find_match(cache, target)
+def output_files(cache, target, output_dir, blob_start, all_algo, board_to_pack):
+    dev, device = find_match(cache, target, board_to_pack)
     name_map[target] = device if dev else "No Match"
     if (dev is None):
         print "No match for %s"%(target)
+        no_match.append(target)
         return
     algo_ram = (get_algo_ram(dev, (None, None))[0] if blob_start is None
                 else blob_start)
