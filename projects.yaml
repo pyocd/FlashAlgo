@@ -148,7 +148,7 @@ projects:
     ncs36510:
         - *module_tools
         - records/projects/onsemi/ncs36510.yaml
-    cc3200sf:
+    cc3220sf:
         - *module_tools
-        - records/projects/ti/cc3200sf.yaml
+        - records/projects/ti/cc3220sf.yaml
  

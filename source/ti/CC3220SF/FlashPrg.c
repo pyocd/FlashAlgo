@@ -128,6 +128,8 @@ uint32_t UnInit(uint32_t fnc)
     //  Fnc parameter has meaning but isnt used in MSC program
     //  routines
     HWREG(GPRCM_BASE+ GPRCM_O_APPS_SOFT_RESET) = 0x2;
+
+    __asm("    wfi\n");
     return 0;
 }
 
@@ -165,7 +167,7 @@ uint32_t EraseChip(void)
        & (FLASH_CTRL_FCRIS_ARIS | FLASH_CTRL_FCRIS_VOLTRIS |
                              FLASH_CTRL_FCRIS_ERRIS))
     {
-        return -1;
+        return 1;
     }
 
     //
@@ -210,7 +212,7 @@ uint32_t EraseSector(uint32_t adr)
        & (FLASH_CTRL_FCRIS_ARIS | FLASH_CTRL_FCRIS_VOLTRIS |
                              FLASH_CTRL_FCRIS_ERRIS))
     {
-        return(-1);
+        return(1);
     }
 
     //
@@ -239,12 +241,6 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
     //
     // See if this device has a write buffer.
     //
-
-#if HAVE_WRITE_BUFFER
-    {
-        //
-        // Loop over the words to be programmed.
-        //
         while(sz)
         {
             //
@@ -281,21 +277,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
             {
             }
         }
-    }
-#else
-    {
-    }
-#endif
-    //
-    // Return an error if an access violation occurred.
-    //
 
-    if(HWREG(FLASH_CONTROL_BASE + FLASH_CTRL_O_FCRIS) & (FLASH_CTRL_FCRIS_ARIS | FLASH_CTRL_FCRIS_VOLTRIS |
-                             FLASH_CTRL_FCRIS_INVDRIS | FLASH_CTRL_FCRIS_PROGRIS))
-
-    {
-        return(-1);
-    }
 
     //
     // Success.
