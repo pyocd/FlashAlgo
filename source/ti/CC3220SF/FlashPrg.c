@@ -127,9 +127,6 @@ uint32_t UnInit(uint32_t fnc)
     //  communication channels and clocks that were enabled
     //  Fnc parameter has meaning but isnt used in MSC program
     //  routines
-    HWREG(GPRCM_BASE+ GPRCM_O_APPS_SOFT_RESET) = 0x2;
-
-    __asm("    wfi\n");
     return 0;
 }
 
