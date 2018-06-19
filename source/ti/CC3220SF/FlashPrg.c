@@ -68,9 +68,8 @@ static const PRCM_PeriphRegs_t PRCM_PeriphRegsList[] =
 void
 UtilsDelay(unsigned long ulCount)
 {
-    __asm("    subs    r0, #1\n"
-          "    bne     UtilsDelay\n"
-          "    bx      lr");
+	__asm("Count:   SUBS    ulCount, #1\n"
+          "    BNE    Count");
 }
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
@@ -91,8 +90,9 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
     // any hibernate wakeup source will be kept maked until the device enters
     // hibernate completely (analog + digital)
     //
-    ulRegValue = PRCMHIBRegRead(HIB3P3_BASE  + HIB3P3_O_MEM_HIB_REG0);
-    
+    ulRegValue = HWREG(HIB3P3_BASE  + HIB3P3_O_MEM_HIB_REG0);
+		UtilsDelay((80*200)/3);
+	
     //PRCMHIBRegWrite(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG0, ulRegValue | (1<<4));
     HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG0) = ulRegValue | (1<<4);
     UtilsDelay((80*200)/3);
@@ -313,213 +313,7 @@ uint32_t UnInit(uint32_t fnc)
     //  communication channels and clocks that were enabled
     //  Fnc parameter has meaning but isnt used in MSC program
     //  routines
-    int_fast16_t status = 1;
-    uint32_t constraints;
-    uintptr_t hwiKey;
-    uint64_t counts;
-    int i = 0;
-    /* disable interrupts */
-    //hwiKey = HwiP_disable();
-    __asm("    mrs     r0, PRIMASK\n"
-          "    cpsid   i\n"
-          "    dsb      \n"
-          "    isb      \n"
-          "    bx      lr\n");
-
-   
-    //int PowerCC32XX_TOTALTIMESHUTDOWN = 500000;
-    /*shut down flash memory*/
-    /*PowerCC32XX_shutdownSSPI(); start*/
-    //unsigned long status = 0;
-
-    /* Acquire SSPI HwSpinlock. */
-    // if (0 != MAP_HwSpinLockTryAcquire(HWSPINLOCK_SSPI, PowerCC32XX_SSPISemaphoreTakeTries)){
-    //     return;
-    // } maybe don't need semaphore in during flash
-
-    /* Enable clock for SSPI module */
-    //MAP_PRCMPeripheralClkEnable(PRCM_SSPI, PRCM_RUN_MODE_CLK);
-    unsigned long ulPeripheral = PRCM_SSPI;
-    unsigned long ulClkFlags = PRCM_RUN_MODE_CLK;
-    if(ulPeripheral != PRCM_ADC)
-    {
-        HWREG(ARCM_BASE + PRCM_PeriphRegsList[ulPeripheral].ulClkReg) |= ulClkFlags;
-    }
-    
-    //
-    // Checking ROM Version less than 2.x.x. 
-    // Only for driverlib backward compatibility
-    //
-    if( (HWREG(0x00000400) & 0xFFFF) < 2 )
-    {
-        //
-        // Set the default clock for camera
-        //
-        if(ulPeripheral == PRCM_CAMERA)
-        {
-        HWREG(ARCM_BASE + APPS_RCM_O_CAMERA_CLK_GEN) = 0x0404;
-        }
-    }
-
-    /*end clock enable for SSPI module*/
-
-    /* Reset SSPI at PRCM level and wait for reset to complete */
-    //MAP_PRCMPeripheralReset(PRCM_SSPI);
-    ulPeripheral = PRCM_SSPI;
-    volatile unsigned long ulDelay;
-
-    if( ulPeripheral != PRCM_DTHE)
-    {
-        //
-        // Assert the reset
-        //
-        HWREG(ARCM_BASE + 0x000000CC)|= PRCM_SOFT_RESET;
-        //
-        // Delay a little bit.
-        //
-        for(ulDelay = 0; ulDelay < 16; ulDelay++)
-        {
-        }
-
-        //
-        // Deassert the reset
-        //
-        HWREG(ARCM_BASE+0x000000CC)&= ~PRCM_SOFT_RESET;
-    }
-
-
-
-    unsigned long ReadyBit = false;
-
-    while(ReadyBit == false){
-        
-
-        //
-        // Read the ready bit status
-        //
-        ReadyBit = HWREG(ARCM_BASE + PRCM_PeriphRegsList[ulPeripheral].ulRstReg);
-        ReadyBit = ReadyBit & PRCM_ENABLE_STATUS;
-    }
-    /*done reset SSPI*/
-
-    /* Reset SSPI at module level */
-    //MAP_SPIReset(SSPI_BASE);
-    //
-    // Assert soft reset (auto clear)
-    //
-    HWREG(SSPI_BASE + MCSPI_O_SYSCONFIG) |= MCSPI_SYSCONFIG_SOFTRESET;
-
-    //
-    // wait until reset is done
-    //
-    while(!(HWREG(SSPI_BASE + MCSPI_O_SYSSTATUS)& MCSPI_SYSSTATUS_RESETDONE))
-    {
-    }
-
-    /*done reset SSPI*/
-
-    /* Configure SSPI module */
-    SPIConfigSetExpClk(SSPI_BASE,PRCMPeripheralClockGet(PRCM_SSPI),
-                    20000000,0x00000000,0x00000000,
-                    (0x01000000 |
-                    0x00000000 |
-                    0x00000000 |
-                    0x00000040 |
-                    0x00000380));
-
-    /* Enable SSPI module */
-    //MAP_SPIEnable(SSPI_BASE);
-    HWREG(SSPI_BASE + MCSPI_O_CH0CTRL) |= MCSPI_CH0CTRL_EN;
-    /* Allow settling before enabling chip select */
-    //uSEC_DELAY(PowerCC32XX_SSPICSDelay);
-
-    ROM_UtilsDelayDirect(PowerCC32XX_SSPICSDelay*80/3));
-    
-
-    /* Enable chip select for the spi flash. */
-    //MAP_SPICSEnable(SSPI_BASE);
-    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) |= MCSPI_CH0CONF_FORCE;
-
-     /* Wait for spi flash. */
-    do{
-        /* Send status register read instruction and read back a dummy byte. */
-        //MAP_SPIDataPut(SSPI_BASE,PowerCC32XX_SSPIReadStatusInstruction);
-        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
-        {
-        }
-
-        //
-        // Write the data
-        //
-        HWREG(SSPI_BASE + MCSPI_O_TX0) = (0x05);
-
-
-        //MAP_SPIDataGet(SSPI_BASE,&status);
-        while(!(HWREG(ulBase + MCSPI_O_CH0STAT) & MCSPI_CH0STAT_RXS))
-        {
-        }
-
-        //
-        // Read the value
-        //
-        status = HWREG(SSPI_BASE + MCSPI_O_RX0);
-
-        //MAP_SPIDataPut(SSPI_BASE,0xFF);
-        /* Write a dummy byte then read back the actual status. */
-        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
-        {
-        }
-
-        //
-        // Write the data
-        //
-        HWREG(SSPI_BASE + MCSPI_O_TX0) = 0xFF;
-        
-        //MAP_SPIDataGet(SSPI_BASE,&status);
-        
-        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT) & MCSPI_CH0STAT_RXS))
-        {
-        }
-
-        //
-        // Read the value
-        //
-        status = HWREG(SSPI_BASE + MCSPI_O_RX0);
-
-    } while((status & 0xFF )== 0x01);
-
-    /* Disable chip select for the spi flash. */
-    //MAP_SPICSDisable(SSPI_BASE);
-    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) &= ~MCSPI_CH0CONF_FORCE;
-    
-    /* Start another CS enable sequence for Power down command. */
-    //MAP_SPICSEnable(SSPI_BASE);
-    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) |= MCSPI_CH0CONF_FORCE;
-
-    /* Send Deep Power Down command to spi flash */
-    //MAP_SPIDataPut(SSPI_BASE,PowerCC32XX_SSPIPowerDownInstruction);
-    //
-    // Wait for space in FIFO
-    //
-    while(!(HWREG(ulBase + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
-    {
-    }
-
-    //
-    // Write the data
-    //
-    HWREG(SSPI_BASE + MCSPI_O_TX0) = (0xB9);
-
-    /* Disable chip select for the spi flash. */
-    //MAP_SPICSDisable(SSPI_BASE);
-    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) &= ~MCSPI_CH0CONF_FORCE;
-
-    /* Release SSPI HwSpinlock. */
-    //MAP_HwSpinLockRelease(HWSPINLOCK_SSPI);
-
-    /* flash shutdown end */
-
-    
+	
     /* if shutdown wakeup time was configured to be large enough */
     unsigned long long ullTicks =(((uint64_t)((500000/ 1000)) * 32768) / 1000);
 
@@ -532,24 +326,16 @@ uint32_t UnInit(uint32_t fnc)
         //
         //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_READ ,0x1);
         HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_READ) = 0x1;
-        i =0;
-			while(i<8000){
-				i++;
-			}
+        UtilsDelay((80*200)/3);
         //
         // Read latched values as 2 32-bit vlaues
         //
         ullRTCVal  = HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_RTC_TIMER_MSW);
-        i =0;
-        while(i<8000){
-            i++;
-        }
-        ullRTCVal  = ullRTCVal << 32;
+				UtilsDelay((80*200)/3);
+        
+				ullRTCVal  = ullRTCVal << 32;
         ullRTCVal |= HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_LSW);
-        i =0;
-        while(i<8000){
-            i++;
-        }
+				UtilsDelay((80*200)/3);
 
         //
         // Add the interval
@@ -559,18 +345,11 @@ uint32_t UnInit(uint32_t fnc)
         //
         // Set RTC match value
         //
-        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_LSW_CONF,
-                                                    (unsigned long)(ullRTCVal));
-        i =0;
-        while(i<8000){
-            i++;
-        }
-        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_MSW_CONF,
-                                                (unsigned long)(ullRTCVal>>32));
-        i =0;
-        while(i<8000){
-            i++;
-        }
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_LSW_CONF) = (unsigned long)(ullRTCVal);
+				UtilsDelay((80*200)/3);
+        
+				HWREG( HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_MSW_CONF)=(unsigned long)(ullRTCVal>>32);
+				UtilsDelay((80*200)/3);
     /* enable the wake source to be RTC */
         //MAP_PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
 
@@ -580,10 +359,7 @@ uint32_t UnInit(uint32_t fnc)
         // Read the RTC register
         //
         ulRegValue = HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN);
-        i =0;
-        while(i<8000){
-            i++;
-        }
+				UtilsDelay((80*200)/3);
 
         //
         // Enable the RTC as wakeup source if specified
@@ -595,19 +371,13 @@ uint32_t UnInit(uint32_t fnc)
         //
         //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN,ulRegValue);
         HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN) = ulRegValue;
-        i =0;
-        while(i<8000){
-            i++;
-        }
+				UtilsDelay((80*200)/3);
         //
         // REad the GPIO wakeup configuration register
         //
         //ulRegValue = PRCMHIBRegRead(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN);
         ulRegValue = HWREG(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN);
-        i =0;
-        while(i<8000){
-            i++;
-        }
+				UtilsDelay((80*200)/3);
 
         //
         // Enable the specified GPIOs a wakeup sources
@@ -619,15 +389,15 @@ uint32_t UnInit(uint32_t fnc)
         //
         //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN,ulRegValue);
         HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN) = ulRegValue;
-
+				UtilsDelay((80*200)/3);
         /* enter hibernate - we should never return from here */
         //MAP_PRCMHibernateEnter();
         //
         // Request hibernate.
         //
-        PRCMHIBRegWrite((HIB3P3_BASE+HIB3P3_O_MEM_HIB_REQ),0x1);
+        //PRCMHIBRegWrite((HIB3P3_BASE+HIB3P3_O_MEM_HIB_REQ),0x1);
         HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_REQ) = 0x1;
-
+				UtilsDelay((80*200)/3);
         //
         // Wait for system to enter hibernate
         //
@@ -642,7 +412,7 @@ uint32_t UnInit(uint32_t fnc)
         }
 
     /* if get here, failed to shutdown, return error code */
-    return (status);
+    return (1);
 }
 
 
@@ -680,7 +450,7 @@ uint32_t EraseChip(void)
        & (FLASH_CTRL_FCRIS_ARIS | FLASH_CTRL_FCRIS_VOLTRIS |
                              FLASH_CTRL_FCRIS_ERRIS))
     {
-        return -1;
+        return 1;
     }
 
     //
