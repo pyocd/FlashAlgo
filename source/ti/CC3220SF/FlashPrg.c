@@ -140,7 +140,7 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
         // Assert the reset
         //
         HWREG(ARCM_BASE + PRCM_PeriphRegsList[PRCM_UDMA].ulRstReg)
-                                                            |= PRCM_SOFT_RESET;
+                                                            |= 0x00000001;
         //
         // Delay a little bit.
         //
@@ -152,7 +152,7 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
         // Deassert the reset
         //
         HWREG(ARCM_BASE+PRCM_PeriphRegsList[PRCM_UDMA].ulRstReg)
-                                                            &= ~PRCM_SOFT_RESET;
+                                                            &= ~0x00000001;
     }
 
 
@@ -219,11 +219,11 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
       // Enable NWP force reset and HIB on WDT reset
       // Enable direct boot path for flash
       //
-      HWREG(OCP_SHARED_BASE + OCP_SHARED_O_SPARE_REG_8) |= ((7<<5) | 0x1);
+      HWREG(OCP_SHARED_BASE + 0x00000188) |= ((7<<5) | 0x1);
       if((HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG2) & 0x1) )
       {
           HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG2) &= ~0x1;
-          HWREG(OCP_SHARED_BASE + OCP_SHARED_O_SPARE_REG_8) |= (1<<9);
+          HWREG(OCP_SHARED_BASE + 0x00000188) |= (1<<9);
 
           //
           // Clear the RTC hib wake up source
