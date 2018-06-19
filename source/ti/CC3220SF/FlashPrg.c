@@ -27,8 +27,51 @@
 #include "inc/hw_hib3p3.h"
 #include "inc/hw_common_reg.h"
 #include "inc/hw_stack_die_ctrl.h"
+#include "inc/prcm.h"
+#include "inc/hw_apps_rcm.h"
+#include "inc/hw_mcspi.h"
 
 #define HAVE_WRITE_BUFFER       1
+
+
+
+//*****************************************************************************
+// Global Peripheral clock and rest Registers
+//*****************************************************************************
+static const PRCM_PeriphRegs_t PRCM_PeriphRegsList[] =
+{
+
+	{APPS_RCM_O_CAMERA_CLK_GATING,   APPS_RCM_O_CAMERA_SOFT_RESET   },
+	{APPS_RCM_O_MCASP_CLK_GATING,    APPS_RCM_O_MCASP_SOFT_RESET    },
+	{APPS_RCM_O_MMCHS_CLK_GATING,    APPS_RCM_O_MMCHS_SOFT_RESET    },
+	{APPS_RCM_O_MCSPI_A1_CLK_GATING, APPS_RCM_O_MCSPI_A1_SOFT_RESET },
+	{APPS_RCM_O_MCSPI_A2_CLK_GATING, APPS_RCM_O_MCSPI_A2_SOFT_RESET },
+	{APPS_RCM_O_UDMA_A_CLK_GATING,   APPS_RCM_O_UDMA_A_SOFT_RESET   },
+	{APPS_RCM_O_GPIO_A_CLK_GATING,   APPS_RCM_O_GPIO_A_SOFT_RESET   },
+	{APPS_RCM_O_GPIO_B_CLK_GATING,   APPS_RCM_O_GPIO_B_SOFT_RESET   },
+	{APPS_RCM_O_GPIO_C_CLK_GATING,   APPS_RCM_O_GPIO_C_SOFT_RESET   },
+	{APPS_RCM_O_GPIO_D_CLK_GATING,   APPS_RCM_O_GPIO_D_SOFT_RESET   },
+	{APPS_RCM_O_GPIO_E_CLK_GATING,   APPS_RCM_O_GPIO_E_SOFT_RESET   },
+	{APPS_RCM_O_WDOG_A_CLK_GATING,   APPS_RCM_O_WDOG_A_SOFT_RESET   },
+	{APPS_RCM_O_UART_A0_CLK_GATING,  APPS_RCM_O_UART_A0_SOFT_RESET  },
+	{APPS_RCM_O_UART_A1_CLK_GATING,  APPS_RCM_O_UART_A1_SOFT_RESET  },
+	{APPS_RCM_O_GPT_A0_CLK_GATING ,  APPS_RCM_O_GPT_A0_SOFT_RESET   },
+	{APPS_RCM_O_GPT_A1_CLK_GATING,   APPS_RCM_O_GPT_A1_SOFT_RESET   },
+	{APPS_RCM_O_GPT_A2_CLK_GATING,   APPS_RCM_O_GPT_A2_SOFT_RESET   },
+	{APPS_RCM_O_GPT_A3_CLK_GATING,   APPS_RCM_O_GPT_A3_SOFT_RESET   },
+	{APPS_RCM_O_CRYPTO_CLK_GATING,   APPS_RCM_O_CRYPTO_SOFT_RESET   },
+	{APPS_RCM_O_MCSPI_S0_CLK_GATING, APPS_RCM_O_MCSPI_S0_SOFT_RESET },
+	{APPS_RCM_O_I2C_CLK_GATING,      APPS_RCM_O_I2C_SOFT_RESET      }
+
+};
+
+void
+UtilsDelay(unsigned long ulCount)
+{
+    __asm("    subs    r0, #1\n"
+          "    bne     UtilsDelay\n"
+          "    bx      lr");
+}
 
 uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
 {
@@ -36,90 +79,233 @@ uint32_t Init(uint32_t adr, uint32_t clk, uint32_t fnc)
     //  watchdogs, peripherals and anything else needed to
     //  access or program memory. Fnc parameter has meaning
     //  but currently isnt used in MSC programming routines
-     unsigned long ulRegVal;
+    unsigned long ulRegValue;
 
-      //
-      // DIG DCDC NFET SEL and COT mode disable
-      //
-      HWREG(0x4402F010) = 0x30031820;
-      HWREG(0x4402F00C) = 0x04000000;
+    //
+    // DIG DCDC LPDS ECO Enable
+    //
+    HWREG(0x4402F064) |= 0x800000;
 
-      int i =0;
-			while(i<32000){
-				i++;
-			}
+    //
+    // Enable hibernate ECO for PG 1.32 devices only. With this ECO enabled,
+    // any hibernate wakeup source will be kept maked until the device enters
+    // hibernate completely (analog + digital)
+    //
+    ulRegValue = PRCMHIBRegRead(HIB3P3_BASE  + HIB3P3_O_MEM_HIB_REG0);
+    
+    //PRCMHIBRegWrite(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG0, ulRegValue | (1<<4));
+    HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG0) = ulRegValue | (1<<4);
+    UtilsDelay((80*200)/3);
+    
+    //
+    // Handling the clock switching (for 1.32 only)
+    //
+    HWREG(0x4402E16C) |= 0x3C;
+    
+    //
+    //Enable uDMA
+    //
+    //
+    // Enable the specified peripheral clocks, Nothing to be done for PRCM_ADC
+    // as it is a dummy define for pinmux utility code generation
+    //
+    if(PRCM_UDMA != PRCM_ADC)
+    {
+        HWREG(ARCM_BASE + PRCM_PeriphRegsList[PRCM_UDMA].ulClkReg) |= PRCM_RUN_MODE_CLK;
+    }
+    
+    //
+    // Checking ROM Version less than 2.x.x. 
+    // Only for driverlib backward compatibility
+    //
+    if( (HWREG(0x00000400) & 0xFFFF) < 2 )
+    {
+        //
+        // Set the default clock for camera
+        //
+        if(PRCM_UDMA == PRCM_CAMERA)
+        {
+            HWREG(ARCM_BASE + APPS_RCM_O_CAMERA_CLK_GEN) = 0x0404;
+        }
+    }
 
-      //
-      // ANA DCDC clock config
-      //
-      HWREG(0x4402F11C) = 0x099;
-      HWREG(0x4402F11C) = 0x0AA;
-      HWREG(0x4402F11C) = 0x1AA;
 
-      //
-      // PA DCDC clock config
-      //
-      HWREG(0x4402F124) = 0x099;
-      HWREG(0x4402F124) = 0x0AA;
-      HWREG(0x4402F124) = 0x1AA;
+    //
+    // Reset uDMA
+    volatile unsigned long ulDelay;
 
+    if( PRCM_UDMA != PRCM_DTHE)
+    {
+        //
+        // Assert the reset
+        //
+        HWREG(ARCM_BASE + PRCM_PeriphRegsList[PRCM_UDMA].ulRstReg)
+                                                            |= PRCM_SOFT_RESET;
+        //
+        // Delay a little bit.
+        //
+        for(ulDelay = 0; ulDelay < 16; ulDelay++)
+        {
+        }
+
+        //
+        // Deassert the reset
+        //
+        HWREG(ARCM_BASE+PRCM_PeriphRegsList[PRCM_UDMA].ulRstReg)
+                                                            &= ~PRCM_SOFT_RESET;
+    }
+
+
+    //
+    //
+    // Disable uDMA
+    HWREG(ARCM_BASE + PRCM_PeriphRegsList[PRCM_UDMA].ulClkReg) &= ~PRCM_RUN_MODE_CLK;
+
+    //
+    // Enable RTC
+    //
+    unsigned long lWakeupStatus = (HWREG(GPRCM_BASE+ GPRCM_O_APPS_RESET_CAUSE) & 0xFF);
+    if(lWakeupStatus == PRCM_POWER_ON)
+    {
+        HWREG(0x4402F804) = PRCM_POWER_ON;
+        UtilsDelay((80*200)/3);
+    }
+
+    //
+    // SWD mode
+    //
+    if(((HWREG(0x4402F0C8) & 0xFF) == 0x2))
+    {
+        HWREG(0x4402E110) = ((HWREG(0x4402E110) & ~0xC0F) | 0x2);
+        HWREG(0x4402E114) = ((HWREG(0x4402E114) & ~0xC0F) | 0x2);
+    }
+    
+    //
+    // Override JTAG mux
+    //
+    HWREG(0x4402E184) |= 0x2;
+    
+
+    //
+    // DIG DCDC VOUT trim settings based on PROCESS INDICATOR
+    //
+    if(((HWREG(0x4402DC78) >> 22) & 0xF) == 0xE)
+    {
+        HWREG(0x4402F0B0) = ((HWREG(0x4402F0B0) & ~(0x00FC0000))|(0x32 << 18));
+    }
+    else
+    {
+        HWREG(0x4402F0B0) = ((HWREG(0x4402F0B0) & ~(0x00FC0000))|(0x29 << 18));
+    }
+
+    //
+    // Enable SOFT RESTART in case of DIG DCDC collapse
+    //
+    HWREG(0x4402FC74) &= ~(0x10000000);
+
+    //
+    // Required only if ROM version is lower than 2.x.x
+    //
+    if( (HWREG(0x00000400) & 0xFFFF) < 2 )
+    {
       //
-      // TD Flash timing configurations in case of MCU WDT reset
+      // Disable the sleep for ANA DCDC
       //
-      if((HWREG(0x4402D00C) & 0xFF) == 0x00000005)
+      HWREG(0x4402F0A8) |= 0x00000004 ;
+    }
+    else if( (HWREG(0x00000400) >> 16)  >= 1 )
+    {
+      //
+      // Enable NWP force reset and HIB on WDT reset
+      // Enable direct boot path for flash
+      //
+      HWREG(OCP_SHARED_BASE + OCP_SHARED_O_SPARE_REG_8) |= ((7<<5) | 0x1);
+      if((HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG2) & 0x1) )
       {
-          HWREG(0x400F707C) |= 0x01840082;
-          HWREG(0x400F70C4)= 0x1;
-          HWREG(0x400F70C4)= 0x0;
+          HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_REG2) &= ~0x1;
+          HWREG(OCP_SHARED_BASE + OCP_SHARED_O_SPARE_REG_8) |= (1<<9);
+
+          //
+          // Clear the RTC hib wake up source
+          //
+          HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN) &= ~0x1;
+
+          //
+          // Reset RTC match value
+          //
+          HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_RTC_WAKE_LSW_CONF) = 0;
+          HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_RTC_WAKE_MSW_CONF) = 0;
+
       }
+    }
 
-      //
-      // Take I2C semaphore
-      //
-      ulRegVal = HWREG(0x400F7000);
-      ulRegVal = (ulRegVal & ~0x3) | 0x1;
-      HWREG(0x400F7000) = ulRegVal;
+    unsigned long efuse_reg2;
+    unsigned long ulDevMajorVer, ulDevMinorVer;
+    //
+    // Read the device identification register
+    //
+    efuse_reg2= HWREG(GPRCM_BASE + GPRCM_O_GPRCM_EFUSE_READ_REG2);
+    
 
-      //
-      // Take GPIO semaphore
-      //
-      ulRegVal = HWREG(0x400F703C);
-      ulRegVal = (ulRegVal & ~0x3FF) | 0x155;
-      HWREG(0x400F703C) = ulRegVal;
+    //
+    // Read the ROM mojor and minor version
+    //
+    ulDevMajorVer = ((efuse_reg2 >> 28) & 0xF);
+    ulDevMinorVer = ((efuse_reg2 >> 24) & 0xF);
+  
+    if(((ulDevMajorVer == 0x3) && (ulDevMinorVer == 0)) || (ulDevMajorVer < 0x3))
+    {
+      unsigned int Scratch, PreRegulatedMode;
 
-      //
-      // Enable 32KHz internal RC oscillator
-      //
-      //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_INT_OSC_CONF, 0x00000101);
+      // 0x4402F840 => 6th bit “1” indicates device is in pre-regulated mode.
+      PreRegulatedMode = (HWREG(0x4402F840) >> 6) & 1;
+    
+      if( PreRegulatedMode)
+      {
+        Scratch = HWREG(0x4402F028);
+        Scratch &= 0xFFFFFF7F; // <7:7> = 0
+        HWREG(0x4402F028) = Scratch;
+        
+        Scratch = HWREG(0x4402F010);
+        Scratch &= 0x0FFFFFFF; // <31:28> = 0
+        Scratch |= 0x10000000; // <31:28> = 1
+        HWREG(0x4402F010) = Scratch;
+      }
+      else
+      {
+        Scratch = HWREG(0x4402F024);
 
-			HWREG(HIB3P3_BASE+HIB3P3_O_MEM_INT_OSC_CONF) =  0x00000101;
-			i =0;
-			while(i<8000){
-				i++;
-			}
+        Scratch &= 0xFFFFFFF0; // <3:0> = 0
+        Scratch |= 0x00000001; // <3:0> = 1
+        Scratch &= 0xFFFFF0FF; // <11:8> = 0000
+        Scratch |= 0x00000500; // <11:8> = 0101
+        Scratch &= 0xFFFE7FFF; // <16:15> = 0000
+        Scratch |= 0x00010000; // <16:15> = 10
 
-      //
-      // Delay for a little bit.
-      //
-			i =0;
-			while(i<8000){
-				i++;
-			}
+        HWREG(0x4402F024) = Scratch;
 
-      //
-      // Enable 16MHz clock
-      //
-      HWREG(HIB1P2_BASE+HIB1P2_O_CM_OSC_16M_CONFIG) = 0x00010008;
+        Scratch = HWREG(0x4402F028);
 
-      //
-      // Delay for a little bit.
-      //
-      i =0;
-			while(i<8000){
-			i++;
-			};
-    	return 0;
+        Scratch &= 0xFFFFFF7F; // <7:7> = 0
+        Scratch &= 0x0FFFFFFF; // <31:28> = 0
+        Scratch &= 0xFF0FFFFF; // <23:20> = 0
+        Scratch |= 0x00300000; // <23:20> = 0011
+        Scratch &= 0xFFF0FFFF; // <19:16> = 0
+        Scratch |= 0x00030000; // <19:16> = 0011
+
+        HWREG(0x4402F028) = Scratch;
+        HWREG(0x4402F010) &= 0x0FFFFFFF; // <31:28> = 0
+      }
+    }
+
+
+
+    //
+    // Success.
+    //
+    return 0;
 }
+
 
 uint32_t UnInit(uint32_t fnc)
 {
@@ -127,8 +313,338 @@ uint32_t UnInit(uint32_t fnc)
     //  communication channels and clocks that were enabled
     //  Fnc parameter has meaning but isnt used in MSC program
     //  routines
-    return 0;
+    int_fast16_t status = 1;
+    uint32_t constraints;
+    uintptr_t hwiKey;
+    uint64_t counts;
+    int i = 0;
+    /* disable interrupts */
+    //hwiKey = HwiP_disable();
+    __asm("    mrs     r0, PRIMASK\n"
+          "    cpsid   i\n"
+          "    dsb      \n"
+          "    isb      \n"
+          "    bx      lr\n");
+
+   
+    //int PowerCC32XX_TOTALTIMESHUTDOWN = 500000;
+    /*shut down flash memory*/
+    /*PowerCC32XX_shutdownSSPI(); start*/
+    //unsigned long status = 0;
+
+    /* Acquire SSPI HwSpinlock. */
+    // if (0 != MAP_HwSpinLockTryAcquire(HWSPINLOCK_SSPI, PowerCC32XX_SSPISemaphoreTakeTries)){
+    //     return;
+    // } maybe don't need semaphore in during flash
+
+    /* Enable clock for SSPI module */
+    //MAP_PRCMPeripheralClkEnable(PRCM_SSPI, PRCM_RUN_MODE_CLK);
+    unsigned long ulPeripheral = PRCM_SSPI;
+    unsigned long ulClkFlags = PRCM_RUN_MODE_CLK;
+    if(ulPeripheral != PRCM_ADC)
+    {
+        HWREG(ARCM_BASE + PRCM_PeriphRegsList[ulPeripheral].ulClkReg) |= ulClkFlags;
+    }
+    
+    //
+    // Checking ROM Version less than 2.x.x. 
+    // Only for driverlib backward compatibility
+    //
+    if( (HWREG(0x00000400) & 0xFFFF) < 2 )
+    {
+        //
+        // Set the default clock for camera
+        //
+        if(ulPeripheral == PRCM_CAMERA)
+        {
+        HWREG(ARCM_BASE + APPS_RCM_O_CAMERA_CLK_GEN) = 0x0404;
+        }
+    }
+
+    /*end clock enable for SSPI module*/
+
+    /* Reset SSPI at PRCM level and wait for reset to complete */
+    //MAP_PRCMPeripheralReset(PRCM_SSPI);
+    ulPeripheral = PRCM_SSPI;
+    volatile unsigned long ulDelay;
+
+    if( ulPeripheral != PRCM_DTHE)
+    {
+        //
+        // Assert the reset
+        //
+        HWREG(ARCM_BASE + 0x000000CC)|= PRCM_SOFT_RESET;
+        //
+        // Delay a little bit.
+        //
+        for(ulDelay = 0; ulDelay < 16; ulDelay++)
+        {
+        }
+
+        //
+        // Deassert the reset
+        //
+        HWREG(ARCM_BASE+0x000000CC)&= ~PRCM_SOFT_RESET;
+    }
+
+
+
+    unsigned long ReadyBit = false;
+
+    while(ReadyBit == false){
+        
+
+        //
+        // Read the ready bit status
+        //
+        ReadyBit = HWREG(ARCM_BASE + PRCM_PeriphRegsList[ulPeripheral].ulRstReg);
+        ReadyBit = ReadyBit & PRCM_ENABLE_STATUS;
+    }
+    /*done reset SSPI*/
+
+    /* Reset SSPI at module level */
+    //MAP_SPIReset(SSPI_BASE);
+    //
+    // Assert soft reset (auto clear)
+    //
+    HWREG(SSPI_BASE + MCSPI_O_SYSCONFIG) |= MCSPI_SYSCONFIG_SOFTRESET;
+
+    //
+    // wait until reset is done
+    //
+    while(!(HWREG(SSPI_BASE + MCSPI_O_SYSSTATUS)& MCSPI_SYSSTATUS_RESETDONE))
+    {
+    }
+
+    /*done reset SSPI*/
+
+    /* Configure SSPI module */
+    SPIConfigSetExpClk(SSPI_BASE,PRCMPeripheralClockGet(PRCM_SSPI),
+                    20000000,0x00000000,0x00000000,
+                    (0x01000000 |
+                    0x00000000 |
+                    0x00000000 |
+                    0x00000040 |
+                    0x00000380));
+
+    /* Enable SSPI module */
+    //MAP_SPIEnable(SSPI_BASE);
+    HWREG(SSPI_BASE + MCSPI_O_CH0CTRL) |= MCSPI_CH0CTRL_EN;
+    /* Allow settling before enabling chip select */
+    //uSEC_DELAY(PowerCC32XX_SSPICSDelay);
+
+    ROM_UtilsDelayDirect(PowerCC32XX_SSPICSDelay*80/3));
+    
+
+    /* Enable chip select for the spi flash. */
+    //MAP_SPICSEnable(SSPI_BASE);
+    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) |= MCSPI_CH0CONF_FORCE;
+
+     /* Wait for spi flash. */
+    do{
+        /* Send status register read instruction and read back a dummy byte. */
+        //MAP_SPIDataPut(SSPI_BASE,PowerCC32XX_SSPIReadStatusInstruction);
+        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
+        {
+        }
+
+        //
+        // Write the data
+        //
+        HWREG(SSPI_BASE + MCSPI_O_TX0) = (0x05);
+
+
+        //MAP_SPIDataGet(SSPI_BASE,&status);
+        while(!(HWREG(ulBase + MCSPI_O_CH0STAT) & MCSPI_CH0STAT_RXS))
+        {
+        }
+
+        //
+        // Read the value
+        //
+        status = HWREG(SSPI_BASE + MCSPI_O_RX0);
+
+        //MAP_SPIDataPut(SSPI_BASE,0xFF);
+        /* Write a dummy byte then read back the actual status. */
+        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
+        {
+        }
+
+        //
+        // Write the data
+        //
+        HWREG(SSPI_BASE + MCSPI_O_TX0) = 0xFF;
+        
+        //MAP_SPIDataGet(SSPI_BASE,&status);
+        
+        while(!(HWREG(SSPI_BASE + MCSPI_O_CH0STAT) & MCSPI_CH0STAT_RXS))
+        {
+        }
+
+        //
+        // Read the value
+        //
+        status = HWREG(SSPI_BASE + MCSPI_O_RX0);
+
+    } while((status & 0xFF )== 0x01);
+
+    /* Disable chip select for the spi flash. */
+    //MAP_SPICSDisable(SSPI_BASE);
+    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) &= ~MCSPI_CH0CONF_FORCE;
+    
+    /* Start another CS enable sequence for Power down command. */
+    //MAP_SPICSEnable(SSPI_BASE);
+    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) |= MCSPI_CH0CONF_FORCE;
+
+    /* Send Deep Power Down command to spi flash */
+    //MAP_SPIDataPut(SSPI_BASE,PowerCC32XX_SSPIPowerDownInstruction);
+    //
+    // Wait for space in FIFO
+    //
+    while(!(HWREG(ulBase + MCSPI_O_CH0STAT)&MCSPI_CH0STAT_TXS))
+    {
+    }
+
+    //
+    // Write the data
+    //
+    HWREG(SSPI_BASE + MCSPI_O_TX0) = (0xB9);
+
+    /* Disable chip select for the spi flash. */
+    //MAP_SPICSDisable(SSPI_BASE);
+    HWREG( SSPI_BASE+MCSPI_O_CH0CONF) &= ~MCSPI_CH0CONF_FORCE;
+
+    /* Release SSPI HwSpinlock. */
+    //MAP_HwSpinLockRelease(HWSPINLOCK_SSPI);
+
+    /* flash shutdown end */
+
+    
+    /* if shutdown wakeup time was configured to be large enough */
+    unsigned long long ullTicks =(((uint64_t)((500000/ 1000)) * 32768) / 1000);
+
+    /* set the hibernate wakeup time */
+    //MAP_PRCMHibernateIntervalSet(counts);
+        unsigned long long ullRTCVal;
+
+        //
+        // Latch the RTC vlaue
+        //
+        //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_READ ,0x1);
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_READ) = 0x1;
+        i =0;
+			while(i<8000){
+				i++;
+			}
+        //
+        // Read latched values as 2 32-bit vlaues
+        //
+        ullRTCVal  = HWREG(HIB3P3_BASE + HIB3P3_O_MEM_HIB_RTC_TIMER_MSW);
+        i =0;
+        while(i<8000){
+            i++;
+        }
+        ullRTCVal  = ullRTCVal << 32;
+        ullRTCVal |= HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_TIMER_LSW);
+        i =0;
+        while(i<8000){
+            i++;
+        }
+
+        //
+        // Add the interval
+        //
+        ullRTCVal = ullRTCVal + ullTicks;
+
+        //
+        // Set RTC match value
+        //
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_LSW_CONF,
+                                                    (unsigned long)(ullRTCVal));
+        i =0;
+        while(i<8000){
+            i++;
+        }
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_MSW_CONF,
+                                                (unsigned long)(ullRTCVal>>32));
+        i =0;
+        while(i<8000){
+            i++;
+        }
+    /* enable the wake source to be RTC */
+        //MAP_PRCMHibernateWakeupSourceEnable(PRCM_HIB_SLOW_CLK_CTR);
+
+        unsigned long ulRegValue;
+
+        //
+        // Read the RTC register
+        //
+        ulRegValue = HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN);
+        i =0;
+        while(i<8000){
+            i++;
+        }
+
+        //
+        // Enable the RTC as wakeup source if specified
+        //
+        ulRegValue |= (0x00000001 & 0x1);
+
+        //
+        // Enable HIB wakeup sources
+        //
+        //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN,ulRegValue);
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN) = ulRegValue;
+        i =0;
+        while(i<8000){
+            i++;
+        }
+        //
+        // REad the GPIO wakeup configuration register
+        //
+        //ulRegValue = PRCMHIBRegRead(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN);
+        ulRegValue = HWREG(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN);
+        i =0;
+        while(i<8000){
+            i++;
+        }
+
+        //
+        // Enable the specified GPIOs a wakeup sources
+        //
+        ulRegValue |= ((0x00000001 >>16)&0xFF);
+
+        //
+        // Write the new register configuration
+        //
+        //PRCMHIBRegWrite(HIB3P3_BASE+HIB3P3_O_MEM_GPIO_WAKE_EN,ulRegValue);
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_RTC_WAKE_EN) = ulRegValue;
+
+        /* enter hibernate - we should never return from here */
+        //MAP_PRCMHibernateEnter();
+        //
+        // Request hibernate.
+        //
+        PRCMHIBRegWrite((HIB3P3_BASE+HIB3P3_O_MEM_HIB_REQ),0x1);
+        HWREG(HIB3P3_BASE+HIB3P3_O_MEM_HIB_REQ) = 0x1;
+
+        //
+        // Wait for system to enter hibernate
+        //
+        __asm("    wfi\n");
+
+        //
+        // Infinite loop
+        //
+        while(1)
+        {
+
+        }
+
+    /* if get here, failed to shutdown, return error code */
+    return (status);
 }
+
 
 
 
@@ -164,7 +680,7 @@ uint32_t EraseChip(void)
        & (FLASH_CTRL_FCRIS_ARIS | FLASH_CTRL_FCRIS_VOLTRIS |
                              FLASH_CTRL_FCRIS_ERRIS))
     {
-        return 1;
+        return -1;
     }
 
     //
@@ -172,6 +688,7 @@ uint32_t EraseChip(void)
     //
     return 0;
 }
+
 
 uint32_t EraseSector(uint32_t adr)
 {
