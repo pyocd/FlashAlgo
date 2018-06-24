@@ -18,7 +18,7 @@ limitations under the License.
 This script takes the path to file(s) created by an image conversion tool
 (fromelf or arm-elf-objcopy) as input. These files (bin and text) are used
 to create flash programming blobs (instruction arrays) which are then
-loaded into the target MCU RAM. Generates files compatible with C programs 
+loaded into the target MCU RAM. Generates files compatible with C programs
 and python programs (DAPLink Interface Firmware and pyDAPFlash)
 '''
 import os
@@ -29,6 +29,8 @@ from flash_algo import PackFlashAlgo
 # FIXED LENGTH - remove and these (shrink offset to 4 for bkpt only)
 BLOB_HEADER = '0xE00ABE00, 0x062D780D, 0x24084068, 0xD3000040, 0x1E644058, 0x1C49D1FA, 0x2A001E52, 0x4770D1F2,'
 HEADER_SIZE = 0x20
+
+STACK_SIZE = 0x200
 
 def str_to_num(val):
     return int(val,0)  #convert string to number and automatically handle hex conversion
@@ -48,7 +50,11 @@ def main():
 
     template_dir = os.path.dirname(os.path.realpath(__file__))
     output_dir = os.path.dirname(args.elf_path)
-    SP = args.blob_start + 2048
+
+    # Allocate stack after algo and its rw data, rounded up.
+    SP = args.blob_start + HEADER_SIZE + algo.rw_start + algo.rw_size + STACK_SIZE
+    SP = (SP + 0x100 - 1) // 0x100 * 0x100
+
     data_dict = {
         'name': os.path.splitext(os.path.split(args.elf_path)[-1])[0],
         'prog_header': BLOB_HEADER,
@@ -59,6 +65,7 @@ def main():
 
     tmpl_name_list = [
         ("c_blob.tmpl", "c_blob.c"),
+        ("py_blob_orig.tmpl", "py_blob_orig.py"),
         ("py_blob.tmpl", "py_blob.py"),
         ("c_blob_mbed.tmpl", "c_blob_mbed.c")
     ]
