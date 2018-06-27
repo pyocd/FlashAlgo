@@ -1,0 +1,10 @@
+common:
+    group_name:
+        - flash_driver
+    target:
+        - cortex-m4
+    includes:
+        - source/
+    sources:
+        - source/toshiba/TZ10XX/FlashDev.c
+        - source/toshiba/TZ10XX/FlashPrg.c

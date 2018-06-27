@@ -1,0 +1,10 @@
+common:
+    group_name:
+        - flash_driver
+    target:
+        - cortex-m0
+    includes:
+        - source/
+    sources:
+        - source/wiznet/W7500/FlashDev.c
+        - source/wiznet/W7500/FlashPrg.c

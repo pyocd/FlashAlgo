@@ -131,6 +131,29 @@ projects:
         - *module_tools
         - records/projects/nxp/common/nxp_flash_driver.yaml
         - records/projects/nxp/targets/lpc4088.yaml
+    lpc54114:
+        - *module_tools
+        - records/projects/nxp/common/nxp_flash_driver.yaml
+        - records/projects/nxp/targets/lpc54114.yaml
+    lpc54608:
+        - *module_tools
+        - records/projects/nxp/common/nxp_flash_driver.yaml
+        - records/projects/nxp/targets/lpc54608.yaml
+    tz10xx:
+        - *module_tools
+        - records/projects/toshiba/tz10xx.yaml
+    w7500:
+        - *module_tools
+        - records/projects/wiznet/W7500.yaml
+    stm32f4xx_2048:
+        - *module_tools
+        - records/projects/st/STM32F4xx_2048.yaml
+    stm32l0xx_192:
+        - *module_tools
+        - records/projects/st/STM32L0xx_192.yaml
     stm32l151:
         - *module_tools
         - records/projects/st/stm32l151.yaml
+    ncs36510:
+        - *module_tools
+        - records/projects/onsemi/ncs36510.yaml

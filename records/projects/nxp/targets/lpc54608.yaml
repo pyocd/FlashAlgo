@@ -1,0 +1,12 @@
+common:
+    target:
+        - cortex-m4
+    includes:
+        - source/nxp/lpc54608
+    sources:
+        - source/nxp/lpc54608/FlashDev.c
+        - source/nxp/lpc54608/FlashPrg.c
+        - source/nxp/lpc54608/fsl_flashiap.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_LPC54608J512ET180
