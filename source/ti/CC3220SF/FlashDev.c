@@ -27,11 +27,11 @@ struct FlashDevice const FlashDevice = {
     ONCHIP,                     // Device Type
     0x01000000,                 // Device Start Address
     0x00100000,                 // Device Size(1MB)
-    0x00000800,                 // Programming Page Size
+    0x00000400,                 // Programming Page Size
     0x00000000,                 // Reserved, must be 0
     0xFF,                       // Initial Content of Erased Memory
     0x00000064,                 // Program Page Timeout 100 mSec
     0x00000BB8,                 // Erase Sector Timeout 3000 mSec
-    {{0x00000400, 0x01000000},  // Sector Size {2kB, starting at address 0x0100 0000}
+    {{0x00000800, 0x01000000},  // Sector Size {2kB, starting at address 0x0100 0000}
     {SECTOR_END}}
 };
