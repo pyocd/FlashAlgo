@@ -9,7 +9,7 @@ Skip any step where a compatible tool already exists
 4. Install virtualenv in python
 
 ```
-> git clone https://github.com/mbedmicro/DAPLink
+> git clone https://github.com/mbedmicro/FlashAlgo
 > pip install virtualenv
 > virtualenv venv
 >
