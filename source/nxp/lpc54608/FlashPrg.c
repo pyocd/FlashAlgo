@@ -64,10 +64,10 @@ uint32_t UnInit(uint32_t fnc)
  */
 uint32_t EraseChip(void)
 {
-    int status = FLASHIAP_PrepareSectorForWrite(0, 7);
+    int status = FLASHIAP_PrepareSectorForWrite(0, 15);
     if (status == kStatus_Success)
     {
-        status = FLASHIAP_EraseSector(0, 7, CORE_CLK);
+        status = FLASHIAP_EraseSector(0, 15, CORE_CLK);
     }
     return status;
 }
