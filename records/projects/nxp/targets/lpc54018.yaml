@@ -1,0 +1,13 @@
+common:
+    target:
+        - cortex-m4
+    includes:
+        - source/nxp/lpc54018
+    sources:
+        - source/nxp/lpc54018/FlashDev.c
+        - source/nxp/lpc54018/FlashPrg.c
+        - source/nxp/lpc54018/fsl_spifi.c
+        - source/nxp/lpc54018/fsl_reset.c
+    macros:
+        - __NO_EMBEDDED_ASM
+        - CPU_LPC54018JET180

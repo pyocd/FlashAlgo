@@ -139,6 +139,10 @@ projects:
         - *module_tools
         - records/projects/nxp/common/nxp_flash_driver.yaml
         - records/projects/nxp/targets/lpc54608.yaml
+    lpc54018:
+        - *module_tools
+        - records/projects/nxp/common/nxp_flash_driver.yaml
+        - records/projects/nxp/targets/lpc54018.yaml
     tz10xx:
         - *module_tools
         - records/projects/toshiba/tz10xx.yaml
