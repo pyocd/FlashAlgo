@@ -31,9 +31,9 @@ static const uint32_t flash_size = {{"0x%08x" % algo.flash_size}};
 * The last pair in the list will have sectors starting at that address and ending
 * at address flash_start + flash_size.
 */
-static const uint32_t sectors_info[] = {
+static const sector_info_t sectors_info[] = {
 {%- for start, size  in algo.sector_sizes %}
-    {{ "0x%08x, 0x%08x" % (start + algo.flash_start, size) }},
+    {{ "{ 0x%08x, 0x%08x }" % (start + algo.flash_start, size) }},
 {%- endfor %}
 };
 
@@ -43,6 +43,7 @@ static const program_target_t flash = {
     {{'0x%08x' % (algo.symbols['EraseChip'] + header_size + entry)}}, // EraseChip
     {{'0x%08x' % (algo.symbols['EraseSector'] + header_size + entry)}}, // EraseSector
     {{'0x%08x' % (algo.symbols['ProgramPage'] + header_size + entry)}}, // ProgramPage
+    0x0,        // Verify
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset
