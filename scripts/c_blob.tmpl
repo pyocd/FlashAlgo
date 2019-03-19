@@ -43,6 +43,7 @@ static const program_target_t flash = {
     {{'0x%08x' % (algo.symbols['EraseChip'] + header_size + entry)}}, // EraseChip
     {{'0x%08x' % (algo.symbols['EraseSector'] + header_size + entry)}}, // EraseSector
     {{'0x%08x' % (algo.symbols['ProgramPage'] + header_size + entry)}}, // ProgramPage
+    {{'0x%08x' % (algo.symbols['Verify'] + header_size + entry)}}, // Verify
 
     // BKPT : start of blob + 1
     // RSB  : blob start + header + rw data offset

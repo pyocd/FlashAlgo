@@ -164,3 +164,11 @@ projects:
     cc3220sf:
         - *module_tools
         - records/projects/ti/cc3220sf.yaml
+    musca_a:
+        - *module_tools
+        - records/projects/arm/common/arm_flash_driver.yaml
+        - records/projects/arm/targets/musca_a.yaml
+    musca_b:
+        - *module_tools
+        - records/projects/arm/common/arm_flash_driver.yaml
+        - records/projects/arm/targets/musca_b.yaml
