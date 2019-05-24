@@ -1,0 +1,14 @@
+common:
+    target:
+        - cortex-m3
+    includes:
+        - source/arm/gfc100/Native_Driver
+        - source/arm/gfc100/Native_Driver/sfn40ulp128kx128m64p16i16_c_dw25_svt_110a
+    sources:
+        - source/arm/gfc100/FlashDev.c
+        - source/arm/gfc100/FlashPrg.c
+        - source/arm/gfc100/Native_Driver/gfc100_eflash_drv.c
+        - source/arm/gfc100/Native_Driver/sfn40ulp128kx128m64p16i16_c_dw25_svt_110a/sfn40ulp_eflash_drv.c
+    macros:
+        - MUSCA_B_EFLASH_BASE=0x0A000000UL
+        - MUSCA_B_EFLASH_REG_BASE=0x52400000UL

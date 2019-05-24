@@ -172,3 +172,7 @@ projects:
         - *module_tools
         - records/projects/arm/common/arm_flash_driver.yaml
         - records/projects/arm/targets/musca_b.yaml
+    musca_b_eflash:
+        - *module_tools
+        - records/projects/arm/common/arm_flash_driver.yaml
+        - records/projects/arm/targets/musca_b_eflash.yaml
