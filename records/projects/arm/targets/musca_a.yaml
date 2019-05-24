@@ -1,0 +1,14 @@
+common:
+    target:
+        - cortex-m3
+    includes:
+        - source/arm/mt25ql512/qspi_ip6514e/lib
+        - source/arm/mt25ql512/qspi_ip6514e/native_driver
+    sources:
+        - source/arm/mt25ql512/FlashDev.c
+        - source/arm/mt25ql512/FlashPrg.c
+        - source/arm/mt25ql512/qspi_ip6514e/lib/mt25ql_flash_lib.c
+        - source/arm/mt25ql512/qspi_ip6514e/native_driver/qspi_ip6514e_drv.c
+    macros:
+        - MUSCA_QSPI_REG_BASE=0x5010A000UL
+        - MUSCA_QSPI_FLASH_BASE=0x00200000UL
