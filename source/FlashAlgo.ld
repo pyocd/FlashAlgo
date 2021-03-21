@@ -15,12 +15,17 @@
  */
 
 
+/*
+ * The PrgCode and PrgData output section names come from the CMSIS-Pack flash algo
+ * templates and armlink. It is used here because several tools that work
+ * with these flash algos expect this section name.
+ */
 SECTIONS
 {
     PrgCode 0 :
     {
         *(.text*)
-        *(.rodata*)
+        EXCLUDE_FILE (*FlashDev.o) *(.rodata*)
     }
 
     PrgData :
@@ -31,8 +36,15 @@ SECTIONS
         *(COMMON)
     }
 
-    .DevDscr :
+    DevDscr :
     {
-        *(.FlashDev*)
+        *FlashDev.o(*)
+    }
+
+    /DISCARD/ : {
+        /* Unused exception related info that only wastes space */
+        *(.ARM.exidx);
+        *(.ARM.exidx.*);
+        *(.ARM.extab.*);
     }
 }

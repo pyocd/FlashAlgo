@@ -1,9 +1,11 @@
+common:
+  target:
+      - cortex-m0
+  core:
+      - Cortex-M0
+
 tool_specific:
     make_gcc_arm:
-        mcu:
-            - cortex-m0
-        macros:
-            -
         linker_file:
             - source/FlashAlgo.ld
         misc:
@@ -12,17 +14,18 @@ tool_specific:
                 - gcc
                 - c
                 - nosys
-            optimization:
-                - O0
-            compiler_options:
-                - Wall
-                - ffunction-sections
-                - fdata-sections
-                - fpic
-                - msingle-pic-base
-                - mpic-register=9
-                - fno-jump-tables
-            linker_options:
-                - nostartfiles
+            common_flags:
+                - -O0
+                - -Wall
+                - -ffunction-sections
+                - -fdata-sections
+                - -fpic
+                - -msingle-pic-base
+                - -mpic-register=9
+                - -fno-jump-tables
+                - -ffreestanding
+            ld_flags:
+                - -nostartfiles
+                - -Wl,--print-memory-usage
 
 
