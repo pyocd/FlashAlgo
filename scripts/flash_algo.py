@@ -118,9 +118,9 @@ class PackFlashAlgo(object):
         """
         padding = " " * spaces
         if fmt == "hex":
-            blob = binascii.b2a_hex(self.algo_data)
+            blob = binascii.b2a_hex(self.algo_data).decode()
             line_list = []
-            for i in xrange(0, len(blob), group_size):
+            for i in range(0, len(blob), group_size):
                 line_list.append('"' + blob[i:i + group_size] + '"')
             return ("\n" + padding).join(line_list)
         elif fmt == "c":
