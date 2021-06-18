@@ -158,6 +158,12 @@ projects:
     stm32l151:
         - *module_tools
         - records/projects/st/stm32l151.yaml
+    stm32l475:
+        - *module_tools
+        - records/projects/st/STM32L475.yaml
+    stm32wb55:
+        - *module_tools
+        - records/projects/st/STM32WB55.yaml
     ncs36510:
         - *module_tools
         - records/projects/onsemi/ncs36510.yaml
