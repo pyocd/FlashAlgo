@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2014 ARM Ltd.
+ * Copyright (c) 2021 ZeUGMA.
  *
  * This software is provided 'as-is', without any express or implied warranty. 
  * In no event will the authors be held liable for any damages arising from 
@@ -18,10 +18,10 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *   
  *
- * $Date:        15. April 2014
+ * $Date:        16/06/2021
  * $Revision:    V1.00
  *  
- * Project:      Flash Programming Functions for STMicroelectronics STM32F4xx Flash
+ * Project:      Flash Programming Functions for STMicroelectronics STM32WB55xx Flash
  * --------------------------------------------------------------------------- */
 
 /* History:
@@ -32,13 +32,6 @@
 #include "FlashOS.h"        // FlashOS Structures
 #include "stm32wbxx.h"
 #include "stm32wb55xx.h"
-
-typedef volatile uint8_t    vu8;
-typedef          uint8_t    u8;
-typedef volatile uint16_t   vu16;
-typedef          uint16_t   u16;
-typedef volatile uint32_t   vu32;
-typedef          uint32_t   u32;
 
 // Flash Keys
 #define FLASH_KEY1      0x45670123
@@ -125,7 +118,7 @@ uint32_t Init (uint32_t adr, uint32_t clk, uint32_t fnc) {
  *    Return Value:   0 - OK,  1 - Failed
  */
 uint32_t UnInit (uint32_t fnc) {
-  u32 acr;
+  uint32_t acr;
 
   acr = FLASH->ACR;                                     // Clear flash caches
   FLASH->ACR = acr & ~FLASH_CACHE_MASK;

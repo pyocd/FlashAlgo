@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2014 ARM Ltd.
+ * Copyright (c) 2021 ZeUGMA.
  *
  * This software is provided 'as-is', without any express or implied warranty. 
  * In no event will the authors be held liable for any damages arising from 
@@ -18,16 +18,17 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *   
  *
- * $Date:        15. April 2014
+ * $Date:        16/06/2021
  * $Revision:    V1.00
  *  
- * Project:      Flash Device Description for STMicroelectronics STM32F4xx Flash
+ * Project:      Flash Programming Functions for STMicroelectronics STM32WB55xx Flash
  * --------------------------------------------------------------------------- */
 
 /* History:
  *  Version 1.00
  *    Initial release
  */ 
+
 
 #include "FlashOS.h"        // FlashOS Structures
 

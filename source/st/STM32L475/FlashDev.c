@@ -19,14 +19,17 @@
  *   
  *
  * $Date:        15. April 2014
- * $Revision:    V1.00
+ * $Revision:    V2.00
  *  
- * Project:      Flash Device Description for STMicroelectronics STM32F4xx Flash
+ * Project:      Flash Programming Functions for STMicroelectronics STM32F4xx Flash
  * --------------------------------------------------------------------------- */
 
 /* History:
  *  Version 1.00
  *    Initial release
+ *  
+ *  Version 2.00 - 18/06/2021
+ *    This file has been modified to be compatible with the STM32L475, by Jonathan BAUDIN - ZeUGMA
  */ 
 
 #include "FlashOS.h"        // FlashOS Structures
