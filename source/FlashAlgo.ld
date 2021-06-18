@@ -22,18 +22,20 @@
  */
 SECTIONS
 {
-    PrgCode 0 :
+    PrgCode 0 : ALIGN_WITH_INPUT
     {
         *(.text*)
         EXCLUDE_FILE (*FlashDev.o) *(.rodata*)
+        . = ALIGN(16);
     }
 
-    PrgData :
+    PrgData : ALIGN_WITH_INPUT
     {
         *(.data*)
         *(.bss*)
         *(.got*)
         *(COMMON)
+        . = ALIGN(16);
     }
 
     DevDscr :
