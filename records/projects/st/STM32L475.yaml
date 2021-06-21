@@ -1,0 +1,10 @@
+common:
+    target:
+        - cortex-m4
+    macros:
+        - STM32L475VG
+        - FLASH_DRV_VERS=0
+    includes:
+        - source/FlashOS.h
+    sources:
+        - source/st/STM32L475
