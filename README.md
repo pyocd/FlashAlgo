@@ -3,6 +3,16 @@
 Framework for building Arm "FLM" style flash programming algorithms.
 
 
+## Other options
+
+Before you consider adding a flash algo here, you might wish to check if an open source flash algo already exists
+for your device or a similar device. Many of the FLM flash algos included in CMSIS Device Family Packs (DFPs) come with source code. For instance, the Keil DFPs include sources.
+
+You can download a DFP for your device from the official CMSIS-Pack list: [by pack](https://www.keil.com/dd2/pack/) or [by part number](https://www.keil.com/dd2/).
+
+DFPs extract as zips (change the extension). For the DFPs created by Keil, .FLM algos and code are under `./CMSIS/Flash/`. Other vendors may have algos in a different folder, and may or may not include source.
+
+
 ## Development Setup
 
 Skip any step where a compatible tool already exists
