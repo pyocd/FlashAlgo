@@ -62,7 +62,7 @@ For adding new targets start from template and use these docs...
 ## Contributions
 
 We welcome contributions! Please see the [contribution guidelines](CONTRIBUTING.md) for detailed requirements.
-In order foster a healthy and safe community, all contributors are expected to follow the
+In order to foster a healthy and safe community, all contributors are expected to follow the
 [code of conduct](CODE_OF_CONDUCT.md).
 
 To report bugs, please [create an issue](https://github.com/pyocd/FlashAlgo/issues/new) in the GitHub project.
