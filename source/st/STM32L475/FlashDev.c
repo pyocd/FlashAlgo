@@ -41,7 +41,7 @@ struct FlashDevice const FlashDevice  =  {
    ONCHIP,                     // Device Type
    0x08000000,                 // Device Start Address
    0x00100000,                 // Device Size in Bytes (1024 kB)
-   1024,                       // Programming Page Size    -- maybe 256 by default ? --
+   2048,                       // Programming Page Size    
    0,                          // Reserved, must be 0
    0xFF,                       // Initial Content of Erased Memory
    100,                        // Program Page Timeout 100 mSec
