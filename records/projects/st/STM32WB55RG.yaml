@@ -6,7 +6,7 @@ common:
         - STM32WB55xx
     includes:
         - source/FlashOS.h
-        - source/st/STM32WB55
-        - source/st/STM32WB55/inc
+        - source/st/STM32WB55RG
+        - source/st/STM32WB55RG/inc
     sources:
-        - source/st/STM32WB55
+        - source/st/STM32WB55RG
