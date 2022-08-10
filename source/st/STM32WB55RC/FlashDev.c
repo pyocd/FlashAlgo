@@ -1,5 +1,5 @@
 /* -----------------------------------------------------------------------------
- * Copyright (c) 2014 ARM Ltd.
+ * Copyright (c) 2021 ZeUGMA.
  *
  * This software is provided 'as-is', without any express or implied warranty. 
  * In no event will the authors be held liable for any damages arising from 
@@ -18,30 +18,28 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *   
  *
- * $Date:        15. April 2014
- * $Revision:    V2.00
+ * $Date:        16/06/2021
+ * $Revision:    V1.00
  *  
- * Project:      Flash Programming Functions for STMicroelectronics STM32F4xx Flash
+ * Project:      Flash Programming Functions for STMicroelectronics STM32WB55xx Flash
  * --------------------------------------------------------------------------- */
 
 /* History:
  *  Version 1.00
  *    Initial release
- *  
- *  Version 2.00 - 18/06/2021
- *    This file has been modified to be compatible with the STM32L475, by Jonathan BAUDIN - ZeUGMA
  */ 
+
 
 #include "FlashOS.h"        // FlashOS Structures
 
-#ifdef STM32L475VG
+#ifdef STM32WB55xx
 struct FlashDevice const FlashDevice  =  {
    FLASH_DRV_VERS,             // Driver Version, do not modify!
-   "STM32L475VG 1024 kB Flash",    // Device Name (1024 kB)
+   "STM32WB55RC 256kB Flash",  // Device Name (256 kB)
    ONCHIP,                     // Device Type
    0x08000000,                 // Device Start Address
-   0x00100000,                 // Device Size in Bytes (1024 kB)
-   2048,                       // Programming Page Size    
+   0x00040000,                 // Device Size in Bytes (256 kB)
+   4096,                       // Programming Page Size
    0,                          // Reserved, must be 0
    0xFF,                       // Initial Content of Erased Memory
    100,                        // Program Page Timeout 100 mSec
@@ -49,7 +47,7 @@ struct FlashDevice const FlashDevice  =  {
 
 // Specify Size and Address of Sectors
    {
-      {0x00800, 0x000000},          // Sector Size  2kB (512 Sectors)
+      {0x01000, 0x000000},          // Sector Size  4kB (256 Sectors)
       {SECTOR_END}
    }
 };

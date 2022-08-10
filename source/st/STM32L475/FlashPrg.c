@@ -184,15 +184,16 @@ int UnInit (unsigned long fnc) {
  *    Return Value:   0 - OK,  1 - Failed
  */
 int EraseChip (void) {
-
-  FLASH->CR |=  FLASH_MER1;                              // Mass Erase Enabled (sectors  0..11)
-  FLASH->CR |=  FLASH_STRT;                             // Start Erase
+  FLASH->CR |=  FLASH_MER1;                              // Mass Erase Enabled (Bank 1)
+  FLASH->CR |=  FLASH_MER2;                              // Mass Erase Enabled (Bank 2)
+  FLASH->CR |=  FLASH_STRT;                              // Start Erase
 
   while (FLASH->SR & FLASH_BSY) {
     IWDG->KR = 0xAAAA;                                  // Reload IWDG
   }
 
   FLASH->CR &= ~FLASH_MER1;                              // Mass Erase Disabled
+  FLASH->CR &= ~FLASH_MER2;                              // Mass Erase Disabled
 
   return (0);                                           // Done
 }
@@ -245,7 +246,7 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf) {
   FLASH->CR  =  0;                                      // reset CR 
 
   while (sz) {
-    FLASH->CR |= (FLASH_PG              |               // Programming Enabled
+    FLASH->CR |= (FLASH_PG |                            // Programming Enabled
                   FLASH_PSIZE_Word);                    // Programming Enabled (Word)
 
     M32(adr) = *((u32 *)buf);                           // Program Double Word
