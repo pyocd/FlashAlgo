@@ -29,7 +29,7 @@
  *    Initial release
  */ 
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 #ifdef FLASH_MEM
 

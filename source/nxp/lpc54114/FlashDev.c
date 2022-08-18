@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 #include "fsl_device_registers.h"
 
 #define FLASH_DRV_VERS (0x0100+VERS)   // Driver Version, do not modify!

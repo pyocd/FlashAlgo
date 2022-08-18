@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"
+#include "FlashOS.h"
 
 #define IAP_ENTRY   0x1FFF1001
 
