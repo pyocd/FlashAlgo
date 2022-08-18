@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 // Memory Mapping Control
 #define MEMMAP   (*((volatile unsigned char *) 0x400FC040))
