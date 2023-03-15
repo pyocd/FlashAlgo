@@ -33,8 +33,9 @@
 *
 *       Register definitions
 */
-#define FLASH_REG_BASE_ADDR (0x4001E000)
 #define INFO_REGS_BASE_ADDR (0x10000000)
+#define UICR_BASE_ADDR      (0x10001000)
+#define FLASH_REG_BASE_ADDR (0x4001E000)
 #define WDT_REGS_BASE_ADDR  (0x40010000)
 
 #define FLASH_REG_READY       *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x400))
@@ -93,7 +94,7 @@ static void _EraseSector(U32 Addr)
     //
     // Check if sector is the UICR or CODE region
     //
-    if (Addr >= 0x10001000) {
+    if (Addr >= UICR_BASE_ADDR) {
         FLASH_REG_ERASEUICR = 1;
     } else {
         FLASH_REG_ERASEPAGE = Addr;
