@@ -3,6 +3,7 @@ common:
         - cortex-m4
     includes:
         - source/nxp/lpc54608
+        - source/nxp/common_headers
     sources:
         - source/nxp/lpc54608/FlashDev.c
         - source/nxp/lpc54608/FlashPrg.c
