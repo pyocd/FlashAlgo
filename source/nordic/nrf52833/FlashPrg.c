@@ -33,21 +33,16 @@
 *
 *       Register definitions
 */
-#define INFO_REGS_BASE_ADDR (0x10000000)
 #define UICR_BASE_ADDR      (0x10001000)
 #define FLASH_REG_BASE_ADDR (0x4001E000)
 #define WDT_REGS_BASE_ADDR  (0x40010000)
 
 #define FLASH_REG_READY       *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x400))
+#define FLASH_REG_READYNEXT   *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x408))
 #define FLASH_REG_CONFIG      *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x504))
 #define FLASH_REG_ERASEPAGE   *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x508))
 #define FLASH_REG_ERASEALL    *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x50C))
 #define FLASH_REG_ERASEUICR   *((volatile U32*)(FLASH_REG_BASE_ADDR + 0x514))
-#define INFO_REG_CODEPAGESIZE *((volatile U32*)(INFO_REGS_BASE_ADDR + 0x10))
-#define INFO_REG_CODESIZE     *((volatile U32*)(INFO_REGS_BASE_ADDR + 0x14))
-#define INFO_REG_CODEBASE     *((volatile U32*)(INFO_REGS_BASE_ADDR + 0x18))
-#define INFO_REG_CONFIGID     *((volatile U32*)(INFO_REGS_BASE_ADDR + 0x5C))
-#define INFO_REG_DEVICEID     *((volatile U32*)(INFO_REGS_BASE_ADDR + 0x60))
 
 #define WDT_REG_INTENSET      *((volatile U32*)(WDT_REGS_BASE_ADDR + 0x304))
 #define WDT_REG_INTENCLR      *((volatile U32*)(WDT_REGS_BASE_ADDR + 0x308))
@@ -203,14 +198,14 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
     volatile U32* pSrc;
     U32 NumWords;
     U32 Status;
-	
+
     pDest = (volatile U32*)adr;
     pSrc = (volatile U32*)buf;    // Always 32-bit aligned. Made sure by CMSIS-DAP firmware
     //
     // adr is always aligned to "Programming Page Size" specified in table in FlashDev.c
     // sz is always a multiple of "Programming Page Size"
     //
-    NumWords = sz >> 2;	
+    NumWords = sz >> 2;
     //
     // Make sure that flash controller is in write mode
     //
@@ -224,13 +219,24 @@ int ProgramPage (unsigned long adr, unsigned long sz, unsigned char *buf)
         // Wait for operation to complete
         //
         do {
-            Status = FLASH_REG_READY;
-            if (Status & 1) {        // Flash controller ready?
+            Status = FLASH_REG_READYNEXT;
+            if (Status & 1) {        // Flash controller ready to queue next write?
                 break;
             }
             _FeedWDT();
         } while(1);
     } while(--NumWords);
+    //
+    // FLASH_REG_READYNEXT only indicates the flash controller is ready to
+    // queue the next word, we should wait for the final ready signal
+    //
+    do {
+        Status = FLASH_REG_READY;
+        if (Status & 1) {        // Flash controller completely done?
+            break;
+        }
+        _FeedWDT();
+    } while(1);
     //
     // Bring back flash controller into read mode
     //
