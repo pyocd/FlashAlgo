@@ -7,4 +7,4 @@ common:
         - source
     sources:
         - source
-        - source/nordic
+        - source/nordic/nrf51xxx
