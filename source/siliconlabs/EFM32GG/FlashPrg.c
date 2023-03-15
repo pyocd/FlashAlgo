@@ -20,6 +20,7 @@
 #include "FlashPrg.h"
 
 /* Defines required by em_msc */
+#include "ARMCM3.h"
 #include "core_cm3.h"
 
 #define MSC_PRESENT
