@@ -64,10 +64,6 @@ unsigned long GetSecNum (unsigned long adr)
 #define USE_SPIFI
 #ifdef USE_SPIFI
 
-typedef unsigned          char uint8_t;
-typedef unsigned short     int uint16_t;
-typedef unsigned           int uint32_t;
-
 /* Include SPIFI ROM headers */
 #include "spifi_rom_api.h"
 #define SPIFIROMD_PRESENT
