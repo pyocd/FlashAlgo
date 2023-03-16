@@ -18,6 +18,8 @@
 
 #include "FlashOS.h"
 #include "FlashPrg.h"
+#include "ARMCM4.h"
+#include "core_cm4.h"
 
 /* 
  * TZ10xx on chip NOR flash support functions. 
@@ -38,7 +40,7 @@ static void wait(uint32_t usec)
     uint32_t cnt;
     cnt = CORE_CLOCK / (1000000 * 4) * usec;
     do {
-        __nop();
+        __NOP();
     } while (--cnt);
 }
 
@@ -199,7 +201,7 @@ uint32_t EraseSector(uint32_t adr)
     }
     wait(8);
     // Write chip erase command.
-    if (writeCommand(0x00000100, 0x00030310, (__rev(adr) | 0x20)) != 0) {
+    if (writeCommand(0x00000100, 0x00030310, (__REV(adr) | 0x20)) != 0) {
         return 1;
     }
     if (polling() != 0) {
@@ -231,7 +233,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
         // Configuration of `PrgAccCtrl'
         REG_SPIC(0x030) = (0x00030330 | ((sz - 1) << 24));
         // Write `Write page program' command to SPIC PrimaryBuffer.
-        REG_SPIC(0x100) = (__rev(adr) | 0x32);
+        REG_SPIC(0x100) = (__REV(adr) | 0x32);
     } else {
         /* SPI single access mode. */
         // Configuration of `PrgBufIOCtrl'
@@ -241,7 +243,7 @@ uint32_t ProgramPage(uint32_t adr, uint32_t sz, uint32_t *buf)
         // Configuration of `PrgAccCtrl'
         REG_SPIC(0x030) = (0x00030330 | ((sz - 1) << 24));
         // Write `Write page program' command to SPIC PrimaryBuffer.
-        REG_SPIC(0x100) = (__rev(adr) | 0x02);
+        REG_SPIC(0x100) = (__REV(adr) | 0x02);
     }
     // Copy from SRAM to SPIC SecondaryBuffer.
     offset = sz & 0xfffffffc;
