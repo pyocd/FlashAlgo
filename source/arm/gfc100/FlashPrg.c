@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 #include "gfc100_eflash_drv.h"
 
 #define  SYSTEM_CLOCK    (40960000UL)

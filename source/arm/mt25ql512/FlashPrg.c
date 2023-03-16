@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 #include "mt25ql_flash_lib.h"
 
 static const struct qspi_ip6514e_dev_cfg_t QSPI_DEV_CFG = {

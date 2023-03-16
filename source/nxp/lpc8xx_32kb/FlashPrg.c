@@ -24,7 +24,7 @@
  * Project:      Flash Device Algorithm for NXP LPC8xx Flash using IAP
  * --------------------------------------------------------------------------- */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 // Memory Mapping Control
 #define MEMMAP     (*((volatile unsigned char *) 0x40048000))
