@@ -16,7 +16,7 @@
 
 /** @file FlashDev.c */
 
-#include "FlashOS.H"
+#include "FlashOS.h"
 
 #define FLASH_DRV_VERS (0x0100+VERS)   // Driver Version, do not modify!
 #define DEVICE_NAME    "XXXX"

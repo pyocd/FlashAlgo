@@ -24,7 +24,7 @@
  * Project:      Flash Device Description for NXP LPC8xx Flash using IAP
  * --------------------------------------------------------------------------- */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 #define FLASH_DRV_VERS (0x0100+VERS)   // Driver Version, do not modify!
 

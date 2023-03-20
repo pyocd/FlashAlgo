@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "FlashOS.H"        // FlashOS Structures
+#include "FlashOS.h"        // FlashOS Structures
 
 // Memory Mapping Control
 #define MEMMAP   (*((volatile unsigned char *) 0x400FC040))
@@ -63,10 +63,6 @@ unsigned long GetSecNum (unsigned long adr)
 
 #define USE_SPIFI
 #ifdef USE_SPIFI
-
-typedef unsigned          char uint8_t;
-typedef unsigned short     int uint16_t;
-typedef unsigned           int uint32_t;
 
 /* Include SPIFI ROM headers */
 #include "spifi_rom_api.h"
