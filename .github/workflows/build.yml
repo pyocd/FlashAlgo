@@ -1,4 +1,4 @@
-name: linux develop build "GCC with Make"
+name: Build all projects with "GCC with Make"
 
 on:
   push:
@@ -10,6 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         project:
           - cc3220sf
           - efm32gg
@@ -61,8 +62,9 @@ jobs:
           # An empty string will build all projects, in case this list is outdated
           - ""
       fail-fast: false
-    runs-on: ubuntu-latest
-    name: Build ${{ matrix.project || 'all' }}
+    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.project || 'all' }} on ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
     - name: Setup Python
@@ -70,8 +72,10 @@ jobs:
       with:
         python-version: 3.8
         cache: pip
-    - name: install requirements
-      run: sudo apt-get install -y gcc-arm-none-eabi
+    - name: Setup arm-none-eabi-gcc
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      with:
+        release: 10.3-2021.10
 
     - name: install requirements
       run: pip install -r requirements.txt
