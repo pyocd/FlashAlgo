@@ -2,24 +2,79 @@ name: linux develop build "GCC with Make"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: '*'
   pull_request:
-    branches: [ "main" ]
+    branches: '*'
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        project:
+          - cc3220sf
+          - efm32gg
+          - lpc1114fn28
+          - lpc4088
+          - lpc54018
+          - lpc54114
+          - lpc54608
+          - lpc824
+          - mk20d5
+          - mk64f12
+          - mk65f18
+          - mk66f18
+          - mk80f25615
+          - mke15z7
+          - mke18f16
+          - mkl02z4
+          - mkl05z4
+          - mkl25z4
+          - mkl26z4
+          - mkl27z4
+          - mkl27z644
+          - mkl28z7
+          - mkl43z4
+          - mkl46z4
+          - mkv10z7
+          - mkv11z7
+          - mkv31f51212
+          - mkv58f22
+          - mkw01z4
+          - mkw30z4
+          - mkw40z4
+          - mkw41z4
+          - musca_a
+          - musca_b
+          - musca_b_eflash
+          - ncs36510
+          - nrf51xxx
+          - nrf52833
+          - stm32f4xx_2048
+          - stm32l0xx_192
+          - stm32l151
+          - stm32l475
+          - stm32wb55rc
+          - stm32wb55rg
+          - template
+          - tz10xx
+          - w7500
+          # An empty string will build all projects, in case this list is outdated
+          - ""
+      fail-fast: false
     runs-on: ubuntu-latest
-
+    name: Build ${{ matrix.project || 'all' }}
     steps:
     - uses: actions/checkout@v3
-    - uses: syphar/restore-virtualenv@v1
-    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+        cache: pip
     - name: install requirements
       run: sudo apt-get install -y gcc-arm-none-eabi
-      
+
     - name: install requirements
       run: pip install -r requirements.txt
 
     - name: build
-      run: progen build -t make_gcc_arm
+      run: progen build -t make_gcc_arm ${{ matrix.project}}
